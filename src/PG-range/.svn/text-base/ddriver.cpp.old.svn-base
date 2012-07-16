@@ -1,0 +1,99 @@
+#include<stdio.h>
+#include <iostream>
+
+#include<stdlib.h> 
+#include "ddriver.h"
+
+/*----------------------------------------------*/
+/* Dictionary driver based on the DIMACS driver */
+/* by Catherine C. McGeoch                      */
+/*                                              */
+/* Modified by Rasmus Pagh and Flemming Rodler  */
+/* June 2001.                                   */ 
+/*----------------------------------------------*/
+using namespace std;
+
+/* Driver reads commands, calls routines, reports */
+int main(int argc, char **argv)
+{
+  dict_ptr  D;
+  int key;
+  boolean found;
+  char index;
+  int i, min_size;
+
+
+  min_size = 1024;
+  switch(argc) {
+  case 2: min_size = atoi(argv[1]);
+  case 1:
+    break;
+  default:
+    fprintf(stderr,"Usage: %s [min size]\n",argv[0]);
+    exit(1);
+  }
+
+  /* Perform dictionary operations */
+  D = construct_dict(min_size);
+  if (DETAIL > 1) { printf("dch"); fflush(stdout); }
+
+  printf("%d Insert\n%d Lookup \n%d Delete\n%d Size of hash\n%d Clear it\n",3,4,5,9,0);
+  cin>>index;
+  while (index != -1) {
+    switch(index) {
+    case '1' : { /* Reset counters */
+      break;
+    }
+    case '3' : { /* Insert element */
+     // fread(&key,sizeof(int),1,stdin);
+     cout<<"What element to insert?\n";
+     cin>>key;
+      found = insert(D, key);
+      if (DETAIL > 1) {
+	if(found) printf("Inserted %d successfully\n",key); 
+	else printf("%d already exists in the hash\n",key);
+      }
+      break;
+    } 
+    case '4':  { /* Lookup element */ 
+     // fread(&key,sizeof(int),1,stdin);
+     cout<<"What element to lookup?\n";
+     cin>>key;
+      found = lookup(D, key);
+
+      if (DETAIL >= 1) {
+	if(found) printf("%d found in hash\n",key); 
+	else printf("%d not found in hash\n",key);
+      }
+      break; 
+    }
+    case '5':  { /* Delete element */
+     // fread(&key,sizeof(int),1,stdin);
+     cout<<"What element to delete?\n";
+     cin>>key;
+      found = delete_key(D, key);
+      if (DETAIL >= 1) {
+	if(found) printf("%d deleted from hash\n",key); else printf("%d not found to be deleted\n",key);
+      }
+      break;
+    }
+    case '9':  { /* Retrieve size */
+      i = size(D);
+      if (DETAIL >= 1) printf ("size of hash is %d\n", i);
+      break;
+    } 
+    case '0':  { /* Clear dictionary */
+      clear(D,min_size);
+      if (DETAIL > 1) printf("cleared the hash\n"); 
+      break; 
+    }
+    }
+    
+    printf("%d Insert\n%d Lookup \n%d Delete\n%d Size of hash\n%d Clear it\n%d Exit",3,4,5,9,0,-1);
+    cin>>index;
+  }
+  
+  destruct_dict(D);
+
+  return 0;
+}

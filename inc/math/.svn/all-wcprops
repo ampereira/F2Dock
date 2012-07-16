@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/inc/math
+END
+Tuple.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/inc/math/Tuple.h
+END
+Gaussian.h
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/inc/math/Gaussian.h
+END
+Ray.h
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/inc/math/Ray.h
+END
+SmoothingFunction.h
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/inc/math/SmoothingFunction.h
+END
+Vector.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/inc/math/Vector.h
+END
+Matrix.h
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/inc/math/Matrix.h
+END
+Quaternion.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/inc/math/Quaternion.h
+END

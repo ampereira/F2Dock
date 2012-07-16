@@ -1,0 +1,556 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Title: F2Dock Parameters
+% Author(s): Rezaul Alam Chowdhury
+% Last Edited: Sep 23, 2010
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+\documentclass[twoside, 11pt]{article}
+
+\usepackage{ amsthm, amsmath, amsfonts, amssymb, mathrsfs, epsfig, multirow } 
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{graphicx} 
+\usepackage{fullpage}
+
+\usepackage{subfigure}
+ 
+\newcommand{\hide}[1]{}
+ 
+\def\qed{\ifmmode$\blacksquare$\else{\unskip\nobreak\hfil
+\penalty50\hskip1em\null\nobreak\hfil$\blacksquare$
+\parfillskip=0pt\finalhyphendemerits=0\endgraf}\fi\vspace{0.3cm}}
+
+ 
+\newcommand{\br}{\mathbf{r}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\by}{\mathbf{y}}
+\newcommand{\bz}{\mathbf{z}}
+\newcommand{\bX}{\mathbf{X}}
+\newcommand{\bn}{\mathbf{n}}
+\newcommand{\bvn}{\vec{\mathbf{n}}}
+\newcommand{\bp}{\mathbf{p}}
+\newcommand{\bvp}{\vec{\mathbf{p}}}
+\newcommand{\td}{\textrm{d}}
+
+\def \bF{{\bf F}}
+
+\newcommand{\lj}{lj}
+
+\newcommand{\tpol}{\textrm{pol}}
+\newcommand{\tsol}{\textrm{sol}}
+
+\def \EMM{E_{\textnormal{MM}}}
+\def \Ed{E_{d}}
+\def \Etheta{E_{\theta}}
+\def \Ephi{E_{\varphi}}
+\def \Evdw{E_{\textnormal{vdw}}}
+\def \Ecoul{E_{\textnormal{coul}}}
+\def \Ebond{E_{\textnormal{bonded}}}
+\def \Enonbond{E_{\textnormal{non-bonded}}}
+\def \Gsol{E_{\textnormal{sol}}}
+\def \Gpol{E_{\textnormal{pol}}}
+\def \Gcav{E_{\textnormal{cav}}}
+\def \Gvdw{E_{\textnormal{vdw(s-s)}}}
+\def \Edisp{E_{\textnormal{disp}}}
+
+\newcommand{\BigOh}{{\mathcal O}}
+\newcommand{\SmallOh}{o}
+ 
+\newcommand{\xif}{{\bf{\em{if~}}}}
+\newcommand{\xthen}{{\bf{\em{then~}}}}
+\newcommand{\xelse}{{\bf{\em{else~}}}}
+\newcommand{\xelseif}{{\bf{\em{elif~}}}}
+\newcommand{\xfi}{{\bf{\em{fi~}}}}
+\newcommand{\xcase}{{\bf{\em{case~}}}}
+\newcommand{\xendcase}{{\bf{\em{endcase~}}}}
+\newcommand{\xfor}{{\bf{\em{for~}}}}
+\newcommand{\xto}{{\bf{\em{to~}}}}
+\newcommand{\xby}{{\bf{\em{by~}}}}
+\newcommand{\xdownto}{{\bf{\em{downto~}}}}
+\newcommand{\xdo}{{\bf{\em{do~}}}}
+\newcommand{\xrof}{{\bf{\em{rof~}}}}
+\newcommand{\xwhile}{{\bf{\em{while~}}}}
+\newcommand{\xendwhile}{{\bf{\em{endwhile~}}}}
+\newcommand{\xand}{{\bf{\em{and~}}}}
+\newcommand{\xor}{{\bf{\em{or~}}}}
+\newcommand{\xerror}{{\bf{\em{error~}}}}
+\newcommand{\xreturn}{{\bf{\em{return~}}}}
+\newcommand{\xparallel}{{\bf{\em{parallel~}}}}
+\newcommand{\T}{\hspace{0.5cm}}
+\newcommand{\m}{\mathcal}
+
+\def\sland{~\land~}
+\def\slor{~\lor~}
+\def\sRightarrow{~\Rightarrow~}
+ 
+\def\comment#1{\hfill{$\left\{\textrm{{\em{#1}}}\right\}$}}
+\def\lcomment#1{\hfill{$\left\{\textrm{{\em{#1}}}\right.$}}
+\def\rcomment#1{\hfill{$\left.\textrm{{\em{#1}}}\right\}$}}
+\def\fcomment#1{\hfill{$\textrm{{\em{#1}}}$}}
+\def\func#1{\textrm{\bf{\sc{#1}}}}
+\def\funcbf#1{\textrm{\textbf{\textsc{#1}}}}
+\def\para#1{\vspace{0.2cm}\noindent{\bf{#1.}}}
+\def\paradot#1{\vspace{0.2cm}\noindent{\bf{- #1.}}}
+\def\paracol#1#2{\vspace{0.2cm}\noindent{\bf{- {\em{#1}} (#2):}}}
+
+
+\def\vctext#1{\begin{tabular}{@{}c@{}}$\phantom{\textrm{\huge{!}}}$\end{tabular}
+                \begin{tabular}{@{}c@{}} #1 \end{tabular}
+                \begin{tabular}{@{}c@{}}$\phantom{\textrm{\huge{!}}}$\end{tabular}}
+
+
+\newcommand{\Oh}[1]{{\mathcal O}\left({#1}\right)}
+\newcommand{\oh}[1]{{o}\left({#1}\right)}
+\newcommand{\Om}[1]{{\Omega}\left({#1}\right)}
+\newcommand{\om}[1]{{\omega}\left({#1}\right)}
+\newcommand{\Th}[1]{{\Theta}\left({#1}\right)}
+\newcommand{\ceil}[1]{\left\lceil{#1}\right\rceil}
+\newcommand{\floor}[1]{\left\lfloor{#1}\right\rfloor}
+
+
+\makeatletter
+   \newcommand\figcaption{\def\@captype{figure}\caption}
+   \newcommand\tabcaption{\def\@captype{table}\caption}
+\makeatother
+
+\newcommand{\TexMol}{\textbf{\it{Te$\chi$Mol}}}
+\newcommand{\FDock}{\textbf{\it{F$^2$Dock}}}
+\newcommand{\GBrerank}{\textbf{\it{GB-rerank}}}
+\newcommand{\ffdock}{F$^2$Dock}
+\newcommand{\fffdock}{F$^3$Dock}
+
+\newcommand{\C}[1]{\centering #1}
+\newcommand{\ft}[1]{\footnotesize #1}
+\newcommand{\TBL}[2]{\begin{tabular}{@{} #1 @{}} #2 \end{tabular}}
+
+\newcommand{\PG}{\textsf{PG}}
+\newcommand{\HPG}{\textsf{HPG}}
+
+\newcommand{\IDM}{\textsf{IDM}}
+\newcommand{\IG}{\textsf{IG}}
+\newcommand{\DT}{\textsf{DT}}
+
+
+\newcommand{\mt}[1]{\mathcal{#1}}
+
+\renewcommand{\labelenumi}{\bf{\arabic{enumi}.}}
+
+
+\pagestyle{plain}
+
+\begin{document}
+
+
+\title{\Large \ffdock{} Parameters}
+
+\vspace{-0.3cm}
+\author{ Rezaul Alam Chowdhury }
+
+%\date{}
+
+\maketitle
+
+\hide{
+\begin{abstract}
+\end{abstract}
+}
+% end hide
+
+%\section{Introduction}
+%\label{sec:Intro}
+
+In this documentation the following symbols are used to denote data type:
+
+\begin{center}
+\begin{tabular}{rl}
+C: & single character/letter\\
+%
+S: & string of characters/letters\\
+%
+I: & integer\\
+%
+F: & floating point\\
+%
+B: & Boolean (true/false)
+\end{tabular}
+\end{center}
+
+\section{Input/Output}
+
+For each file name parameter below the name of the file must be specified with full path if it is not in the current folder.
+
+\paracol{staticMolecule}{S} Name of the F2D file for the molecule that is to be held stationary during docking. Typically the static molecule is the larger of the two molcules to be docked.
+
+\paracol{staticMoleculePQR}{S} Name of the PQR \cite{Dolinsky04} file for the static molecule. Current version of \ffdock{} only works on PQR files without chain information (fix is easy, and will be done soon). However, we also plan to remove this parameter from future versions of \ffdock{} because the corresponding F2D file already contains all information \ffdock{} extracts from the PQR file except that the residues in the F2D file are not listed in increasing order of residue numbers (some \ffdock{} computations depend on this ordering). \ffdock{} will be updated to internally reorder the residues read from the F2D files whenever necessary. 
+
+\paracol{staticMoleculeQUAD}{S} Name of the quadrature points \cite{Bajaj09,CB10-2} file for the static molecule. Each line of the quadrature points file contains the description of an integration point on the surface of the molecule. Each such line consists of 7 floating point numbers: the first three are the co-ordinates of the point followed by three floats giving the $x$, $y$ and $z$ components, respectively, of the unit outward surface normal at that point, while the last one is the weight given to that point.
+
+\paracol{movingMolecule}{S} Name of the F2D file for the molecule that is to be moved around during docking. Typically the smaller of the two molcules to be docked is treated as the moving molecule for performance reasons.
+
+\paracol{movingMoleculePQR}{S} Name of the PQR file for the moving molecule. 
+
+\paracol{movingMoleculeQUAD}{S} Name of the quadrature points file for the moving molecule.
+
+\paracol{rmsdAtoms}{S} Name of a text file containing the coordinates of the atoms of the moving molecule that must be included in the RMSD calculation. If this parameter is not specified RMSD values will not be calculated. The first line of the file contains the number of atoms in the moving molecule, and the 2nd line contains the number of atoms (say, $n$) to be included in the RMSD computation. Each of the next $n$ lines contains four numbers. The first number is the atom number/id (an integer) from the F2D file of the moving molecule, and the next three numbers are floating point values giving the co-ordinates of that atom. Observe that the co-ordinate values are redundant as they can be obtained from the F2D file once we know the atom number, and so should be removed from the future versions of \ffdock. The first line of the file (i.e., the number of atoms in the moving molecule) can also be removed.
+
+\paracol{outFile}{S} Name of the file to which \ffdock{} will output the potential docking solutions (poses). 
+
+\paracol{numSolutions}{I} A positive integer giving the upper bound on the number of top docking poses \ffdock{} should output. Default value is $20,000$.
+
+
+\section{Rotations}
+
+For each file name parameter below the name of the file must be specified with full path if it is not in the current folder.
+
+\paracol{rotFile}{S} Name of a text file containing the rotations to be applied to the moving molecule during docking. Each line of the file contains one rotation specified by three Euler angles.
+
+\paracol{numRot}{I} The top {\em numRot} rotations from {\em rotFile} are used. If left unspecified all rotations will be used.
+
+\paracol{rotateVolume}{B} If set to {\em true}, the original orientation of the moving molecule is used for gridding to FFT grid, and then the nonzero grid points are rotated and the rotated grid is computed through interpolation. If set to {\em false} the atoms are gridded from scratch for each rotation. Default value is {\em true}.
+
+\paracol{randomRotate}{B} If set to {\em true} a random rotation matrix is applied on the moving molecule initially. Default value is {\em false}. 
+
+\paracol{peaksPerRotation}{I} Only the top {\em peaksPerRotation} peaks will be retained for each rotation. Default values are given in Table \ref{tbl:ppr}.
+
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|r||r|r|r|}
+\hline
+\multirow{2}{*}{Parameter} & \multicolumn{3}{c|}{complexType}\\ \cline{2-4} \cline{2-4}
+                           & $A$ & $E$ & $G$\\ \hline
+%
+{\em peaksPerRotation} & 3 & 2 & 4 \\ \hline
+\end{tabular}
+\tabcaption{\small Default values for {\em peaksPerRotation} based on complexType.}
+\label{tbl:sc}
+\end{center}
+\end{table}
+
+
+\section{FFT Grid}
+
+\paracol{effGridFile}{S} Name of a text file containing the grid sizes for efficient FFT computation. Each line of the file contains an integer (positive even) $n$ indicating a 3D $n \times n \times n$ grid for FFT computation. The list of integers is machine-specific, and \ffdock{} uses this list as follows for improved performance. For any given grid size $n$ (implicitly or explicitly) requested by the user \ffdock{} scans the list of integers in this file, and finds the first integer $m$ that is not smaller than $n$. The grid sizes in the file are ordered so that FFT on an $m \times m \times m$ grid runs at least as fast as that on an $n \times n \times n$ grid on the machine for which the listing is generated. \ffdock{} can generate this file automatically if run with the {\em -effGridFile} option preceding the name of the input parameters file.
+
+\paracol{gridSpacing}{F} A positive floating point value giving an upper bound on the spacing (in \AA) between adjacent grid points in the 3D spatial FFT grid. \ffdock{} consults the effGridFile file in order to compute a grid size so that the grid spacing does not exceed the upper bound provided by the user, and at the same time FFT can be computed as efficiently as possible. Thus numFreq parameter depends on this approximated grid spacing. The default upper bound is $1.2$ \AA.
+
+\paracol{enforceExactGridSpacing}{B} If set to {\em true} the the FFT grid is scaled up to match the user-specified grid-spacing upper bound (i.e., the grid cells are expanded without changing the number of cells in the grid). The default value is {\em false}.
+
+\paracol{numFreq}{I} A positive integer $n$ specifying the number of frequencies $n^3$ to be used during FFT computations. If this parameter is not specified it is computed from the gridSpacing parameter.
+
+\paracol{sparseFFT}{B} If set to {\em true} the sparsity of the input and the output grids will be exploited for faster computation. Default value is {\em true}.
+
+\paracol{narrowBand}{B} If set to {\em true} only the positions of the moving molecule that lie within a narrow band around the static molecule will be considered for finding potential solutions, othewrise the entire 3D grid is searched. Default value is {\em true}.
+
+\paracol{minEffGridSize}{I} A positive integer specifying the minimum grid size to consider when creating {\em effGridFile} by running \ffdock{} with the {\em -effGridFile} option.
+
+\paracol{maxEffGridSize}{I} A positive integer specifying the maximum grid size to consider when creating {\em effGridFile} by running \ffdock{} with the {\em -effGridFile} option.
+
+\section{Complex Type}
+
+\paracol{complexType}{C} Type of the docked complex that has four possible values: $A$ (antibody-antigen), $E$ (enzyme-inhibitor or enzyme-substrate), $G$ (neither A nor E), and $U$ (unknown). The default value is $U$ in which case \ffdock{} tries to identify the complex type itself (very successfully for antibody-antigen, and with moderate success for enzyme-inhibitors and enzyme-substrates).
+
+
+\section{Shape Complementarity}
+
+\paracol{blobbiness}{F} Specifies the value controlling the blobbiness of the Gaussians used for representing the atoms. Default value is $-2.3$.
+
+\paracol{pseudoAtomRadius}{F} Radius of each pseudo (skin) atom of the static molecule. Default value is $1.1$ \AA.
+
+\paracol{singleLayerLigandSkin}{B} If set to {\em false} the core atoms adjacent to the skin atoms of the moving molecule are also considered part of the skin. Default value is {\em false}.
+
+\paracol{curvatureWeightedStaticMol}{B} If set to {\em true} the skin atoms of the static molecule are weighted based on curvature. Default value is {\em true}.
+
+\paracol{curvatureWeightedMovingMol}{B} If set to {\em true} the skin atoms of the moving molecule are weighted based on curvature. Default value is {\em false}.
+
+\paracol{curvatureWeightingRadius}{F} The radius of the spherical region around each atom center used for curvature computation. Default value is given in Table \ref{tbl:sc}.
+
+\paracol{bandwidth}{F} The width of the onion shell type bands of core atoms constructed for computing depth-dependant core weights. Default value is $2$ \AA. 
+
+\paracol{gradFactor}{F} The weight of the core atoms in any given shell is a factor of {\em gradFactor} more than the weights of the core atoms in the shell just outside of it. Default value is $1.1$. 
+
+
+\paracol{skinSkinWeight}{F} A positive floating point value specifying the reward given to unit skin-skin overlap during shape-complementarity scoring. See Table \ref{tbl:sc} for default value.
+
+\paracol{skinCoreWeight}{F} Specifies the wight (reward or penalty) given to skin-core overlaps during shape-complementarity scoring. Default value is given in Table \ref{tbl:sc}.
+
+\paracol{coreCoreWeight}{F} A positive floating point value specifying the penalty given to unit core-core overlaps during shape-complementarity scoring.
+See Table \ref{tbl:sc} for default value.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|r||r|r|r|}
+\hline
+\multirow{2}{*}{Parameter} & \multicolumn{3}{c|}{complexType}\\ \cline{2-4} \cline{2-4}
+                           & $A$ & $E$ & $G$\\ \hline
+%
+{\em skinSkinWeight} & 0.73 & 0.78 & 0.57 \\ \hline
+{\em skinCoreWeight} & -0.31 & -0.08 & -0.23 \\ \hline
+{\em coreCoreWeight} & 31.00 & 5.00 & 5.00 \\ \hline
+{\em curvatureWeightingRadius} & 4.5 & 6.0 & 4.5 \\ \hline
+\end{tabular}
+\tabcaption{\small Default values for various shape complementarity related parameters based on complexType.}
+\label{tbl:sc}
+\end{center}
+\end{table}
+
+\section{Electrostatics}
+
+\paracol{elecWeight}{F} The weight given to the electrostatics score computed by \ffdock{}. See Table \ref{tbl:elec} for default value.
+
+\paracol{elecKernelVoidRad}{F} Specifies the $d_{0}$ distance in computing the distance-dependant dielectric constant $E({\bf x})$ using
+Equation \ref{eq:Ex} given below (a generalization of the Gabb et al. expression \cite{Gabb1997}). Default value is given in Table \ref{tbl:elec}.
+
+
+ \begin{equation}
+ E({\bf x}) = \left\{ \begin{array}{@{}l@{~}l}
+                   0 & \textrm{if $||{\bf{x}}|| \leq d_{0}$,}\\
+                   v_{l} & \textrm{if $d_{0} < ||{\bf{x}}|| \leq d_{l}$,}\\
+                   c_{1} ||{\bf{x}}|| + c_{2}~~~ & \textrm{if $d_{l} < ||{\bf{x}}|| \leq d_{h}$,}\\                   
+                   v_{h} & \textrm{if $d_{h} < ||{\bf{x}}||$,}
+                   \end{array} \right.
+ \label{eq:Ex}
+ \end{equation}
+
+\noindent
+where,  $c_{1} = { { v_h - v_l } \over { d_h - d_l } }$, and $c_{2} = v_l - d_l c_{1}$.
+
+
+\paracol{elecKernelDistLow}{F} Specifies the $d_{l}$ distance in Equation \ref{eq:Ex}. Default value is $6$ \AA.
+
+\paracol{elecKernelDistHigh}{F} Specifies the $d_{h}$ distance in Equation \ref{eq:Ex}. Default value is $8$ \AA.
+
+\paracol{elecKernelValLow}{F} Specifies the $v_{l}$ value in Equation \ref{eq:Ex}. See Table \ref{tbl:elec} for default value.
+
+\paracol{elecKernelValHigh}{F} Specifies the $v_{h}$ value in Equation \ref{eq:Ex}. Default value is $80$.
+
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|r||r|r|r|}
+\hline
+\multirow{2}{*}{Parameter} & \multicolumn{3}{c|}{complexType}\\ \cline{2-4} \cline{2-4}
+                           & $A$ & $E$ & $G$\\ \hline
+%
+{\em elecWeight} & 0.72 & 0.15 & 0.72 \\ \hline
+{\em elecKernelVoidRad} & 0.0 & 3.0 & 0.0 \\ \hline
+{\em elecKernelValLow} & 4.0 & 1.0 & 4.0 \\ \hline
+\end{tabular}
+\tabcaption{\small Default values for various electrostatics related parameters based on complexType.}
+\label{tbl:elec}
+\end{center}
+\end{table}
+
+
+\paracol{elecRadiusInGrids}{F} A positive floating point value specifying the constant radius of each atom within which its charge is diffused using a Gaussian during electrostatics scoring. Default value is $2.9$.
+
+
+\section{Hydrogen Bonding}
+
+\paracol{hbondWeight}{F} The weight given to the hydrogen bonding score computed by \ffdock{}. Default value is $0.0$.
+
+\paracol{hbondDistanceCutoff}{F} A positive floating point value specifying the surface to surface distance upper bound between any pair of donor and acceptor atoms. The default value is $2$ \AA.
+
+
+\section{Hydrophobicity Scoring}
+\label{sec:hydrop}
+
+\paracol{hydrophobicityWeight}{F} Weight given to the ratio $r_{h} = {\textrm{\em interface hydrophobic score} \over \textrm{\em interface hydrophilic score}}$ computed by \ffdock{}. Default value is given in Table \ref{tbl:hydrop}.
+
+\paracol{hydrophobicityProductWeight}{F} Weight given to the product $r_{h} \times \textrm{\em interface hydrophobic score}$ computed by \ffdock{}. Default value is $0.001$.
+
+\paracol{hydroRatioTolerance}{F} A positive floating point value giving the upper bound on $r_h$. If $r_{h}$ exceeds this value $r_h$ is set
+to {\em hydroPenalty} ({\em hydroPenalty} $= -10$ in the current version). See Table \ref{tbl:hydrop} for default value.
+
+\paracol{hydroMinRatio}{F} A nonnegative floating point value giving the lower bound on $r_h$. If $r_{h}$ is below this value $r_h$ is set
+to {\em hydroPenalty}. Table \ref{tbl:hydrop} gives the default value.
+
+\paracol{hydroRatioNumeratorLow}{F} Lower bound on {\em interface hydrophobic score}. If this value is below the lower bound $r_h$ is set
+to {\em hydroPenalty}. See Table \ref{tbl:hydrop} for default value.
+
+\paracol{hydroRatioNumeratorHigh}{F} Upper bound on {\em interface hydrophobic score}. If this value is above the upper bound $r_h$ is set
+to {\em hydroPenalty}. Default value is $100.0$.
+
+\paracol{hydroRatioDenominatorLow}{F} Lower bound on {\em interface hydrophilic score}. If this value is below the lower bound $r_h$ is set
+to {\em hydroPenalty}. See Table \ref{tbl:hydrop} for default value.
+
+\paracol{hydroRatioDenominatorHigh}{F} Upper bound on {\em interface hydrophilic score}. If this value is above the upper bound $r_h$ is set
+to {\em hydroPenalty}. Table \ref{tbl:hydrop} gives the default value.
+
+\paracol{twoWayHydrophobicity}{B} If set to {\em false} only the hydrophobicity of the atoms of the static molecule is considered, otherwise both molecules are considered. Default value is {\em true}.
+
+\paracol{useInterfacePropensity}{B} If set to {\em true} interface propensity values from \cite{Jones1997} are used, othewise hydrophobicity values from \cite{Black1991} are used. Default value is {\em true}.
+
+\paracol{perResidueHydrophobicity}{B} If set to {\em true} per residue hydrophobicity values from \cite{Black1991} are used,
+per atom hydrophobicity values \cite{Kapcha-Rossky} are used. Default value is {\em true}. If {\em useInterfacePropensity}
+is set to {\em true} this parameter is ignored (i.e., always assumed to be {\em true}).
+
+\paracol{staticMolHydroDistCutoff}{F} A non-negative floating point value giving the maximum distance from the surface of a core atom of the static molecule to the center of any skin atom in order to consider that core atom for hydrophobicity calculation. Default value is $4.0$ \AA.
+
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|r||r|r|r|}
+\hline
+\multirow{2}{*}{Parameter} & \multicolumn{3}{c|}{complexType}\\ \cline{2-4} \cline{2-4}
+                           & $A$ & $E$ & $G$\\ \hline
+%
+{\em hydrophobicityWeight} & 8.5 & 9.0 & 8.5 \\ \hline
+{\em hydroRatioTolerance} & 8.0 & 8.0 & 10.0 \\ \hline
+{\em hydroMinRatio} & 1.5 & 1.22 & 0.5 \\ \hline
+{\em hydroRatioNumeratorLow} & 1.25 & 2.0 & 2.0 \\ \hline
+{\em hydroRatioDenominatorLow} & 0.45 & 1.0 & 0.2 \\ \hline
+{\em hydroRatioDenominatorHigh} & 2.5 & 7.0 & 6.0 \\ \hline
+\end{tabular}
+\tabcaption{\small Default values for various hydrophobicity related parameters based on complexType.}
+\label{tbl:hydrop}
+\end{center}
+\end{table}
+
+
+\section{Simple Charge Complementarity}
+
+\paracol{simpleChargeWeight}{F} Weight given to the simple charge complementarity score computed by \ffdock{}. Default value is given in Table \ref{tbl:simpC}.
+
+\paracol{simpleRadExt}{F} The radius of each atom is extended by this value for simplified charge complementarity computation. Default value is $1.5$ \AA.
+
+
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|r||r|r|r|}
+\hline
+\multirow{2}{*}{Parameter} & \multicolumn{3}{c|}{complexType}\\ \cline{2-4} \cline{2-4}
+                           & $A$ & $E$ & $G$\\ \hline
+%
+{\em simpleChargeWeight} & 0.1 & 5.5 & 2.0 \\ \hline
+\end{tabular}
+\tabcaption{\small Default values for various simple charge complementarity related parameters based on complexType.}
+\label{tbl:simpC}
+\end{center}
+\end{table}
+
+
+\section{Clash Filter}
+
+\paracol{applyClashFilter}{B} If set to {\em true} clash filter is applied. Default value is {\em true}.
+
+\paracol{eqmDistFrac}{F} Two atoms are considered to be in a clash if the distance between the atom centers is less than {\em eqmDistFrac} fraction smaller than the sum of their radii. Default value is $0.5$.
+
+\paracol{clashTolerance}{I} Upper bound on the number of atomic clashes permitted. Default value is given in Table \ref{tbl:clash}.
+
+\paracol{clashWeight}{F} Weight given to each clash when added to the total score. See Table \ref{tbl:clash} for default value.
+
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|r||r|r|r|}
+\hline
+\multirow{2}{*}{Parameter} & \multicolumn{3}{c|}{complexType}\\ \cline{2-4} \cline{2-4}
+                           & $A$ & $E$ & $G$\\ \hline
+%
+{\em clashTolerance} & 2 & 9 & 10 \\ \hline
+{\em clashWeight} & -30 & -0.5 & -0.5 \\ \hline
+\end{tabular}
+\tabcaption{\small Default values for various clash filter related parameters based on complexType.}
+\label{tbl:clash}
+\end{center}
+\end{table}
+
+
+\section{Lennard-Jones Filter}
+
+\paracol{applyVdWFilter}{B} If set to {\em true} Lennard-Jones filter is applied. Default value is {\em true}.
+
+\paracol{vdWCutoffLow}{F} If \#clashes $<$ {\em clashTolerance} / 2, poses with vdW potential > {\em vdWCutoffLow} are penalized. Default value is $0.0$.
+
+\paracol{vdWCutoffHigh}{F} If \#clashes $\geq$ {\em clashTolerance} / 2, poses with vdW potential > {\em vdWCutoffHigh} are penalized. Default value is given in Table \ref{tbl:vdw}.
+
+\paracol{vdWEqmRadScale}{F} All $r_{eqm}$ values are multiplied by this factor. Default value is $0.3$.
+
+\paracol{epsilonLJ}{F} Error control parameter ($\in (0, 1]$) for Lennard-Jones potential. Default value is $0.5$.
+
+\paracol{useSSE}{B} Is set to {\em true} SSE (Streaming SIMD Instructions) will be used for faster execution. Default is {\em false}.
+
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|r||r|r|r|}
+\hline
+\multirow{2}{*}{Parameter} & \multicolumn{3}{c|}{complexType}\\ \cline{2-4} \cline{2-4}
+                           & $A$ & $E$ & $G$\\ \hline
+%
+{\em vdWCutoffHigh} & 0.0 & 20.0 & 5.0 \\ \hline
+\end{tabular}
+\tabcaption{\small Default values for various Lennard-Jones filter related parameters based on complexType.}
+\label{tbl:vdw}
+\end{center}
+\end{table}
+
+
+\section{Hydrophobicity Filter}
+
+\paracol{applyPseudoGsolFilter}{B} If set to {\em true} hydrophobicity filter will be applied. Default value is {\em true}.
+
+\paracol{pseudoGsolWeight}{F} Weight given to the value ${ { ( \textrm{\em interface hydrophobic score} )^{2} } \over { \textrm{\em interface hydrophilic score } } }$ computed by the hydrophobicity filter which is then added to the total score. Default value is $0.0$. This parameter is now redundant and will be removed.
+
+\paracol{useInterfacePropensity}{B} Same as in Section \ref{sec:hydrop}.
+
+\paracol{perResidueHydrophobicity}{B} Same as in Section \ref{sec:hydrop}.
+
+
+
+\section{Dispersion Filter}
+
+\paracol{applyDispersionFilter}{B} If set to {\em true} dispersion filter will be applied. Default value is {\em false}.
+
+\paracol{dispersionEnergyLimit}{F} If the computed dispersion energy has value larger than {\em dispersionEnergyLimit} it is set to {\em dispersionEnergyLimit}, and if it has value smaller than -{\em dispersionEnergyLimit} it is set to -{\em dispersionEnergyLimit}. Default value is $1000.0$.
+
+\paracol{dispersionMinAtomRadius}{F} Smallest permitted atom radius during dispersion energy calculation. Default value is $0.1$ \AA.
+
+\paracol{dispersionWeight}{F} Weight given to the dispersion energy value computed which is then added to the total score. Default value is $0.0$.
+
+\paracol{epsilonBR}{F} Error control parameter ($\in (0, 1]$) for dispersion energy approximation. Default value is $0.3$.
+
+
+\section{Reranking}
+
+\paracol{rerank}{B} If set to {\em true} the output of \ffdock{} will be reranked based on various filters. Default value is {\em false}.
+
+\paracol{numRerank}{I} Number of top solutions to rerank. Default value is 2000.
+
+\paracol{applyAntibodyFilter}{B} If set to {\em true} antibody filter will be applied which filters based on the active sites on the antibody. Default value is {\em true}.
+
+\paracol{applyEnzymeFilter}{B} If set to {\em true} enzyme filter will be applied which filters based on the abundance of Glycine residues. Default value is {\em true}.
+
+\paracol{applyResidueContactFilter}{B} If set to {\em true} filtering will be done based on residue contact preferences (from Table III, page 94 of \cite{Glaser2001}). Default value is {\em true}.
+
+\paracol{rerankerF2DockScoreWeight}{F} Weight given to the original \ffdock{} score. Default value is $100.0$.
+
+\paracol{rerankerPseudoGsolWeight}{F} Weight given to the value ${ { ( \textrm{\em interface hydrophobic score} )^{2} } \over { \textrm{\em interface hydrophilic score } } }$ computed by the hydrophobicity filter. Default value is $1.0$.
+
+
+
+\section{Clustering}
+
+\paracol{clusterTransRad}{F} The radius of the level $i \in [1, 3]$ cluster is $i \cdot \textrm{\em clusterTransRad}$. Default value is $1.2$ \AA.
+
+\paracol{clusterTransSize}{F} Maximum number of docking poses (i.e., geometric center of the moving molecule) in cluster $i \in [1, 3]$
+is $i \cdot \textrm{\em clusterTransSize} + c_{i}$, where $c_1 = 0, c_2 = 1$ and $c_3 = 3$. Default value is $1$.
+
+
+
+\section{Parallelization}
+
+\paracol{numThreads}{I} A positive integer specifying the number of concurrent threads to use. Default value is $4$.
+
+
+\section{Misc}
+
+\paracol{scoreScaleUpFactor}{F} \ffdock{} scores are scaled up by this factor. Default value is $10,000$.
+
+
+\bibliographystyle{acm}
+\bibliography{params}
+\end{document}
+

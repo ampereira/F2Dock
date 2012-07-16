@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/src/math
+END
+Vector.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/src/math/Vector.cpp
+END
+Matrix.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/src/math/Matrix.cpp
+END
+Quaternion.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/src/math/Quaternion.cpp
+END
+Tuple.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/src/math/Tuple.cpp
+END
+Gaussian.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/src/math/Gaussian.cpp
+END
+Ray.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/src/math/Ray.cpp
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/cvc/!svn/ver/3304/trunk/F2Dock-refactored/src/math/CMakeLists.txt
+END
+SmoothingFunction.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/src/math/SmoothingFunction.cpp
+END

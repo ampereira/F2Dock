@@ -1,0 +1,20 @@
+------------------------------------------------
+|        F2Dock/GB-rerank 1.0 - Usage           |
+------------------------------------------------
+X. XXXX -- xxxx@ices.utexas.edu -- 01/14/2010
+
+F2Dock is a program for performing rigid body
+molecular docking.
+
+The reranking program GB-rerank is also included
+in this distribution.
+
+More information is available via the Computational
+Visualization Center's website: 
+
+http://cvcweb.ices.utexas.edu
+
+------------------------------------------------
+
+Usage: F2Dock -score|saveGrid|vdw|effGridFile parameterFile
+Usage: GB-rerank parameterFile

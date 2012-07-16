@@ -1,0 +1,2 @@
+/usr/bin/ar cr ../../lib/libPG-range.a  CMakeFiles/PG-range.dir/cuckoo.cc.o CMakeFiles/PG-range.dir/PG.cc.o
+/usr/bin/ranlib ../../lib/libPG-range.a

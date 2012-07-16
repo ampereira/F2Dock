@@ -1,0 +1,1823 @@
+@String {ACR = "Acc. Chem. Res." }
+@String {ARPC = "Annu. Rev. Phys. Chem." }
+@string {COSB = "Curr. Opin. Struct. Biol." }
+@String {CPC = "Comput. Phys. Comm." }
+@String {CPL = "Chem. Phys. Lett." }
+@String {DCG = "Discrete and computational geometry" }
+@String {JAC = "J. Appl. Cryst." }
+@String {JACS = "J. Am. Chem. Soc." }
+@String {JCC = "J. Comput. Chem." }
+@String {JCP = "J. Chem. Phys." }
+@String {JMB = "J. Mol. Biol." }
+@String {JMG = "J. Molecular Graphics" }
+@String {JPC = "J. Phys. Chem." }
+@String {JPCA = "J. Phys. Chem. A" }
+@String {JPCB = "J. Phys. Chem. B" }
+@String {MP = "Mol. Phys." }
+@String {PROTEINS = "Proteins: Structure, function, and genetics" }
+@String {JPA = "J. Phys. A.: Math. Gen."}
+@String {JMS = "J. Mol. Struct. (Theochem)" }
+@String {CAGD = "Computer Aided Geometric Design"}
+@String {CMAME = "Computer Methods Applied Mechanical Engineering"}
+%%%%%%%%%%analytical method to calculate the area/volume of hard-sphere models%%%%%%%%%%%%%%%%%%%%%%%%
+@inproceedings{BLMP1997
+, author    = "C. Bajaj and H. Lee and R. Merkert and V. Pascucci"
+, title     = "{NURBS} based B-rep Models from Macromolecules and their Properties"
+, booktitle = "Proceedings of Fourth Symposium on Solid Modeling and Applications"
+, year      = 1997
+, pages     = "217--228"
+}
+
+@ARTICLE{BXZ09,
+  AUTHOR = "C. Bajaj and G. Xu and Q. Zhang",
+  YEAR = "2009",
+  TITLE = "A fast variational method for the construction of resolution adaptive $C^2$-smooth molecular surfaces",
+  JOURNAL = CMAME,
+  VOLUME = "198",
+  PAGES = "1684--1690"
+}
+
+@ARTICLE{BPS03,
+  AUTHOR = "C. Bajaj and V. Pascucci and A. Shamir and R. Holt and A. Netravali",
+  YEAR = "2003",
+  TITLE = "Dynamic Maintenance and Visualization of Molecular Surfaces",
+  JOURNAL = "Discrete Applied Mathematics",
+  VOLUME = "127",
+  PAGES = "23--51"
+}
+
+@InBook{CHARMMFF,
+   title = "CHARMM: The Energy Function and Its Parameterization with an Overview of the Program",
+   series = "The Encyclopedia of Computational Chemistry",
+   author = "MacKerel Jr., A.D. and Brooks III, C.L. and Nilsson, L. and Roux, B. and Won, Y. and Karplus, M.",
+   editor = "P. v. R. Schleyer et al.",
+   publisher = "John Wiley \& Sons: Chichester",
+   pages = "271-277",
+   volume = "1",
+   year = "1998"
+}
+
+@article{Ren03,
+  author = "P. Ren and J. W. Ponder",
+  title = "Polarizable Atomic Multipole Water Model for Molecular Mechanics Simulation",
+  journal = JPCB,
+  volume = 107,
+  pages = "5933--5947",
+  year = 2003
+}
+
+
+@ARTICLE{Connolly83a,
+  AUTHOR = "Connolly, M.",
+  YEAR = "1983",
+  TITLE = "Analytical Molecular Surface Calculation",
+  JOURNAL = JAC,
+  VOLUME = "16",
+  PAGES = "548--558"
+
+}
+
+@ARTICLE{Connolly83b,
+  AUTHOR = "Connolly, M.",
+  YEAR = {1983},
+  TITLE = "Solvent- accessible surfaces of proteins and nucleic acids",
+  JOURNAL = "Science",
+  VOLUME = "221",
+  PAGES = "709"
+
+}
+
+@ARTICLE{Connolly85,
+  AUTHOR = "Connolly, M.",
+  YEAR = "1985",
+  TITLE = "Computation of Molecular Volume",
+  JOURNAL = JACS,
+  VOLUME = "107",
+  PAGES = "1118--1124"
+
+}
+
+@ARTICLE{Richmond84,
+  AUTHOR = "Richmond, T.",
+  YEAR = "1984",
+  TITLE = "Solvent accessible surface area and excluded volume in proteins",
+  JOURNAL = JMB,
+  VOLUME = "178",
+  PAGES = "63--89",
+
+}
+
+@ARTICLE{Gibson87,
+  AUTHOR = "Gibson, K. and Scheraga, H.",
+  YEAR = "1987",
+  TITLE= "Exact calculation of the volume and surface area of fused hard sphere molecule with unequal atomic radii",
+  JOURNAL = MP,
+  VOLUME = "62",
+  PAGES = "1247--1265",
+
+}
+
+@article{Lee71,
+  author = "Lee, B. and Richards, F.",
+  title = "The interpretation of protein structure: estimation of static accessiblilty",
+  journal =JMB,
+  volume = 55,
+  pages = "379--400",
+  year = 1971
+}
+
+@article{Richards77,
+  author = "Richards, F.",
+  title = "Areas, Volumes, Packing, and Protein Structure",
+  journal = "Annu. Rev. Biophys. Bioeng.",
+  volume = 6,
+  pages = "151--176",
+  year = 1977
+}
+
+@article{Shrake73,
+  author = "Shrake, A. and Rupley, J. A.",
+  title = "Environment and exposure to solvent of protein atoms in lyzyzyme and insulin",
+  journal = JMB,
+  volume =79,
+  pages = "351--371",
+  year =1973
+}
+
+@article{Legrand93,
+  author = "Legrand, S. and Merz, K.",
+  title = "Rapid approximation to molecular surface area via the use of Boolean logic and lookup tables",
+  journal = JCC,
+  volume =14,
+  pages = "349--352",
+  year = 1993
+}
+
+@article{Rowlinson63,
+  author = "Rowlinson, J. S.",
+  title = "The triplet distribution function in a fluid of hard spheres",
+  journal = MP,
+  volume = 6,
+  pages = "517--524",
+  year = 1963
+}
+
+@article{Pavani82,
+  author = "Pavani, R. and Ranghino, G.",
+  title = "A method to compute the volume of a molecule",
+  journal = "Computers and Chemistry",
+  volume = 6,
+  pages = "133--135",
+  year = 1982
+}
+
+@article{Gavezzotti83,
+  author = "Gavezzotti, A.",
+  title = "The calculation of molecular volumes and the use of volume analysis in the investigation of structured media and of solid-state organic reactivity",
+  journal = JACS,
+  volume = 105,
+  pages = "5220--5225",
+  year = 1983
+}
+
+@article{Dodd91,
+  author = "Dodd, L. and Theodorou, D.",
+  title = "Analytical treatment of the volume and surface area of molecules formed by an arbitrary collection of unequal spheres intersected by planes",
+  journal = MP,
+  volume = 72,
+  pages = "1313--1345",
+  year = 1991
+}
+
+@article{Kratky78,
+  author = "Kratky, K.",
+  title = "The area of the intersection of n equal cicular disks",
+  journal = JPA,
+  volume = 11,
+  pages = "1017--1024",
+  year = 1978
+}
+
+@article{Edelsbrunner05,
+  author = "Edelsbrunner, H. and Koehl, P.",
+  title = "The geomotry of Biomolecular Solvation",
+  journal = DCG,
+  volume = 52,
+  pages = "241--273",
+  year = 2005
+}
+
+@article{Perrot92,
+  author = "Perrot, G. and Cheng, B. and Gibson, K. and Vila, J. and Palmer, K. and Nayeem, A. and Maigret, B. and Scheraga, H.",
+  title = "MSEED: a program for the rapid analytical determination of accessible surface-areas and their derivatives",
+  journal = JCC,
+  volume = 13,
+  pages = "1--11",
+  year = 1992
+}
+
+@article{Spoel05,
+  author = "David Van Der Spoel and Erik Lindahl and Berk Hess and Gerrit Groenhof and Alan E. Mark and Herman J. C. Berendsen",
+  title = "GROMACS: Fast, flexible, and free",
+  journal = JCC,
+  volume = 26,
+  number = 16,
+  pages = "1701--1718",
+  year = 2005
+}
+
+
+@article{Sridharan94,
+  author = "Sridharan, S. and Nicholls, A. and Sharo, K.",
+  title = "A rapid method for calculating derivatives of solvent accessible surface areas of molecules",
+  journal = JCC,
+  volume = 16,
+  pages = "1038--1044",
+  year = 1994
+}
+
+@article{Gogonea94,
+  author = "Gogonea, V. and Osawa, E.",
+  title = "Implementation of solvent effect in molecular mechanics Part 3: the first- and second-order analytical derivatives of excluded volume",
+  journal = JMS,
+  volume = 311,
+  pages = "305--324",
+  year = 1994
+}
+
+@article{Gogonea95,
+  author = "Gogonea, V. and Osawa, E.",
+  title = "An improved algorithm for the analytical computation of solvent-excluded volume. The treatment of singularities in solvent-accessible surface area and volume functions",
+  journal = JCC,
+  volume = 16,
+  pages = "817--842",
+  year = 1995
+}
+
+@article{Fraczkiewicz98,
+  author = "Fraczkiewicz, R. and Braun, W.",
+  title = "Exact and efficient analytical calculation of the accessible surface areas and their gradients for macromolecules",
+  journal = JCC,
+  volume = 19,
+  pages = "319--333",
+  year = 1998
+}
+
+@article{Weiser99,
+  author = "Weiser, J and Shenkin, P. and Still, W.",
+  title = "Optimization of {G}aussian surface calculations and extension to solvent-accessible surface areas",
+  journal = JCC,
+  volume = 20,
+  pages = "688--703",
+  year = 1999
+}
+
+@article{Zhang06,
+  author = "Zhang, Y. and Xu, G. and Bajaj, C.",
+  title = "Quality Meshing of Implicit Solvation Models of Biomolecular Structures",
+  journal = "Computer Aided Geometric Design",
+  volume = 23,
+  pages = "510--530",
+  year =2006
+}
+
+%%%%%%%%%%%alpha shape theory%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@ARTICLE{Edelsbrunner95,
+  AUTHOR = "Edelsbrunner, H.",
+  YEAR = "1995",
+  TITLE = "The union of balls and its dual shape",
+  JOURNAL = DCG,
+  VOLUME = "13",
+  PAGES = "415--440",
+
+}
+
+@ARTICLE{Liang98,
+  AUTHOR = "Liang, J. and Edelsbrunner, H. and Fu, P. and Sudhakar, P.",
+  YEAR = "1998",
+  TITLE = "Analytical shape computation of macromolecules: I. {M}olecular are and volume through aplha shape",
+  JOURNAL = PROTEINS,
+  VOLUME = "33",
+  PAGES = "1--17",
+
+}
+
+%%%%%%%%%%%analytical representations%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@ARTICLE{Grant95,
+  AUTHOR = "Grant, J. and Pickup, B.",
+  YEAR = "1995",
+  TITLE = "A {G}aussian description of molecular shape",
+  JOURNAL = JPC,
+  VOLUME = "99",
+  PAGES = "3503--3510"
+
+}
+
+@article{ritchie03evaluation,
+    author={D. Ritchie},
+    title={Evaluation of protein docking predictions using Hex 3.1 in {CAPRI} rounds 1 and 2},
+    journal={Proteins: Structure, Function, and Genetics},
+    year={2003},
+    volume={52},
+    number={1},
+    pages={98--106},
+    month={July},
+}
+
+@ARTICLE{Im03,
+  AUTHOR = "Im, W. and Lee, M. and Brooks, III, C.",
+  YEAR = "2003",
+  TITLE = "Generalized {B}orn Model with a simple smoothing function",
+  JOURNAL = JCC,
+  VOLUME = "24",
+  PAGES = "1691--1702"
+
+}
+
+@ARTICLE{Gabdoulline96,
+  AUTHOR = "Gabdoulline, R. and Wade, R.",
+  YEAR = "1996",
+  TITLE = "Analytically defined surfaces to analyze molecular interaction properties",
+  JOURNAL = JMG,
+  VOLUME = "14",
+  PAGES = "341--353"
+
+}
+
+@ARTICLE{Lee02,
+  AUTHOR = "M. Lee and F. Salsbury and Brooks, III, C.",
+  YEAR = "2002",
+  TITLE = "Novel generalized {B}orn methods",
+  JOURNAL = JCP,
+  VOLUME = "116",
+  NUMBER = "24",
+  PAGES = "10606-10614"
+
+}
+
+@ARTICLE{Lee03,
+  AUTHOR = "M. Lee and M. Feig and F. Salsbury and Brooks, III, C.",
+  YEAR = "2003",
+  TITLE = "New analytical approximation to the standard molecular volume definition and its application to generalized {B}orn calculations",
+  JOURNAL = JCC,
+  VOLUME = "24",
+  PAGES = "1348-1356"
+
+}
+
+@ARTICLE{Duncan93,
+  AUTHOR = "B. Duncan and A. Olson",
+  YEAR = "1993",
+  TITLE = "Shape analysis of molecular surface",
+  JOURNAL = "Biopolymers",
+  VOLUME = "33",
+  PAGES = "231--238"
+
+}
+
+@article{Bajaj05,
+  AUTHOR = "C. Bajaj and J. Castrillon-Candas and V. Siddavanahalli and Z. Xu",
+  TITLE = "Compressed Representations of Macromolecular Structures and Properties",
+  JOURNAL = "Structure",
+  VOLUME = 13,
+  PAGES = "463--471",
+  YEAR = 2005
+}
+
+%%%%%%%%% solvation energy %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@article{feigbrooks04,
+ author = "M. Feig and C. Brooks",
+ title = "{Recent advances in the development and application implicit solvent models in biomolecule simulations}",
+  journal = "Current Opinion in Structural Biology",
+  volume = 14,
+  pages = "217",
+  year = 2004
+}
+
+@BOOK{Jackson,
+   author = "J. Jackson",
+   title = "Classical Electrodynamics",
+   publisher = "John Wiley \& Sons",
+   edition = "Third",
+   year = 1998
+   }
+
+%%%%%%%%%%%% non-polarization energy %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@article{Sharp91,
+  author = "K. Sharp",
+  title = "Incorporating solvent and ion screening into molecular dynamics using the finite-difference {P}oisson-{B}oltzmann method",
+  journal = JCC,
+  volume = 12,
+  pages = "454--468",
+  year = 1991
+}
+
+@article{Gilson93,
+  author = "M. Gilson and M. Davis and B. Luty and J.A. McCammon",
+  title = "Computation of electrostatic forces on solvated molecules using the {P}oisson-{B}oltzmann equation",
+  journal = JPC,
+  volume = 97,
+  pages = "3591--3600",
+  year = 1993
+}
+
+@article{Hermann72,
+  author = "R. Hermann",
+  title = "Theory of hydrophobic bonding. {II}. {C}orrelation of hydrocarbon solubility in water with solvent cavity surface area",
+  journal = JPC,
+  volume = 76,
+  pages = "2754--2759",
+  year = 1972
+}
+
+@article{Simonson94,
+  author = "T. Simonson and A. Bruenger",
+  title = "Solvation Free Energies Estimated from Macroscopic Continuum Theory: An Accuracy Assessment",
+  journal = JPC,
+  volume = 98,
+  pages = "4683 -- 4694",
+  year = 1994
+}
+
+@article{Eisenberg86,
+  author = "D. Eisenberg and A. Mclachlan",
+  title = "Solvation energy in protein folding and binding",
+  journal = "Nature (London)",
+  volume = 319,
+  pages = "199--203",
+  year = 1986
+}
+
+@article{Lum99,
+  author = "K. Lum and D. Chandler and J. Weeks",
+  title = "Hydrophobicity at small and large length scales",
+  journal = JPCB,
+  volume = 103,
+  pages = "4570--4577",
+  year = 1999
+}
+
+@article{Week71,
+  author = "J. Weeks and D. Chandler and H. Andersen",
+  title = "Role of repulsive forces in determining the equilibrium structure of simple liquids",
+  journal = JCP,
+  volume = 54,
+  pages = "5237--5247",
+  year = 1971
+}
+
+@article{Chandler83,
+  author = "D. Chandler and J. Weeks and H. Andersen,",
+  title = "van der {W}aals Picture of Liquids, Solids, and Phase Transformations",
+  journal = "Science",
+  volume = 220,
+  pages = "787--794",
+  year = 1983
+}
+
+@article{Wagoner06,
+  author = "J. Wagoner and N.A. Baker",
+  title = "Assessing implicit models for nonpolar mean solvation forces: {T}he importance of dispersion and volume terms",
+  journal = PNAS,
+  volume = 103,
+  pages = "8331--8336",
+  year =2006
+}
+
+
+%%%%%%%%%%%%%%%%%%%% PB solver %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@article{Im98,
+  author = "W. Im and D. Beglov and B. Roux",
+  title = "Continuum solvation model: {C}omputation of electrostatic forces from numerical solutions to the {P}oisson-{B}oltzmann equation",
+  journal = CPC,
+  volume = 111,
+  pages = "59--75",
+  year = 1998
+}
+
+@article{Nina97,
+  author = "Nina, M. and Beglov, D. and Roux, B.",
+  title = "Atomic Radii for Continuum Electrostatics Calculations Based on Molecular Dynamics Free Energy Simulations",
+  journal = JPCB,
+  volume = 101,
+  pages = "5239--5248",
+  year = 1997
+}
+
+@article{Rocchia02,
+  author = "W. Rocchia and S. Sridharan and A. Nicholls and E. Alexov and A. Chiabrera and B. Honig",
+  title = "Rapid grid-based construction of the molecular surface and the use of induced surface charge to calculate reaction field energies: Applications to the molecular systems and geometric objects",
+  journal = JCC,
+  volume = 23,
+  pages = "128--137",
+  year = 2002
+}
+
+@article{Gilson87,
+  author = "M. Gilson and K. Sharp and B. Honig",
+  title = "Calculating the electrostatic potential of molecules in solution: Method and error assessment",
+  journal = JCC,
+  volume = 9,
+  pages = "327--335",
+  year = 1987
+}
+
+@article{Roux97,
+  author = "B. Roux",
+  title = "Influence of the membrane potential on the free energy of an intrinsic protein",
+  journal = "Biophys. J",
+  volume = 73,
+  pages = "2980--2989",
+  year = 1997
+}
+
+@article{Honig95,
+  author = "B. Honig and A. Nicholls",
+  title = "Classical electrostatics in biology and chemistry",
+  journal = "Science",
+  volume = 268,
+  pages = "1144--1149",
+  year = 1995
+}
+
+@article{Bashford97,
+  author = "Bashford, D.",
+  title = "An object-oriented programming suite for electrostatic effects in biological molecules",
+  journal = "Scientific Computing in Object-Oriented Parallel Environments, volume 1343 of Lecture Notes in Computer Science",
+  pages = "233--240",
+  year = 1997
+}
+
+@article{Baker00,
+  author = "N. Baker and M. Holst and F. Wang",
+  title = "Adaptive multilevel finite element solution of the {P}oisson-{B}oltzmann equation {II}. {R}efinement at solvent-accessible surfaces in biomolecular systems",
+  journal = JCC,
+  volume = 21,
+  pages = "1343--1352",
+  year = 2000
+}
+
+@article{Holst00,
+  author = "M. Holst and N. Baker and F. Wang",
+  title = "Adaptive multilevel finite element solution of the {P}oisson-{B}oltzmann equation {I}. {A}lgorithms and examples",
+  journal = JCC,
+  volume = 21,
+  pages = "1319--1342",
+  year = 2000
+}
+
+@article{Cortis97a,
+  author = "C. Cortis and R. Friesner",
+  title = "An automatic three-dimensional finite element mesh generation system for the {P}oisson-{B}oltzmann equation",
+  journal = JCC,
+  volume = 18,
+  pages = "1570--1590",
+  year = 1997
+}
+
+@article{Cortis97b,
+  author = "C. Cortis and R. Friesner",
+  title = "Numerical solution of the {P}oisson-{B}oltzmann equation using tetrahedral finite-element meshes",
+  journal = JCC,
+  volume = 18,
+  pages = "1591--1608",
+  year = 1997
+}
+
+@article{Abagyan94,
+  author = "R. Abagyan and M. Totrov and D. Kuznetsov",
+  title = "{ICM}--{A} new method for protein modeling and design: Applications to docking and structure prediction from the distorted native conformation",
+  journal = JCC,
+  volume = 15,
+  pages = "488--506",
+  year = 1994
+}
+
+@article{Totrov01,
+  author = "M. Totrov and R. Abagyan",
+  title = "Rapid boundary element solvation electrostatics calculations in folding simulations: Successful folding of a 23-residue peptide",
+  journal = "Biopolyms Peptide Sci",
+  volume = 60,
+  pages = "124--133",
+  year = 2001
+}
+
+@article{Madura95,
+  author = "J. Madura and J. Briggs and R. Wade and M. Davis and B. Luty and A. Ilin and J. Antosiewicz and M. Gilson and B. Bagheri and L. Scott and J.A. McCammon",
+  title = "Electrostatics and diffusion of molecules in solution: simulations with the {U}niversity of {H}ouston {B}rownian {D}ynamics program",
+  journal =CPC,
+  volume = 91,
+  pages = "57--95",
+  year = 1995
+}
+
+@article{Fogolari02,
+  author = "F. Fogolari and A. Brigo and H. Molinari",
+  title = "The {P}oisson-{B}oltzmann equation for biomolecular electrostatics: a tool for structural biology",
+  journal = "J. Molecular Recognition",
+  volume = 15,
+  pages = "377--392",
+  year = 2002
+}
+
+@article{Holst94,
+  author = "M. Holst",
+  title = "The {P}oisson-{B}oltzmann equation: Analysis and multilevel numerical solution",
+  year = "1994",
+  url = "citeseer.ifi.unizh.ch/holst94poissonboltzmann.html"
+}
+
+@article{Lu05,
+  author = "Lu, B. and D. Zhang and J.A. McCammon",
+  title = "Computation of electrostatic forces between solvated molecules determined by the {P}oisson-{B}oltzmann equation using a boundary element method",
+  journal = JCP,
+  volume = 122,
+  pages = "214102--214109",
+  year = 2005
+}
+
+@article{Lu07,
+  author = "B. Lu and X. Cheng and J.A. McCammon",
+  title = "New-version-fast-multipole-method accelerated electrostatic calculations in biomolecular systems ",
+  journal = JCP,
+  volume = 226,
+  pages = "1348--1366",
+  year = 2007
+}
+
+%%%%%%%%%%%%%% GB %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@article{Born20,
+  author = "M. Born",
+  title = "Volume and hydration warmth of ions",
+  journal = "Zeitschrift Fur Physik",
+  volume = 1,
+  pages = "45--48",
+  year = 1920
+}
+
+@article{Still90,
+  author = "W. Still and A. Tempczyk and R. Hawley and T. Hendrickson",
+  title = "Semianalytical treatment of solvation for molecular mechanics and dynamics",
+  journal = JACS,
+  volume = 112,
+  pages = "6127--6129",
+  year = 1990
+}
+
+@article{Scarci97,
+  author = "Scarsi, M. and Apostolakis, J. and Caflisch, A.",
+  title = "Continuum Electrostatic Energies of Macromolecules in Aqueous Solutions",
+  journal = JPCA,
+  volume = 101,
+  pages = "8098--8106",
+  year = 1997
+}
+
+@article{Hawkins95,
+  author = "G. Hawkins and C. Cramer and D. Truhlar",
+  title = "Pairwise solute descreening of solute charges from a dielectric medium",
+  journal = CPL,
+  volume = 246,
+  pages = "122--129",
+  year = 1995
+}
+
+@article{Hawkins96,
+  author = "G. Hawkins and C. Cramer and D. Truhlar",
+  title = "Parametrized Models of Aqueous Free Energies of Solvation Based on Pairwise Descreening of Solute Atomic Charges from a Dielectric Medium",
+  journal = JPC,
+  volume = 100,
+  pages = "19824 -- 19839",
+  year = 1996
+}
+
+@article{Schaefer96,
+  author = "M. Schaefer and M. Karplus",
+  title = "A Comprehensive Analytical Treatment of Continuum Electrostatics",
+  journal = JPC,
+  volume = 100,
+  pages = "1578--1599",
+  year = 1996
+}
+
+@article{Schaefer01,
+  author = "M. Schaefer and C. Bartels and F. Leclerc and M. Karplus",
+  title = "Effective atom volumes for implicit solvent models: comparison between Voronoi volumes and minimum fluctuation volumes",
+  journal = JCC,
+  volume = 22,
+  pages = "1857--1879",
+  year = 2001
+}
+
+@article{Qiu97,
+  author = "Qiu, D. and Shenkin, P. and Hollinger, F. and Still, W.",
+  title = "The GB/SA Continuum Model for Solvation. A Fast Analytical Method for the Calculation of Approximate {B}orn Radii",
+  journal = JPCA,
+  volume = 101,
+  pages = "3005--3014",
+  year = 1997
+}
+
+@article{Dominy99,
+  author = "Dominy, B. and Brooks, III, C.",
+  title = "Development of a Generalized {B}orn Model Parametrization for Proteins and Nucleic Acids",
+  journal = JPCB,
+  volume = 103,
+  pages = "3765--3773",
+  year = 1999
+}
+
+@article{Scarsi97,
+  author = "Scarsi, M. and Apostolakis, J. and Caflisch, A.",
+  title = "Continuum Electrostatic Energies of Macromolecules in Aqueous Solutions",
+  journal = JPCA,
+  volume = 101,
+  pages = "8098--8106",
+  year = 1997
+}
+
+@article{Ghosh98,
+  author = "Ghosh, A. and Rapp, C. and Friesner, R.",
+  title = "Generalized {B}orn Model Based on a Surface Integral Formulation",
+  journal = JPCB,
+  volume = 102,
+  pages = "10983-10990",
+  year = 1998
+}
+
+@article{Lee02,
+  author = "M. Lee and Salsbury, Jr., F. and Brooks, III, C.",
+  title = "Novel generalized {B}orn methods",
+  journal = JCP,
+  volume = 116,
+  pages = "10606--10614",
+  year = 2002
+}
+
+@article{Lee03,
+  author = "M. Lee and M. Feig and Salsbury, Jr., F. and Brooks, III, C.",
+  title = "New analytic approximation to the standard molecular volume definition and its application to generalized {B}orn calculations",
+  journal = JCC,
+  volume = 24,
+  pages = "1348--1356",
+  year = 2003
+}
+
+@article{Im03,
+  author = "W. Im and M. Lee and Brooks, III, C.",
+  title = "Generalized {B}orn model with a simple smoothing function",
+  journal = JCC,
+  volume = 24,
+  pages = "1691--1702",
+  year = 2003
+}
+
+@article{Tsui00,
+  author = "Tsui, V. and Case, D.",
+  title = "Molecular Dynamics Simulations of Nucleic Acids with a Generalized {B}orn Solvation Model",
+  journal = JACS,
+  volume = 122,
+  pages = "2489--2498",
+  year = 2000
+}
+
+@article{Tsui01,
+  author = "V. Tsui and D. Case",
+  title = "Theory and applications of the generalized {B}orn solvation model in macromolecular simulations",
+  journal = "Biopolymers",
+  volume = 56,
+  pages = "275--291",
+  year = 2001
+}
+
+@article{Onufriev00,
+  author = "Onufriev, A. and Bashford, D. and Case, D.",
+  title = "Modification of the Generalized {B}orn Model Suitable for Macromolecules",
+  journal = JPCB,
+  volume = 104,
+  pages = "3712--3720",
+  year = 2000
+}
+
+@article{Jayaram98a,
+  author = "Jayaram, B. and Sprous, D. and Beveridge, D.",
+  title = "Solvation Free Energy of Biomacromolecules: Parameters for a Modified Generalized {B}orn Model Consistent with the {AMBER} Force Field",
+  journal = JPCB,
+  volume = 102,
+  pages = "9571--9576",
+  year = 1998
+}
+
+@article{Jayaram98b,
+  author = "B. Jayaram and Y. Liu and D. Beveridge",
+  title = "A modification of the generalized {B}orn theory for improved estimates of solvation energies and pK shifts",
+  journal = JCP,
+  volume = 109,
+  pages = "1465--1471 ",
+  year = 1998
+}
+
+@article{Bashford00,
+  author = "D. Bashford and D. A. Case",
+  title = "Generalized {B}orn models of macromolecular solvation effects",
+  journal = ARPC,
+  volume = 51,
+  pages = "129--152",
+  year = 2000
+}
+
+@article{Case05,
+  author = "Case, D. and Cheatham, III, T. and Darden, T. and H. Gohlke and R. Luo and Merz, Jr., K. and A. Onufriev and C. Simmerling and B. Wang and R. Woods",
+  title = "The {A}mber biomolecular simulation programs",
+  journal = JCC,
+  volume = 26,
+  pages = "1668--1688",
+  year = 2005
+}
+
+%%%%%%%%%%%%%% comparation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@article{Feig04,
+  author = "M. Feig and A. Onufriev and M. Lee and W. Im and D. Case and Brooks, III, C.",
+  title = "Performance comparison of generalized {B}orn and {P}oisson methods in the calculation of electrostatic solvation energies for protein structures",
+  journal = JCC,
+  volume = 25,
+  pages = "265--284",
+  year = 2004
+}
+
+@article{Calimet01,
+  author = {N. Calimet and M. Schaefer and T. Simonson},
+  title = {Protein molecular dynamics with the generalized {Born/ACE} solvent model},
+  journal = PROTEINS,
+  volume = 45,
+  pages = {144--158},
+  year = 2001
+}
+
+@article{Gallicchio04,
+  author = {E. Gallicchio and R. M. Levy},
+  title = {{AGBNP}: An analytic implicit solvent model suitable for molecular dynamics simulations and high-resolution modeling},
+  journal = JCC,
+  volume = 25,
+  pages = {479--499},
+  year = 2004
+}
+
+
+%%%%%%%%%%%%%% numerical implimentation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@book{PJDavis,
+  author = "P. Davis and P. Rabinowitz",
+  title = "Methods of numerical integration",
+  publisher = "Dover",
+   edition = "Second",
+   year = 2007
+}
+
+@article{Dunavant85,
+  author = "D. Dunavant",
+  title = "High degree efficient symmetrical {G}aussian quadrature rules for the triangle",
+  journal = "Int. J. Numer. Meth. Engng.",
+  volume = 21,
+  pages = "1129--1148",
+  year = 1985
+}
+
+@article{Lebedev99,
+  author = "V. Lebedev and D. Laikov",
+  title = "A Quadrature Formula for the sphere of the 131th Algebraic Order of Accuracy",
+  journal = "Doklady Mathematics",
+  volume = 59,
+  pages = "477--481",
+  year = 1999
+}
+
+%%%%%%%%%%%%%% protein-protein interface %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@article{Cazals05a,
+  author = "F. Cazals and F. Proust",
+  title = "Revisiting the description of protein-protein interfaces. {P}art {I}: {A}lgorithms",
+  journal = "Unite de recherche INRIA Sophia Antipolis",
+  Number = 5346,
+  year = 2005
+}
+
+@article{Cazals05b,
+  author = "F. Cazals and F. Proust",
+  title = "Revisiting the description of protein-protein interfaces. {P}art {II}: {E}xperimental study",
+  journal = "Unite de recherche INRIA Sophia Antipolis",
+  Number = 5501,
+  year = 2005
+}
+
+%%%%%%%%%%%%%%% fast multipole %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@article{Greengard87,
+  author = "Greengard, L. and Rokhlin, V.",
+  title = "A fast algorithm for particle simulations",
+  journal = JCP,
+  volume = 73,
+  pages = "325--348",
+  year = 1987
+}
+
+%%%%%%%%%%%%%% MD %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@article{Cheatham00,
+  author = "T. Cheatham and P. Kollman",
+  title = "Molecular dynamics simulation of nucleic acid",
+  journal = ARPC,
+  volume = 51,
+  pages = "435--471",
+  year = 2000
+}
+
+@article{Cornell95,
+  author = "W. Cornell and P. Cieplak and C. Bayly and I. Gould and Merz, Jr., K. and D. Ferguson and D. Spellmeyer and T. Fox and J. Caldwell and P. Kollman",
+  title = "A second generation force field for the simulation of proteins, nucleic acids, and organic molecules",
+  journal = JACS,
+  volume = 117,
+  pages = "5179--5197",
+  year = 1995
+}
+
+@article{Cheatham96,
+  author = "T. Cheatham and P. Kollman",
+  title = "Observation of the {A-DNA} to {B-DNA} transition during unrestrained molecular dynamics in aqueous solution",
+  journal = JMB,
+  volume = 259,
+  pages = "434--444",
+  year = 1996
+}
+
+@article{Steinbach,
+  author = "P. Steinbach",
+  title = "Introduction to macromolecular simulation",
+  journal = "http://cmm.cit.nih.gov/initro simulation"
+}
+
+
+%%%%%%%%%%%%%% MMPBSA %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@article{Lee00,
+  author = "M. Lee and Y. Duan and P. Kollman",
+  title = "Use of MM-PB/SA in estimating the free energies of proteins: application to native, intermediates, and unfolded villin headpiece",
+  journal = PROTEINS,
+  volume = 39,
+  pages = "309--316",
+  year = 2000
+}
+
+@article{Srinivasan98,
+  author = "J. Srinivasan and T. Cheatham and P. Cieplak and P. Kollman and D. Case",
+  title = "Continuum solvent studies of the stability of {DNA}, {RNA}, and phosphoramidate-{DNA} helices",
+  journal = JACS,
+  volume = 120,
+  pages = "9401--9409",
+  year = 1998
+}
+
+@article{Srinivasan99,
+  author = "J. Srinivasan and M. Trevathan and P. Beroza and D. Case",
+  title = "Application of a pairwise generalized {B}orn model to proteins and nucleic acids: inclusion of salt effects",
+  journal = "Theor. Chem. Accts.",
+  volume = 101,
+  pages = "426--434",
+  year =1999
+}
+
+@article{Levitt95,
+  author = "M. Levitt and M. Hirshberg and R. Sharon and V. Daggett",
+  title = "Potential energy function and parameters for simulations of the molecular dynamics of proteins and nucleic acids in solution",
+  journal = "Comp. Phys. Comm.",
+  volume = 91,
+  pages = "215--231",
+  year = 1995
+}
+
+@article{Kollman00,
+  author = "P. Kollman and I. Massova and C. Reyes and B. Kuhn and S. Huo and L. Chong and M. Lee and T. Lee and Y. Duan and W. Wang and O. Donini and P. Cieplak and J. Srinivasan and D. Case and T. Cheatham",
+  title = "Calculating structures and free energies of complex molecules: combining molecular mechanics and continuum models",
+  journal = ACR,
+  volume = 33,
+  pages = "889--897",
+  year = 2000
+}
+
+%%%%%%%%%%%%%% Binding %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@article{Gilson88,
+  author = "M. Gilson and B. Honig",
+  title = "Calculation of the total electrostatic energy of a macromolecular system: solvation energies, binding energies, and conformational analysis",
+  journal = PROTEINS,
+  volume = 4,
+  pages = "7--18",
+  year = 1988
+}
+
+@article{Massova99,
+  author = "I. Massova and P. Kollman",
+  title = "Computational alanine scanning to probe protein-protein interactions: A novel approach to evaluate binding free energies",
+  journal = JACS,
+  volume = 121,
+  pages = "8133--8143",
+  year = 1999
+}
+
+@article{Huo02,
+  author = "S. Huo and I. Massova and P. Kollman",
+  title = "Computational alanine scanning of the 1:1 human growth hormone-receptor complex",
+  journal = JCC,
+  volume = 23,
+  pages = "15--27",
+  year = 2002
+}
+
+@article{Kuhn00,
+  author = "B. Kuhn and P. Kollman",
+  title = "A ligand that is predicted to bind better to avidin than biotin: insights from computational fluorine scanning",
+  journal = JACS,
+  volume = 122,
+  pages = "3909--3916",
+  year = 2000
+}
+
+%%%%%%%%%%%%%% Fast Summation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@article{Potts03,
+  author = "D. Potts and G. Steidl",
+  title = "Fast summation at nonequispaced knots by {NFFT}s",
+  journal = "SIAM J. Sci. Comput.",
+  volume = 24,
+  pages = "2013--2037",
+  year = 2003
+}
+
+@inbook{PottsTutorial,
+  author = "D. Potts and G. Steidl and M. Tasche",
+  title = "{Fast Fourier transforms for nonequispaced data: A tutorial, in Modern Samplling Theory: mathematics and Applications}",
+  editor = "{J. Benedetto and P. Ferreira}",
+  publisher = "Birkhauser",
+  pages = "247--270",
+  year = 2001
+}
+
+%%%%%%%%%%%%%% Quadrature %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@article{Dunavant85,
+  author = "D. Dunavant",
+  title = "High degree efficient symmetrical {G}aussian quadrature rules for the triangle",
+  journal = "Int. J. Numer. Meth. Engng.",
+  volume = 21,
+  pages = "1129--1148",
+  year = 1985
+}
+
+%%%%%%%%%%%%%% PDB2PQR %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@article{Dolinsky04,
+  author = "T. Dolinsky and J. Nielsen and J.A. McCammon and N. Baker",
+  title = "PDB2PQR: an automated pipeline for the setup of {P}oisson-{B}oltzmann electrostatics calculations",
+  journal = "Nucleic Acids Research",
+  volume = 32,
+  pages = "665--667",
+  year = 2004
+}
+
+%%%%%%%%%%%%% geometry %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@article{Bajaj07,
+ author = "C. Bajaj and V. Siddavanahalli and W. Zhao",
+ title = "Fast algorithms for molecular interface triangulations and solvation energy computations",
+ journal = "{ICES Report}",
+ volume = "07-06",
+ year = 2007
+}
+
+@article{Zhao09,
+  author = "W. Zhao and G. Xu and C. Bajaj",
+  title = "An algebraic spline model of molecular surfaces",
+  journal = "IEEE/ACM Transactions on Computational Biology and Bioinformatics",
+   volume ="{Accepted for Publication}",
+  year =2009
+}
+
+
+@article{Zhao07,
+  author = "W. Zhao and G. Xu and C. Bajaj",
+  title = "An algebraic spline model of molecular surfaces",
+  journal = "ACM Symp. Sol. Phys. Model.",
+  volume = 2007,
+  pages = "297--302",
+  year = 2007
+}
+
+@article{Ju02,
+  author = "T. Ju and F. Losasso and S. Schaefer and J. Warren",
+  title = "Dual Contouring of Hermite Data",
+  journal = "Proceedings of {ACM SIGGRAPH}",
+  pages = "339--346",
+  year = 2002
+}
+
+@article{Zhang06,
+  author = "Y. Zhang and G. Xu and C. Bajaj",
+  title = "Quality meshing of implicit solvation models of biomolecular structures",
+  journal = CAGD,
+  volume = 23,
+  pages = "510--530",
+  year = 2006
+}
+
+@article{Garland98,
+  author = "M. Garland and P. Heckbert",
+  title = "Simplifying surfaces with color and texture using quadric error metrics",
+  journal = "IEEE Visualization",
+  pages = "263--270",
+  year = 1998
+}
+
+@article{Gao1989,
+  author = "J. Gao and K. Kuczera and B. Tidor and M. Karplus",
+  title = "Hidden thermodynamics of mutant proteins: a molecular dynamics analysis",
+  journal = "Science",
+  volume = 244,
+  pages = "1069--1072",
+  year = 1989
+}
+
+@article{Roux99,
+  author = "B. Rouxa and T. Simonsonb",
+  title = "Implicit solvent models ",
+  journal = "Biophys. Chem.",
+  volume = 78,
+  pages = "1--20",
+  year = 1999
+}
+
+@article{Pierotti76,
+  author = "R. Pierotti",
+  title = "A scaled particle theory of aqueous and nonaqueous solutions",
+  journal = "Chem. Rev.",
+  volume = 76,
+  pages = "717--726",
+  year = 1976
+}
+
+@article{Sinanoglu81,
+  author = "O. Sinanoglu",
+  title = "Surface tension down to molecular dimensions and microthermodynamic surface areas of molecules or clusters",
+  journal = JCP,
+  volume = 75,
+  pages = "463--468",
+  year = 1981
+}
+
+@article{Tomasi94,
+  author = "J. Tomasi and M. Persico",
+  title = "Molecular Interactions in Solution: An Overview of Methods Based on Continuous Distributions of the Solvent",
+  journal = "Chem. Rev.",
+  volume = 94,
+  pages = "2027--2094",
+  year = 1994
+}
+
+@article{Tobias01,
+  author = "D. Tobias",
+  title = "Electrostatics calculations: {R}ecent methodological advances and applications to membranes",
+  journal = COSB,
+  volume = 11,
+  pages = "253--C261",
+  year = 2001
+}
+
+@article{Yu06,
+  author = "Z. Yu and M. Jacobson and R. Friesner",
+  title = "What role do surfaces play in {GB} models? {A} new-generation of surface-generalized {B}orn model based on a novel {G}aussian surface fro biomolecules",
+  journal = JCC,
+  volume = 27,
+  pages = "72--89",
+  year = 2006
+}
+%%%%%%%%%%%%% coarse grained %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@article{Shih05,
+  author = "A. Shih and I. Denisov and J. Phillips and S. Sligar and K. Schulten",
+  title = "Molecular Dynamics Simulations of Discoidal Bilayers Assembled from Truncated Human Lipoproteins",
+  journal = "Biophys. J.",
+  volume = 88,
+  pages = "548--556",
+  year = 2005
+}
+
+
+@article{Bajaj09,
+author = {Chandrajit Bajaj and Wenqi Zhao},
+title = {Fast Molecular Solvation Energetics and Forces Computation},
+publisher = {SIAM},
+year = {2010},
+journal = {SIAM Journal on Scientific Computing},
+volume = {31},
+number = {6},
+pages = {4524--4552},
+keywords = {generalized Born; molecular surface; fast summation; error analysis},
+url = {http://link.aip.org/link/?SCE/31/4524/1},
+doi = {10.1137/090746173}
+}
+
+
+@MISC{CUFFT_FFTW,
+  howpublished = "http://www.science.uwaterloo.ca/~hmerz/CUDA\_benchFFT/",
+}
+
+
+@MISC{MolSurfReview,
+  author = "Michael L. Connolly",
+  title = "Molecular Surfaces: A Review",
+  howpublished = "http://www.netsci.org/Science/Compchem/feature14.html"
+}
+
+
+@techreport{CB10,
+   author      = {Rezaul Chowdhury and Chandrajit Bajaj},
+   title       = {Algorithms for Faster Molecular Energetics},
+   institution = {Department of Computer Sciences, The University of Texas at Austin},
+   year        = {2010},
+   number      = {TR-10-17}
+}
+
+
+@article{MWP+05,
+   Author = {Mintseris, Julian and Wiehe, Kevin and Pierce, Brian and Anderson, Robert and Chen, Rong and Janin, J. and Weng, Zhiping},
+   Title = {Protein-protein docking benchmark 2.0: An update},
+   Journal = {Proteins: Structure, Function, and Bioinformatics},
+   Volume = {60},
+   Number = {2},
+   Pages = {214-216},
+   URL = {http://zlab.bu.edu/zdock/benchmark.shtml},
+      Year = {2005} }
+
+@inproceedings{Grossman-2008,
+ author = {Grossman, J. P. and Young, Cliff and Bank, Joseph A. and Mackenzie, Kenneth and Ierardi, Douglas J. and Salmon, John K. and Dror, Ron O. and Shaw, David E.},
+ title = {Simulation and embedded software development for Anton, a parallel machine with heterogeneous multicore ASICs},
+ booktitle = {CODES/ISSS '08: Proceedings of the 6th IEEE/ACM/IFIP international conference on Hardware/Software codesign and system synthesis},
+ year = {2008},
+ isbn = {978-1-60558-470-6},
+ pages = {125--130},
+ location = {Atlanta, GA, USA},
+ doi = {http://doi.acm.org/10.1145/1450135.1450165},
+ publisher = {ACM},
+ address = {New York, NY, USA}
+ }
+
+
+@article{Hess-2008,
+  author = {Berk Hess and Carsten Kutzner and David van der Spoel and Erik Lindahl},
+  title = {GROMACS 4: Algorithms for Highly Efficient, Load-Balanced, and Scalable Molecular Simulation},
+  journal = {Journal of Chemical Theory and Computation},
+  number = {3},
+  pages = {435-447},
+  url = {http://pubs.acs.org/doi/abs/10.1021/ct700301q},
+  volume = {4},
+  year = {2008},
+  doi = {10.1021/ct700301q}
+}
+
+
+@inproceedings{Bowers-2006,
+ author = {Bowers, Kevin J. and Chow, Edmond and Xu, Huafeng and Dror, Ron O. and Eastwood, Michael P. and Gregersen, Brent A. and Klepeis, John L. and Kolossvary, Istvan and Moraes, Mark A. and Sacerdoti, Federico D. and Salmon, John K. and Shan, Yibing and Shaw, David E.},
+ title = {Scalable algorithms for molecular dynamics simulations on commodity clusters},
+ booktitle = {SC '06: Proceedings of the 2006 ACM/IEEE conference on Supercomputing},
+ year = {2006},
+ isbn = {0-7695-2700-0},
+ pages = {84},
+ location = {Tampa, Florida},
+ doi = {http://doi.acm.org/10.1145/1188455.1188544},
+ publisher = {ACM},
+ address = {New York, NY, USA}
+ }
+
+
+@article{Phillips-2005,
+	author = {Phillips, J. C.  and Braun, R.  and Wang, W.  and Gumbart, J.  and Tajkhorshid, E.  and Villa, E.  and Chipot, C.  and Skeel, R. D.  and Kal\'{e}, L.  and Schulten, K. },
+	title = {Scalable molecular dynamics with NAMD},
+	doi = {10.1002/jcc.20289},
+	issn = {0192-8651},
+	journal = {J Comput Chem},
+	keywords = {dynamics, molecular},
+	month = {December},
+	number = {16},
+	pages = {1781--1802},
+	url = {http://dx.doi.org/10.1002/jcc.20289},
+	volume = {26},
+	year = {2005}
+}
+
+	
+@article{Stone-2007,
+	author = {Stone, John  and Phillips, James  and Freddolino, Peter  and Hardy, David  and Trabuco, Leonardo  and Schulten, Klaus},
+	title = {Accelerating molecular modeling applications with graphics processors},
+	doi = {10.1002/jcc.20829},
+	issn = {0192-8651},
+	journal = {J Comput Chem},
+	number = {16},
+	pages = {2618--2640},
+	volume = {28},
+	keywords = {cuda, gpu},
+	month = {September},
+	url = {http://dx.doi.org/10.1002/jcc.20829},
+	year = {2007}
+}
+
+
+@article{Barnes-1986,
+   Author = {Barnes, Josh and Hut, Piet},
+   Title = {A hierarchical {$O(N\log N)$} force-calculation algorithm},
+   Journal = {Nature},
+   Volume = {324},
+   Number = {6096},
+   Pages = {446--449},
+   Year = {1986} 
+}
+
+
+@article{Greengard-1987,
+ author = {Greengard, L. and Rokhlin, V.},
+ title = {A fast algorithm for particle simulations},
+ journal = {J. Comput. Phys.},
+ volume = {73},
+ number = {2},
+ year = {1987},
+ issn = {0021-9991},
+ pages = {325--348},
+ doi = {http://dx.doi.org/10.1016/0021-9991(87)90140-9},
+ publisher = {Academic Press Professional, Inc.},
+ address = {San Diego, CA, USA}
+ }
+
+
+@article{Board-1992,
+	title = {Accelerated molecular dynamics simulation with the parallel fast multipole algorithm},
+	author = {Board, John  A.  and Causey, Jeffrey  W.  and Leathrum, James  F.  and Windemuth, Andreas   and Schulten, Klaus  },
+	doi = {10.1016/0009-2614(92)90053-P},
+	journal = {Chemical Physics Letters},
+	month = {October},
+	number = {1-2},
+	pages = {89--94},
+	url = {http://dx.doi.org/10.1016/0009-2614(92)90053-P},
+	volume = {198},
+	year = {1992}
+}
+
+
+@article{Cheng-1999,
+ author = {Cheng, H. and Greengard, L. and Rokhlin, V.},
+ title = {A fast adaptive multipole algorithm in three dimensions},
+ journal = {J. Comput. Phys.},
+ volume = {155},
+ number = {2},
+ year = {1999},
+ issn = {0021-9991},
+ pages = {468--498},
+ doi = {http://dx.doi.org/10.1006/jcph.1999.6355},
+ publisher = {Academic Press Professional, Inc.},
+ address = {San Diego, CA, USA}
+ }
+
+
+@book{Hockney-1988,
+ author = {Hockney, R. W. and Eastwood, J. W.},
+ title = {Computer simulation using particles},
+ year = {1988},
+ isbn = {0-85274-392-0},
+ publisher = {Taylor \& Francis, Inc.},
+ address = {Bristol, PA, USA}
+ }
+
+
+@misc{Pollock-1995,
+	title = {Comments on {PPPM}, {FMM}, and the {Ewald} Method for Large Periodic {Coulombic} Systems},
+	author = {Pollock, E. L.  and Glosli, Jim  },
+	keywords = {electrostatics, ewald, multipole},
+	month = {Nov},
+	url = {http://arxiv.org/abs/cond-mat/9511134},
+	year = {1995}
+}
+
+
+@article{Darden-1993,
+	author = {Darden, T.  and York, D.  and Pedersen, L. },
+	title = {Particle mesh {Ewald}: An {$N\cdot\log{(N)}$} method for {Ewald} sums in large systems},
+	journal = {Journal of Chemical Physics},
+	pages = {10089--10092},
+	volume = {89},
+	year = {1993}
+}
+
+		
+@article{Essmann-1995,
+	author = {Essmann, Ulrich   and Perera, Lalith   and Berkowitz, Max  L.  and Darden, Tom   and Lee, Hsing   and Pedersen, Lee  G. },
+	title = {A smooth particle mesh {Ewald} method},
+	doi = {10.1063/1.470117},
+	journal = {The Journal of Chemical Physics},
+	number = {19},
+	pages = {8577--8593},
+	publisher = {AIP},
+	url = {http://dx.doi.org/10.1063/1.470117},
+	volume = {103},
+	year = {1995}
+}
+
+
+@article{Skeel-2002,
+	author = {Skeel, Robert  D.  and Tezcan, Ismail   and Hardy, David  J. },
+	title = {Multiple grid methods for classical molecular dynamics},
+	doi = {10.1002/jcc.10072},
+	journal = {Journal of Computational Chemistry},
+	number = {6},
+	pages = {673--684},
+	url = {http://dx.doi.org/10.1002/jcc.10072},
+	volume = {23},
+	year = {2002}
+}
+
+@phdthesis{Hardy-2006,
+ author = {Hardy, David Joseph},
+ note = {Adviser-Skeel, Robert D.},
+ title = {Multilevel summation for the fast evaluation of forces for the simulation of biomolecules},
+ year = {2006},
+ isbn = {978-0-542-77415-7},
+ order_no = {AAI3223608},
+ publisher = {University of Illinois at Urbana-Champaign},
+ address = {Champaign, IL, USA}
+ }
+
+
+@ARTICLE{grant95gaussian,
+  AUTHOR =       {J. Grant and B. Pickup},
+  TITLE =        {A Gaussian description of molecular shape},
+  JOURNAL =      {Journal of Physical Chemistry},
+  YEAR =         {1995},
+  volume =       {99},
+  pages =        {3503--3510},
+}
+
+
+@ARTICLE{lee71interpretation,
+  AUTHOR =       "B. Lee and F. Richards",
+  TITLE =        "The interpretation of protein structures: estimation of static accessibility",
+  JOURNAL =      "Journal of Molecular Biology",
+  YEAR =         "1971",
+  volume =       "55",
+  number =       "3",
+  pages =        "379--400",
+  month =        "February"
+}
+
+
+@ARTICLE{richards77areas,
+  AUTHOR =       "F. Richards",
+  TITLE =        "Areas, Volumes, Packing, and Protein Structure",
+  JOURNAL =      "Annual Review of Biophysics and Bioengineering",
+  YEAR =         "1977",
+  volume =       "6",
+  pages =        "151--176",
+  month =        "June"
+}
+
+
+
+
+@ARTICLE{Wagoner2006,
+  author = {Wagoner, J. and Baker, N. A.},
+  title = {Assessing implicit models for nonpolar mean solvation forces: The
+	importance of dispersion and volume terms},
+  journal = {Proc. Natl. Acad. Sci. USA},
+  year = {2006},
+  volume = {103},
+  pages = {8331--8336},
+
+}
+
+@inproceedings{BCR09,
+ author = {Bajaj, Chandrajit and Chowdhury, Rezaul Alam and Rasheed, Muhibur},
+ title = {A dynamic data structure for flexible molecular maintenance and informatics},
+ booktitle = {SIAM/ACM Conf. Geom. Phys. Model.},
+ year = {2009},
+ isbn = {978-1-60558-711-0},
+ pages = {259--270},
+ location = {San Francisco, California},
+ doi = {http://doi.acm.org/10.1145/1629255.1629287},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ }
+
+
+@ARTICLE{Grycuk03,
+  AUTHOR = "Tomasz Grycuk",
+  YEAR = "2003",
+  TITLE = "Deficiency of the Coulomb-field approximation in the generalized Born model: An improved formula for Born radii evaluation",
+  JOURNAL = JCP,
+  VOLUME = "119",
+  PAGES = "4817-4826"
+}
+
+
+@article{GBr6,
+  author = "Harianto Tjong and Huan-Xiang Zhou",
+  title = "GBr$^6$: A Parameterization-Free, Accurate, Analytical Generalized Born Method",
+  journal = JPCB,
+  volume = 111,
+  pages = "3055--3061",
+  year = 2007
+}
+
+@article{BZ09,
+author = {Chandrajit Bajaj and Wenqi Zhao},
+title = {Fast Molecular Solvation Energetics and Forces Computation},
+publisher = {SIAM},
+year = {2010},
+journal = {SIAM Journal on Scientific Computing},
+volume = {31},
+number = {6},
+pages = {4524-4552},
+keywords = {generalized Born; molecular surface; fast summation; error analysis},
+url = {http://link.aip.org/link/?SCE/31/4524/1},
+doi = {10.1137/090746173}
+}
+
+
+@article{Jackins80,
+author = {Chris L. Jackins and Steven L. Tanimoto},
+title = {Oct-trees and their use in representing three-dimensional objects},
+journal = {Computer Graphics and Image Processing},
+volume = {14},
+number = {3},
+pages = {249--270},
+year = {1980}
+}
+
+@article{Finkel74,
+  author    = {Raphael A. Finkel and
+               Jon Louis Bentley},
+  title     = {Quad Trees: A Data Structure for Retrieval on Composite
+               Keys},
+  journal   = {Acta Informatica},
+  volume    = {4},
+  year      = {1974},
+  pages     = {1--9}
+}
+
+
+@article{Black1991,
+   Author = {Black, S.D. and Mould, D.R.},
+   Title = {Development of Hydrophobicity Parameters to Analyze Proteins 
+            Which Bear Post- or Cotranslational Modifications},
+   Journal = {Anal. Biochem.},
+   Volume = {193},
+   Pages = {72--82},
+   Year = {1991} 
+}
+
+@misc{Kapcha-Rossky,
+  author = {L. Kapcha and P. Rossky},
+  howpublished = {Personal Communication, University of Texas at Austin}
+}
+
+
+@article{Brent74,
+ author = {Brent, Richard P.},
+ title = {The Parallel Evaluation of General Arithmetic Expressions},
+ journal = {J. ACM},
+ volume = {21},
+ number = {2},
+ year = {1974},
+ issn = {0004-5411},
+ pages = {201--206},
+ doi = {http://doi.acm.org/10.1145/321812.321815},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ }
+
+@techreport{BS06,
+   author      = {Chandrajit Bajaj and Vinay Siddavanahalli},
+   title       = {Adaptive Grid Based Methods for Computing Molecular
+                  Surfaces and Properties},
+   institution = {Institute for Computational and Engineering Sciences, The University of Texas at Austin},
+   year        = {2006},
+   number      = {ICES Report 06-56}
+}
+
+@article{WCK00,
+  author    = {Junmei Wang and
+               Piotr Cieplak and
+               Peter A. Kollman},
+  title     = {How well does a restrained electrostatic potential (RESP)
+               model perform in calculating conformational energies of
+               organic and biological molecules?},
+  journal   = {Journal of Computational Chemistry},
+  volume    = {21},
+  number    = {12},
+  year      = {2000},
+  pages     = {1049-1074},
+  ee        = {http://dx.doi.org/10.1002/1096-987X(200009)21:12$<$1049::AID-JCC3$>$3.0.CO;2-F},
+  bibsource = {DBLP, http://dblp.uni-trier.de}
+}
+
+
+@book{pthreads-book,
+ author = {Butenhof, David R.},
+ title = {Programming with POSIX threads},
+ year = {1997},
+ isbn = {0-201-63392-2},
+ publisher = {Addison-Wesley Longman Publishing Co., Inc.},
+ address = {Boston, MA, USA},
+ }
+
+
+@inproceedings{Leiserson09,
+ author = {Leiserson, Charles E.},
+ title = {The {Cilk++} concurrency platform},
+ booktitle = {Proc. Annu. Des. Auto. Conf.},
+ year = {2009},
+ isbn = {978-1-60558-497-3},
+ pages = {522--527},
+ location = {San Francisco, California},
+ doi = {http://doi.acm.org/10.1145/1629911.1630048},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ }
+
+
+@inproceedings{Bender04,
+ author = {Bender, Michael A. and Fineman, Jeremy T. and Gilbert, Seth and Leiserson, Charles E.},
+ title = {On-the-fly maintenance of series-parallel relationships in fork-join multithreaded programs},
+ booktitle = SPAA,
+ year = {2004},
+ isbn = {1-58113-840-7},
+ pages = {133--144},
+ location = {Barcelona, Spain},
+ doi = {http://doi.acm.org/10.1145/1007912.1007933},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ }
+
+
+@article{Blumofe99,
+ author = {Blumofe, Robert D. and Leiserson, Charles E.},
+ title = {Scheduling multithreaded computations by work stealing},
+ journal = {J. ACM},
+ volume = {46},
+ number = {5},
+ year = {1999},
+ issn = {0004-5411},
+ pages = {720--748},
+ doi = {http://doi.acm.org/10.1145/324133.324234},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ }
+
+
+@inproceedings{Cheng98,
+ author = {Cheng, Guang-Ien and Feng, Mingdong and Leiserson, Charles E. and Randall, Keith H. and Stark, Andrew F.},
+ title = {Detecting data races in {Cilk} programs that use locks},
+ booktitle = SPAA,
+ year = {1998},
+ isbn = {0-89791-989-0},
+ pages = {298--309},
+ location = {Puerto Vallarta, Mexico},
+ doi = {http://doi.acm.org/10.1145/277651.277696},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ }
+
+
+@inproceedings{Feng97,
+ author = {Feng, Mingdong and Leiserson, Charles E.},
+ title = {Efficient detection of determinacy races in {Cilk} programs},
+ booktitle = SPAA,
+ year = {1997},
+ isbn = {0-89791-890-8},
+ pages = {1--11},
+ location = {Newport, Rhode Island, United States},
+ doi = {http://doi.acm.org/10.1145/258492.258493},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ }
+
+
+@inproceedings{Frigo09,
+ author = {Frigo, Matteo and Halpern, Pablo and Leiserson, Charles E. and Lewin-Berlin, Stephen},
+ title = {Reducers and other {Cilk++} hyperobjects},
+ booktitle = SPAA,
+ year = {2009},
+ isbn = {978-1-60558-606-9},
+ pages = {79--90},
+ location = {Calgary, AB, Canada},
+ doi = {http://doi.acm.org/10.1145/1583991.1584017},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ }
+
+
+@article{Frigo98,
+ author = {Frigo, Matteo and Leiserson, Charles E. and Randall, Keith H.},
+ title = {The implementation of the {Cilk-5} multithreaded language},
+ journal = {SIGPLAN Not.},
+ volume = {33},
+ number = {5},
+ year = {1998},
+ issn = {0362-1340},
+ pages = {212--223},
+ doi = {http://doi.acm.org/10.1145/277652.277725},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ }
+
+
+@inproceedings{He10,
+ author = {He, Yuxiong and Leiserson, Charles and Leiserson, William},
+ title = {{The Cilkview Scalability Analyzer (to appear)}},
+ booktitle = SPAA,
+ year = {2010},
+ }
+
+
+@TECHREPORT{CB10-1,
+  AUTHOR =       {Chowdhury, Rezaul Alam and Bajaj, Chandrajit},
+  TITLE =        {Algorithms for Faster Molecular Energetics, Forces and Interfaces},
+  INSTITUTION =  {Department of Computer Sciences, The University of Texas at Austin},
+  YEAR =         {2010},
+  type =         {CS Technical report},
+  number =       {TR-10-17},
+  address =      {Austin, TX, USA 78712.},
+  month =        {August},
+}
+
+
+@TECHREPORT{CB10-2,
+  AUTHOR =       {Chowdhury, Rezaul Alam and Bajaj, Chandrajit},
+  TITLE =        {Algorithms for Faster Molecular Energetics, Forces and Interfaces},
+  INSTITUTION =  {Institute for Computational Engineering \& Science, The University of Texas at Austin},
+  YEAR =         {2010},
+  type =         {ICES report},
+  number =       {10-32},
+  address =      {Austin, TX, USA 78712.},
+  month =        {August},
+}
+
+
+@article{Morris-96,
+   author = {Morris, Garrett M. and Goodsell, David S. and Huey, Ruth and Olson, Arthur J.},
+   title = {Distributed automated docking of flexible ligands to proteins: {P}arallel applications of {AutoDock} 2.4},
+   journal = {Journal of Computer-Aided Molecular Design},
+   publisher = {Springer Netherlands},
+   issn = {0920-654X},
+   keyword = {Biomedical and Life Sciences},
+   pages = {293--304},
+   volume = {10},
+   issue = {4},
+   url = {http://dx.doi.org/10.1007/BF00124499},
+   note = {10.1007/BF00124499},
+   year = {1996}
+}
+
+
+@article{Weiner-84,
+   author = {Scott J. Weiner and Peter A. Kollman and David A. Case and U. Chandra Singh and Caterina Ghio and Guliano Alagona and Salvatore Profeta and Paul Weiner},
+   title = {A new force field for molecular mechanical simulation of nucleic acids and proteins},
+   journal = {Journal of the American Chemical Society},
+   pages = {765--784},
+   volume = {106},
+   issue = {3},
+   year = {1984}
+}
+
+
+@article{Gabb1997,
+   Author = {Gabb, H. A. and Jackson, R. M. and Sternberg, M. J. E.},
+   Title = {Modelling Protein Docking using Shape Complementarity,Electrostatics and Biochemical Information},
+   Journal = {Journal of Molecular Biology},
+   Volume = {272},
+   Number = {1},
+   Pages = {106-120},
+   Year = {1997} 
+}
+
+
+@article{Jones1997,
+author = {Susan Jones and Janet M. Thornton},
+title = {Analysis of protein-protein interaction sites using surface patches},
+journal = {Journal of Molecular Biology},
+volume = {272},
+number = {1},
+pages = {121--132},
+year = {1997}
+}
+
+
+
+@article{Glaser2001,
+author = {Fabian Glaser and David M. Steinberg and Ilya A. Vakser and Nir Ben-Tal},
+title = {Residue Frequencies and Pairing Preferences at Protein–Protein Interfaces},
+journal = {PROTEINS: Structure, Function, and Genetics},
+volume = {43},
+pages = {89–-102},
+year = {2001}
+}

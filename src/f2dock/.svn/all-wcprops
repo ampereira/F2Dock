@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/repos/cvc/!svn/ver/5206/trunk/F2Dock-refactored/src/f2dock
+END
+Docking.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/cvc/!svn/ver/5206/trunk/F2Dock-refactored/src/f2dock/Docking.cpp
+END
+TopValues.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/src/f2dock/TopValues.cpp
+END
+CMakeLists.lonestar
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/cvc/!svn/ver/3685/trunk/F2Dock-refactored/src/f2dock/CMakeLists.lonestar
+END
+F2Dock.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/cvc/!svn/ver/5206/trunk/F2Dock-refactored/src/f2dock/F2Dock.cpp
+END
+ValuePosition3D.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/src/f2dock/ValuePosition3D.cpp
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/cvc/!svn/ver/4750/trunk/F2Dock-refactored/src/f2dock/CMakeLists.txt
+END

@@ -1,0 +1,23 @@
+
+staticMolecule /net/neutron/workspace/muhibur/scratch/F2Dock-refactored/tests/1AHW_R_U_1.7.f2d
+movingMolecule /net/neutron/workspace/muhibur/scratch/F2Dock-refactored/tests/1AHW_L_U.f2d
+staticMoleculePQR /net/neutron/workspace/muhibur/scratch/F2Dock-refactored/tests/1AHW_R_U.pqr
+movingMoleculePQR /net/neutron/workspace/muhibur/scratch/F2Dock-refactored/tests/1AHW_L_U.pqr
+staticMoleculeQUAD /net/neutron/workspace/muhibur/scratch/F2Dock-refactored/tests/1AHW_R_U.quad
+movingMoleculeQUAD /net/neutron/workspace/muhibur/scratch/F2Dock-refactored/tests/1AHW_L_U.quad
+rmsdAtoms /net/neutron/workspace/muhibur/scratch/F2Dock-refactored/tests/1AHW_rmsd_backbone_unbound_10.0.txt
+outFile /net/neutron/workspace/muhibur/scratch/F2Dock-refactored/tests/1AHW_out.txt
+
+rotFile /net/neutron/workspace/muhibur/scratch/F2Dock-refactored/deg15.mtx
+numRot 100000
+effGridFile /net/neutron/workspace/muhibur/scratch/F2Dock-refactored/fftw-rank.txt
+
+complexType A
+numSolutions 20000
+rerank true
+numRerank 2000
+
+breakDownScores true
+
+numThreads 4
+

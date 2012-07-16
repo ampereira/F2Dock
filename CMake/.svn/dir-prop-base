@@ -1,0 +1,6 @@
+K 13
+svn:externals
+V 70
+cuda		https://svn.ices.utexas.edu/repos/cvc/trunk/FindCUDA/CMake/cuda
+
+END

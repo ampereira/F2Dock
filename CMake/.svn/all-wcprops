@@ -1,0 +1,101 @@
+K 25
+svn:wc:ra_dav:version-url
+V 36
+/repos/cvc/!svn/ver/5624/trunk/CMake
+END
+GetPrerequisites.cmake
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/repos/cvc/!svn/ver/5315/trunk/CMake/GetPrerequisites.cmake
+END
+SetupQt.cmake
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/repos/cvc/!svn/ver/3774/trunk/CMake/SetupQt.cmake
+END
+BundleUtilities.cmake
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/repos/cvc/!svn/ver/5315/trunk/CMake/BundleUtilities.cmake
+END
+SetupGSL.cmake
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/repos/cvc/!svn/ver/4261/trunk/CMake/SetupGSL.cmake
+END
+SetupBoost.cmake
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/repos/cvc/!svn/ver/4173/trunk/CMake/SetupBoost.cmake
+END
+FindFFTW.cmake
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/repos/cvc/!svn/ver/4560/trunk/CMake/FindFFTW.cmake
+END
+FindCGAL.cmake
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/repos/cvc/!svn/ver/3774/trunk/CMake/FindCGAL.cmake
+END
+ResolveCompilerPaths.cmake
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/repos/cvc/!svn/ver/3774/trunk/CMake/ResolveCompilerPaths.cmake
+END
+FindLog4cplus.cmake
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/repos/cvc/!svn/ver/4811/trunk/CMake/FindLog4cplus.cmake
+END
+FindPETSc.cmake
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/repos/cvc/!svn/ver/3774/trunk/CMake/FindPETSc.cmake
+END
+FindGSL.cmake
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/repos/cvc/!svn/ver/4144/trunk/CMake/FindGSL.cmake
+END
+SetupFFTW.cmake
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/repos/cvc/!svn/ver/3992/trunk/CMake/SetupFFTW.cmake
+END
+SetupCGAL.cmake
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/repos/cvc/!svn/ver/5559/trunk/CMake/SetupCGAL.cmake
+END
+FindCg.cmake
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/repos/cvc/!svn/ver/4507/trunk/CMake/FindCg.cmake
+END
+FindLapack.cmake
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/repos/cvc/!svn/ver/5624/trunk/CMake/FindLapack.cmake
+END
+FindPackageMultipass.cmake
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/repos/cvc/!svn/ver/3774/trunk/CMake/FindPackageMultipass.cmake
+END

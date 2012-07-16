@@ -1,0 +1,245 @@
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/src/libmol
+END
+subag.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/subag.cpp
+END
+matrix.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/cvc/!svn/ver/4526/trunk/F2Dock-refactored/src/libmol/matrix.cpp
+END
+move.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/move.cpp
+END
+myhelpers.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/myhelpers.cpp
+END
+mol2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/mol2.cpp
+END
+gbsa.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/gbsa.cpp
+END
+mem.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/mem.cpp
+END
+test.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/test.cpp
+END
+protein.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/protein.cpp
+END
+prms.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/prms.cpp
+END
+minimize.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/minimize.cpp
+END
+bond.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/bond.cpp
+END
+phys.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/phys.cpp
+END
+version.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/version.cpp
+END
+sasa.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/sasa.cpp
+END
+energy.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/energy.cpp
+END
+mask.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/mask.cpp
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/cvc/!svn/ver/4559/trunk/F2Dock-refactored/src/libmol/CMakeLists.txt
+END
+potential.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/potential.cpp
+END
+atom.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/src/libmol/atom.cpp
+END
+newgetline.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/cvc/!svn/ver/4526/trunk/F2Dock-refactored/src/libmol/newgetline.cpp
+END
+init.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/init.cpp
+END
+pdb.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/pdb.cpp
+END
+intcrds.cpp.back
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/intcrds.cpp.back
+END
+io.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/io.cpp
+END
+quaternions.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/quaternions.cpp
+END
+_atom_group_copy_from_deprecated.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/_atom_group_copy_from_deprecated.cpp
+END
+shield.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/shield.cpp
+END
+nbenergy.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/nbenergy.cpp
+END
+atom_group.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/atom_group.cpp
+END
+ms.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/ms.cpp
+END
+icharmm.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/icharmm.cpp
+END
+octree.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/octree.cpp
+END
+compare.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/compare.cpp
+END
+tvector.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/tvector.cpp
+END
+hbond.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/hbond.cpp
+END
+testHbond.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/testHbond.cpp
+END
+xyz.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/xyz.cpp
+END
+benergy.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/benergy.cpp
+END
+rotamers.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/rotamers.cpp
+END

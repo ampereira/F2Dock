@@ -1,0 +1,2 @@
+/usr/bin/ar cr ../../lib/libfast-resCont.a  CMakeFiles/fast-resCont.dir/resContFilter.cpp.o
+/usr/bin/ranlib ../../lib/libfast-resCont.a

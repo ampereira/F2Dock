@@ -1,0 +1,2 @@
+/usr/bin/ar cr ../../lib/libfast-LJ.a  CMakeFiles/fast-LJ.dir/fastLJ.cpp.o CMakeFiles/fast-LJ.dir/LJTest.cpp.o
+/usr/bin/ranlib ../../lib/libfast-LJ.a

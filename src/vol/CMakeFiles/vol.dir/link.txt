@@ -1,0 +1,2 @@
+/usr/bin/ar cr ../../lib/libvol.a  CMakeFiles/vol.dir/RAWIV.cpp.o
+/usr/bin/ranlib ../../lib/libvol.a

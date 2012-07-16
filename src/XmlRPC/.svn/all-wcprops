@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/repos/cvc/!svn/ver/4187/branches/TexMol-Qt4/src/XmlRPC
+END
+XmlRpcSocket.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/cvc/!svn/ver/3074/branches/TexMol-Qt4/src/XmlRPC/XmlRpcSocket.cpp
+END
+XmlRpcValue.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/repos/cvc/!svn/ver/3074/branches/TexMol-Qt4/src/XmlRPC/XmlRpcValue.cpp
+END
+XmlRpcUtil.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/cvc/!svn/ver/3074/branches/TexMol-Qt4/src/XmlRPC/XmlRpcUtil.cpp
+END
+XmlRpcClient.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/cvc/!svn/ver/3074/branches/TexMol-Qt4/src/XmlRPC/XmlRpcClient.cpp
+END
+XmlRpcDispatch.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/cvc/!svn/ver/3074/branches/TexMol-Qt4/src/XmlRPC/XmlRpcDispatch.cpp
+END
+XmlRpcSource.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/cvc/!svn/ver/3074/branches/TexMol-Qt4/src/XmlRPC/XmlRpcSource.cpp
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/cvc/!svn/ver/4187/branches/TexMol-Qt4/src/XmlRPC/CMakeLists.txt
+END
+XmlRpcServer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/cvc/!svn/ver/3074/branches/TexMol-Qt4/src/XmlRPC/XmlRpcServer.cpp
+END
+XmlRpcServerConnection.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/repos/cvc/!svn/ver/3074/branches/TexMol-Qt4/src/XmlRPC/XmlRpcServerConnection.cpp
+END
+XmlRpcServerMethod.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/cvc/!svn/ver/3074/branches/TexMol-Qt4/src/XmlRPC/XmlRpcServerMethod.cpp
+END

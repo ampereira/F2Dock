@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/repos/cvc/!svn/ver/4750/trunk/F2Dock-refactored/src/F2DockServer
+END
+F2DockServer.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/repos/cvc/!svn/ver/4750/trunk/F2Dock-refactored/src/F2DockServer/F2DockServer.cpp
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/repos/cvc/!svn/ver/4501/trunk/F2Dock-refactored/src/F2DockServer/CMakeLists.txt
+END

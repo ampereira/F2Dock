@@ -1,0 +1,2 @@
+/usr/bin/ar cr ../../lib/libfast-clash.a  CMakeFiles/fast-clash.dir/clashFilter.cpp.o
+/usr/bin/ranlib ../../lib/libfast-clash.a

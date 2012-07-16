@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/src/fast-GB
+END
+SSEApproxMath.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/cvc/!svn/ver/2950/trunk/F2Dock-refactored/src/fast-GB/SSEApproxMath.cpp
+END
+fastGpol.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/src/fast-GB/fastGpol.cpp
+END
+GpolTest.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/src/fast-GB/GpolTest.cpp
+END
+fastDispE.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/src/fast-GB/fastDispE.cpp
+END
+fastBornRadius.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/src/fast-GB/fastBornRadius.cpp
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/repos/cvc/!svn/ver/3304/trunk/F2Dock-refactored/src/fast-GB/CMakeLists.txt
+END

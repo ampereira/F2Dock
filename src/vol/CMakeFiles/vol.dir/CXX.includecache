@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/andre/F2Dock-refactored/src/vol/RAWIV.cpp
+stdio.h
+-
+stdlib.h
+-
+malloc.h
+-
+string.h
+-
+RAWIV.h
+/Users/andre/F2Dock-refactored/src/vol/RAWIV.h
+
+src/vol/../../inc/vol/../fft-utils/fftw3.h
+stdio.h
+-
+
+src/vol/../../inc/vol/../fft-utils/fftwPrecision.h
+
+src/vol/../../inc/vol/RAWIV.h
+../fft-utils/fftw3.h
+src/vol/../../inc/vol/../fft-utils/fftw3.h
+../fft-utils/fftwPrecision.h
+src/vol/../../inc/vol/../fft-utils/fftwPrecision.h
+

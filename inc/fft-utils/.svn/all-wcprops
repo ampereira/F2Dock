@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/repos/cvc/!svn/ver/3418/trunk/F2Dock-refactored/inc/fft-utils
+END
+fftw3.h
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/cvc/!svn/ver/3304/trunk/F2Dock-refactored/inc/fft-utils/fftw3.h
+END
+fastfft.h
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/repos/cvc/!svn/ver/3306/trunk/F2Dock-refactored/inc/fft-utils/fastfft.h
+END
+rank-fftw.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/repos/cvc/!svn/ver/3418/trunk/F2Dock-refactored/inc/fft-utils/rank-fftw.h
+END
+sparsefft3.h
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/repos/cvc/!svn/ver/3304/trunk/F2Dock-refactored/inc/fft-utils/sparsefft3.h
+END
+sparsefft3-timers.h
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/repos/cvc/!svn/ver/3304/trunk/F2Dock-refactored/inc/fft-utils/sparsefft3-timers.h
+END
+fftwPrecision.h
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/cvc/!svn/ver/3304/trunk/F2Dock-refactored/inc/fft-utils/fftwPrecision.h
+END

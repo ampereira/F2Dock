@@ -1,0 +1,24 @@
+------------------------------------------------
+|   F2Dock/GB-rerank 1.0 - Build/Installation   |
+------------------------------------------------
+XX XXXX -- xxxx@ices.utexas.edu -- 01/14/2010
+
+To build:
+$ cd $BUILD_DIR
+$ cmake $SOURCE_DIR
+$ make
+
+BUILD_DIR - a location to place files generated during the build.
+            It can be the same as the SOURCE_DIR
+SOURCE_DIR - The location of the project's root CMakeLists.txt file.
+
+The build process with produce the executables:
+
+bin/F2Dock
+bin/GB-rerank
+
+
+Requirements:
+
+F2Dock uses the fftw3 library.  
+

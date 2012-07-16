@@ -1,0 +1,11 @@
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/repos/cvc/!svn/ver/1762/trunk/FindCUDA/CMake/cuda
+END
+FindCUDA.cmake
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/repos/cvc/!svn/ver/1762/trunk/FindCUDA/CMake/cuda/FindCUDA.cmake
+END

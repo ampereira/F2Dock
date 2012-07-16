@@ -1,0 +1,1 @@
+/usr/bin/c++    -I='/User/andre/F2Dock-refactored/inc/' -O2 -Wl,-search_paths_first -Wl,-headerpad_max_install_names   CMakeFiles/F2DockServer.dir/F2DockServer.cpp.o  -o ../../bin/F2DockServer  ../../lib/libXmlRPC.a 

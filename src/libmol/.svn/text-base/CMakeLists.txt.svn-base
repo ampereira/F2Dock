@@ -1,0 +1,30 @@
+CMAKE_MINIMUM_REQUIRED (VERSION 2.6)
+
+
+FILE(GLOB SOURCE_FILES *.cpp)
+FILE(GLOB INCLUDE_FILES ../../inc/libmol/*.[Hh])
+
+SOURCE_GROUP("Source Files" FILES ${SOURCE_FILES})
+SOURCE_GROUP("Header Files" FILES ${HEADER_FILES})
+
+INCLUDE_DIRECTORIES(
+  ../../inc
+  ../../inc/libmol
+)
+
+LINK_DIRECTORIES(
+  $ENV{TACC_FFTW3_LIB}
+)
+
+ADD_LIBRARY (libmol STATIC ${SOURCE_FILES} ${INCLUDE_FILES})
+
+
+SET(LIBMOL_LINK_LIBS 
+  libmol
+  fft-utils
+  fftw3
+  pthread
+)
+
+#ADD_EXECUTABLE (test test.cpp)
+#TARGET_LINK_LIBRARIES(test ${LIBMOL_LINK_LIBS})

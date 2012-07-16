@@ -1,0 +1,113 @@
+10
+
+dir
+5808
+https://svn.ices.utexas.edu/repos/cvc/trunk/F2Dock-refactored/inc
+https://svn.ices.utexas.edu/repos/cvc
+
+
+
+2012-02-28T22:10:49.709696Z
+5206
+brrk
+has-props
+
+
+svn:externals
+
+
+
+
+
+
+
+
+
+
+5c445d63-28bb-4f35-9efd-764fef348d2b
+
+fast-hydro
+dir
+
+fast-GB
+dir
+
+fast-clash
+dir
+
+math
+dir
+
+misc-ident
+dir
+
+F2DockServer
+dir
+
+hbondFilter
+dir
+
+fast-LJ
+dir
+
+PG-range
+dir
+
+utils
+dir
+
+vol
+dir
+
+svnext.txt
+file
+
+
+
+
+2012-07-12T16:28:27.425680Z
+ca8a42e620412b6399a620ef29a231f6
+2011-08-15T16:56:19.958097Z
+4501
+arand
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+80
+
+fast-resCont
+dir
+
+f2dock
+dir
+
+GB-rerank
+dir
+
+fast-PQ
+dir
+
+fft-utils
+dir
+
+libmol
+dir
+

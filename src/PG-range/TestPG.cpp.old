@@ -1,0 +1,57 @@
+
+#include <PG.h>
+#include <cstdio>
+
+int main()
+{
+	PG *pg = new PG(10.0, 1000.0, 3.0);
+
+	vector <Point *> pts;
+
+	FILE *fp = fopen("balls.xyz", "r");
+	int i=0, j;
+
+	double a,b,c;
+
+	while(!feof(fp))
+	{
+		fscanf(fp,"%lf",&a);
+		fscanf(fp,"%lf",&b);
+		fscanf(fp,"%lf",&c);
+
+		Point *p = new Point;
+
+		p->x = a;
+		p->y = b;
+		p->z = c;
+
+
+		pts.push_back(p);
+
+		pg->addPoint(pts[i]);
+
+		i++;
+	}
+
+	vector <Point *> results;
+
+	for(i=0;i<50;i++)
+	{
+		results = pg->range(pts[i], 3.0);
+		cout<<results.size()<<endl;
+//		for(j=0;j<results.size();j++)
+//			cout<<results[j]->x<<" " <<results[j]->y<<" "<<results[j]->z<<" "<<endl;
+		int count = 0;
+
+		cout<<"Point = "<<pts[i]->x<<" "<<(*pts[i]).y<<" "<<(*pts[i]).z<<" "<<endl;
+		for(j=0;j<pts.size();j++)
+		{
+			
+			if(pts[j]->distsq(*pts[j], *pts[i])<=9.0)
+				count++;
+		}
+
+		cout<<count<<endl;
+	}
+	return 1;
+}

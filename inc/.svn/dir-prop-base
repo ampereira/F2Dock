@@ -1,0 +1,7 @@
+K 13
+svn:externals
+V 80
+XmlRPC		  https://svn.ices.utexas.edu/repos/cvc/branches/TexMol-Qt4/inc/XmlRPC
+
+
+END

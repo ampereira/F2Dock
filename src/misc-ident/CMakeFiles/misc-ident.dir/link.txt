@@ -1,0 +1,2 @@
+/usr/bin/ar cr ../../lib/libmisc-ident.a  CMakeFiles/misc-ident.dir/miscIdent.cpp.o
+/usr/bin/ranlib ../../lib/libmisc-ident.a

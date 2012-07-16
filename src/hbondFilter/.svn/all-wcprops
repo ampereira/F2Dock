@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/src/hbondFilter
+END
+hbondFilter.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/src/hbondFilter/hbondFilter.cpp
+END
+testHbondFilter.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/src/hbondFilter/testHbondFilter.cpp
+END
+CMakeLists.txt
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/repos/cvc/!svn/ver/4559/trunk/F2Dock-refactored/src/hbondFilter/CMakeLists.txt
+END

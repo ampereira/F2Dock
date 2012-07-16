@@ -1,0 +1,2 @@
+/usr/bin/ar cr ../../lib/libfft-utils.a  CMakeFiles/fft-utils.dir/fastfft.cpp.o CMakeFiles/fft-utils.dir/rank-fftw.cpp.o CMakeFiles/fft-utils.dir/sparsefft3-plan.cpp.o CMakeFiles/fft-utils.dir/sparsefft3.cpp.o
+/usr/bin/ranlib ../../lib/libfft-utils.a

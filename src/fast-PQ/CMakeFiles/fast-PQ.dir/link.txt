@@ -1,0 +1,2 @@
+/usr/bin/ar cr ../../lib/libfast-PQ.a  CMakeFiles/fast-PQ.dir/PairingHeap.cpp.o
+/usr/bin/ranlib ../../lib/libfast-PQ.a
