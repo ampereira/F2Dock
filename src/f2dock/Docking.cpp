@@ -5891,12 +5891,13 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
   if ( scoreUntransformed )
     {
      for ( int i = 0; i < 9; i++ )
-       pr->rotations[ i ] = ( i % 4 ) ? 0 : 1;
+     	 pr->rotations[ i ] = ( i % 4 ) ? 0 : 1;
 
-     pr->numberOfRotations = 1;
-     pr->numThreads = 1;
+     	
+    	 pr->numberOfRotations = 1;
+     	 pr->numThreads = 1;
 
-     pr->numberOfPositions = numFreq3;
+     	 pr->numberOfPositions = numFreq3;
     }
 
   //#ifdef DEBUG
