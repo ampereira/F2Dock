@@ -53,15 +53,15 @@ src/fast-clash/CMakeFiles/fast-clash.dir/clashFilter.cpp.o: src/fast-clash/CMake
 src/fast-clash/CMakeFiles/fast-clash.dir/clashFilter.cpp.o: src/fast-clash/clashFilter.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/fast-clash/CMakeFiles/fast-clash.dir/clashFilter.cpp.o"
-	cd /h1/apereira/F2Dock/src/fast-clash && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/fast-clash.dir/clashFilter.cpp.o -c /h1/apereira/F2Dock/src/fast-clash/clashFilter.cpp
+	cd /h1/apereira/F2Dock/src/fast-clash && /usr/bin/mpic++.openmpi   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/fast-clash.dir/clashFilter.cpp.o -c /h1/apereira/F2Dock/src/fast-clash/clashFilter.cpp
 
 src/fast-clash/CMakeFiles/fast-clash.dir/clashFilter.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/fast-clash.dir/clashFilter.cpp.i"
-	cd /h1/apereira/F2Dock/src/fast-clash && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/fast-clash/clashFilter.cpp > CMakeFiles/fast-clash.dir/clashFilter.cpp.i
+	cd /h1/apereira/F2Dock/src/fast-clash && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/fast-clash/clashFilter.cpp > CMakeFiles/fast-clash.dir/clashFilter.cpp.i
 
 src/fast-clash/CMakeFiles/fast-clash.dir/clashFilter.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/fast-clash.dir/clashFilter.cpp.s"
-	cd /h1/apereira/F2Dock/src/fast-clash && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/fast-clash/clashFilter.cpp -o CMakeFiles/fast-clash.dir/clashFilter.cpp.s
+	cd /h1/apereira/F2Dock/src/fast-clash && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/fast-clash/clashFilter.cpp -o CMakeFiles/fast-clash.dir/clashFilter.cpp.s
 
 src/fast-clash/CMakeFiles/fast-clash.dir/clashFilter.cpp.o.requires:
 .PHONY : src/fast-clash/CMakeFiles/fast-clash.dir/clashFilter.cpp.o.requires

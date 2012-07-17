@@ -53,15 +53,15 @@ src/F2DockServer/CMakeFiles/F2DockServer.dir/F2DockServer.cpp.o: src/F2DockServe
 src/F2DockServer/CMakeFiles/F2DockServer.dir/F2DockServer.cpp.o: src/F2DockServer/F2DockServer.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/F2DockServer/CMakeFiles/F2DockServer.dir/F2DockServer.cpp.o"
-	cd /h1/apereira/F2Dock/src/F2DockServer && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/F2DockServer.dir/F2DockServer.cpp.o -c /h1/apereira/F2Dock/src/F2DockServer/F2DockServer.cpp
+	cd /h1/apereira/F2Dock/src/F2DockServer && /usr/bin/mpic++.openmpi   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/F2DockServer.dir/F2DockServer.cpp.o -c /h1/apereira/F2Dock/src/F2DockServer/F2DockServer.cpp
 
 src/F2DockServer/CMakeFiles/F2DockServer.dir/F2DockServer.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/F2DockServer.dir/F2DockServer.cpp.i"
-	cd /h1/apereira/F2Dock/src/F2DockServer && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/F2DockServer/F2DockServer.cpp > CMakeFiles/F2DockServer.dir/F2DockServer.cpp.i
+	cd /h1/apereira/F2Dock/src/F2DockServer && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/F2DockServer/F2DockServer.cpp > CMakeFiles/F2DockServer.dir/F2DockServer.cpp.i
 
 src/F2DockServer/CMakeFiles/F2DockServer.dir/F2DockServer.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/F2DockServer.dir/F2DockServer.cpp.s"
-	cd /h1/apereira/F2Dock/src/F2DockServer && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/F2DockServer/F2DockServer.cpp -o CMakeFiles/F2DockServer.dir/F2DockServer.cpp.s
+	cd /h1/apereira/F2Dock/src/F2DockServer && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/F2DockServer/F2DockServer.cpp -o CMakeFiles/F2DockServer.dir/F2DockServer.cpp.s
 
 src/F2DockServer/CMakeFiles/F2DockServer.dir/F2DockServer.cpp.o.requires:
 .PHONY : src/F2DockServer/CMakeFiles/F2DockServer.dir/F2DockServer.cpp.o.requires

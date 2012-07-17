@@ -53,15 +53,15 @@ src/fast-LJ/CMakeFiles/fast-LJ.dir/LJTest.cpp.o: src/fast-LJ/CMakeFiles/fast-LJ.
 src/fast-LJ/CMakeFiles/fast-LJ.dir/LJTest.cpp.o: src/fast-LJ/LJTest.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/fast-LJ/CMakeFiles/fast-LJ.dir/LJTest.cpp.o"
-	cd /h1/apereira/F2Dock/src/fast-LJ && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/fast-LJ.dir/LJTest.cpp.o -c /h1/apereira/F2Dock/src/fast-LJ/LJTest.cpp
+	cd /h1/apereira/F2Dock/src/fast-LJ && /usr/bin/mpic++.openmpi   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/fast-LJ.dir/LJTest.cpp.o -c /h1/apereira/F2Dock/src/fast-LJ/LJTest.cpp
 
 src/fast-LJ/CMakeFiles/fast-LJ.dir/LJTest.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/fast-LJ.dir/LJTest.cpp.i"
-	cd /h1/apereira/F2Dock/src/fast-LJ && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/fast-LJ/LJTest.cpp > CMakeFiles/fast-LJ.dir/LJTest.cpp.i
+	cd /h1/apereira/F2Dock/src/fast-LJ && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/fast-LJ/LJTest.cpp > CMakeFiles/fast-LJ.dir/LJTest.cpp.i
 
 src/fast-LJ/CMakeFiles/fast-LJ.dir/LJTest.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/fast-LJ.dir/LJTest.cpp.s"
-	cd /h1/apereira/F2Dock/src/fast-LJ && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/fast-LJ/LJTest.cpp -o CMakeFiles/fast-LJ.dir/LJTest.cpp.s
+	cd /h1/apereira/F2Dock/src/fast-LJ && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/fast-LJ/LJTest.cpp -o CMakeFiles/fast-LJ.dir/LJTest.cpp.s
 
 src/fast-LJ/CMakeFiles/fast-LJ.dir/LJTest.cpp.o.requires:
 .PHONY : src/fast-LJ/CMakeFiles/fast-LJ.dir/LJTest.cpp.o.requires
@@ -77,15 +77,15 @@ src/fast-LJ/CMakeFiles/fast-LJ.dir/fastLJ.cpp.o: src/fast-LJ/CMakeFiles/fast-LJ.
 src/fast-LJ/CMakeFiles/fast-LJ.dir/fastLJ.cpp.o: src/fast-LJ/fastLJ.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/fast-LJ/CMakeFiles/fast-LJ.dir/fastLJ.cpp.o"
-	cd /h1/apereira/F2Dock/src/fast-LJ && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/fast-LJ.dir/fastLJ.cpp.o -c /h1/apereira/F2Dock/src/fast-LJ/fastLJ.cpp
+	cd /h1/apereira/F2Dock/src/fast-LJ && /usr/bin/mpic++.openmpi   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/fast-LJ.dir/fastLJ.cpp.o -c /h1/apereira/F2Dock/src/fast-LJ/fastLJ.cpp
 
 src/fast-LJ/CMakeFiles/fast-LJ.dir/fastLJ.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/fast-LJ.dir/fastLJ.cpp.i"
-	cd /h1/apereira/F2Dock/src/fast-LJ && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/fast-LJ/fastLJ.cpp > CMakeFiles/fast-LJ.dir/fastLJ.cpp.i
+	cd /h1/apereira/F2Dock/src/fast-LJ && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/fast-LJ/fastLJ.cpp > CMakeFiles/fast-LJ.dir/fastLJ.cpp.i
 
 src/fast-LJ/CMakeFiles/fast-LJ.dir/fastLJ.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/fast-LJ.dir/fastLJ.cpp.s"
-	cd /h1/apereira/F2Dock/src/fast-LJ && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/fast-LJ/fastLJ.cpp -o CMakeFiles/fast-LJ.dir/fastLJ.cpp.s
+	cd /h1/apereira/F2Dock/src/fast-LJ && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/fast-LJ/fastLJ.cpp -o CMakeFiles/fast-LJ.dir/fastLJ.cpp.s
 
 src/fast-LJ/CMakeFiles/fast-LJ.dir/fastLJ.cpp.o.requires:
 .PHONY : src/fast-LJ/CMakeFiles/fast-LJ.dir/fastLJ.cpp.o.requires

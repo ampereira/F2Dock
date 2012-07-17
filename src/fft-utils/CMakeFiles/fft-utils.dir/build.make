@@ -53,15 +53,15 @@ src/fft-utils/CMakeFiles/fft-utils.dir/fastfft.cpp.o: src/fft-utils/CMakeFiles/f
 src/fft-utils/CMakeFiles/fft-utils.dir/fastfft.cpp.o: src/fft-utils/fastfft.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/fft-utils/CMakeFiles/fft-utils.dir/fastfft.cpp.o"
-	cd /h1/apereira/F2Dock/src/fft-utils && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/fft-utils.dir/fastfft.cpp.o -c /h1/apereira/F2Dock/src/fft-utils/fastfft.cpp
+	cd /h1/apereira/F2Dock/src/fft-utils && /usr/bin/mpic++.openmpi   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/fft-utils.dir/fastfft.cpp.o -c /h1/apereira/F2Dock/src/fft-utils/fastfft.cpp
 
 src/fft-utils/CMakeFiles/fft-utils.dir/fastfft.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/fft-utils.dir/fastfft.cpp.i"
-	cd /h1/apereira/F2Dock/src/fft-utils && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/fft-utils/fastfft.cpp > CMakeFiles/fft-utils.dir/fastfft.cpp.i
+	cd /h1/apereira/F2Dock/src/fft-utils && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/fft-utils/fastfft.cpp > CMakeFiles/fft-utils.dir/fastfft.cpp.i
 
 src/fft-utils/CMakeFiles/fft-utils.dir/fastfft.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/fft-utils.dir/fastfft.cpp.s"
-	cd /h1/apereira/F2Dock/src/fft-utils && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/fft-utils/fastfft.cpp -o CMakeFiles/fft-utils.dir/fastfft.cpp.s
+	cd /h1/apereira/F2Dock/src/fft-utils && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/fft-utils/fastfft.cpp -o CMakeFiles/fft-utils.dir/fastfft.cpp.s
 
 src/fft-utils/CMakeFiles/fft-utils.dir/fastfft.cpp.o.requires:
 .PHONY : src/fft-utils/CMakeFiles/fft-utils.dir/fastfft.cpp.o.requires
@@ -77,15 +77,15 @@ src/fft-utils/CMakeFiles/fft-utils.dir/rank-fftw.cpp.o: src/fft-utils/CMakeFiles
 src/fft-utils/CMakeFiles/fft-utils.dir/rank-fftw.cpp.o: src/fft-utils/rank-fftw.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/fft-utils/CMakeFiles/fft-utils.dir/rank-fftw.cpp.o"
-	cd /h1/apereira/F2Dock/src/fft-utils && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/fft-utils.dir/rank-fftw.cpp.o -c /h1/apereira/F2Dock/src/fft-utils/rank-fftw.cpp
+	cd /h1/apereira/F2Dock/src/fft-utils && /usr/bin/mpic++.openmpi   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/fft-utils.dir/rank-fftw.cpp.o -c /h1/apereira/F2Dock/src/fft-utils/rank-fftw.cpp
 
 src/fft-utils/CMakeFiles/fft-utils.dir/rank-fftw.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/fft-utils.dir/rank-fftw.cpp.i"
-	cd /h1/apereira/F2Dock/src/fft-utils && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/fft-utils/rank-fftw.cpp > CMakeFiles/fft-utils.dir/rank-fftw.cpp.i
+	cd /h1/apereira/F2Dock/src/fft-utils && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/fft-utils/rank-fftw.cpp > CMakeFiles/fft-utils.dir/rank-fftw.cpp.i
 
 src/fft-utils/CMakeFiles/fft-utils.dir/rank-fftw.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/fft-utils.dir/rank-fftw.cpp.s"
-	cd /h1/apereira/F2Dock/src/fft-utils && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/fft-utils/rank-fftw.cpp -o CMakeFiles/fft-utils.dir/rank-fftw.cpp.s
+	cd /h1/apereira/F2Dock/src/fft-utils && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/fft-utils/rank-fftw.cpp -o CMakeFiles/fft-utils.dir/rank-fftw.cpp.s
 
 src/fft-utils/CMakeFiles/fft-utils.dir/rank-fftw.cpp.o.requires:
 .PHONY : src/fft-utils/CMakeFiles/fft-utils.dir/rank-fftw.cpp.o.requires
@@ -101,15 +101,15 @@ src/fft-utils/CMakeFiles/fft-utils.dir/sparsefft3-plan.cpp.o: src/fft-utils/CMak
 src/fft-utils/CMakeFiles/fft-utils.dir/sparsefft3-plan.cpp.o: src/fft-utils/sparsefft3-plan.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_3)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/fft-utils/CMakeFiles/fft-utils.dir/sparsefft3-plan.cpp.o"
-	cd /h1/apereira/F2Dock/src/fft-utils && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/fft-utils.dir/sparsefft3-plan.cpp.o -c /h1/apereira/F2Dock/src/fft-utils/sparsefft3-plan.cpp
+	cd /h1/apereira/F2Dock/src/fft-utils && /usr/bin/mpic++.openmpi   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/fft-utils.dir/sparsefft3-plan.cpp.o -c /h1/apereira/F2Dock/src/fft-utils/sparsefft3-plan.cpp
 
 src/fft-utils/CMakeFiles/fft-utils.dir/sparsefft3-plan.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/fft-utils.dir/sparsefft3-plan.cpp.i"
-	cd /h1/apereira/F2Dock/src/fft-utils && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/fft-utils/sparsefft3-plan.cpp > CMakeFiles/fft-utils.dir/sparsefft3-plan.cpp.i
+	cd /h1/apereira/F2Dock/src/fft-utils && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/fft-utils/sparsefft3-plan.cpp > CMakeFiles/fft-utils.dir/sparsefft3-plan.cpp.i
 
 src/fft-utils/CMakeFiles/fft-utils.dir/sparsefft3-plan.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/fft-utils.dir/sparsefft3-plan.cpp.s"
-	cd /h1/apereira/F2Dock/src/fft-utils && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/fft-utils/sparsefft3-plan.cpp -o CMakeFiles/fft-utils.dir/sparsefft3-plan.cpp.s
+	cd /h1/apereira/F2Dock/src/fft-utils && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/fft-utils/sparsefft3-plan.cpp -o CMakeFiles/fft-utils.dir/sparsefft3-plan.cpp.s
 
 src/fft-utils/CMakeFiles/fft-utils.dir/sparsefft3-plan.cpp.o.requires:
 .PHONY : src/fft-utils/CMakeFiles/fft-utils.dir/sparsefft3-plan.cpp.o.requires
@@ -125,15 +125,15 @@ src/fft-utils/CMakeFiles/fft-utils.dir/sparsefft3.cpp.o: src/fft-utils/CMakeFile
 src/fft-utils/CMakeFiles/fft-utils.dir/sparsefft3.cpp.o: src/fft-utils/sparsefft3.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_4)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/fft-utils/CMakeFiles/fft-utils.dir/sparsefft3.cpp.o"
-	cd /h1/apereira/F2Dock/src/fft-utils && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/fft-utils.dir/sparsefft3.cpp.o -c /h1/apereira/F2Dock/src/fft-utils/sparsefft3.cpp
+	cd /h1/apereira/F2Dock/src/fft-utils && /usr/bin/mpic++.openmpi   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/fft-utils.dir/sparsefft3.cpp.o -c /h1/apereira/F2Dock/src/fft-utils/sparsefft3.cpp
 
 src/fft-utils/CMakeFiles/fft-utils.dir/sparsefft3.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/fft-utils.dir/sparsefft3.cpp.i"
-	cd /h1/apereira/F2Dock/src/fft-utils && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/fft-utils/sparsefft3.cpp > CMakeFiles/fft-utils.dir/sparsefft3.cpp.i
+	cd /h1/apereira/F2Dock/src/fft-utils && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/fft-utils/sparsefft3.cpp > CMakeFiles/fft-utils.dir/sparsefft3.cpp.i
 
 src/fft-utils/CMakeFiles/fft-utils.dir/sparsefft3.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/fft-utils.dir/sparsefft3.cpp.s"
-	cd /h1/apereira/F2Dock/src/fft-utils && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/fft-utils/sparsefft3.cpp -o CMakeFiles/fft-utils.dir/sparsefft3.cpp.s
+	cd /h1/apereira/F2Dock/src/fft-utils && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/fft-utils/sparsefft3.cpp -o CMakeFiles/fft-utils.dir/sparsefft3.cpp.s
 
 src/fft-utils/CMakeFiles/fft-utils.dir/sparsefft3.cpp.o.requires:
 .PHONY : src/fft-utils/CMakeFiles/fft-utils.dir/sparsefft3.cpp.o.requires

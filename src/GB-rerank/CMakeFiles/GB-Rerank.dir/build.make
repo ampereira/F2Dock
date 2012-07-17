@@ -53,15 +53,15 @@ src/GB-rerank/CMakeFiles/GB-Rerank.dir/GB-rerank.cpp.o: src/GB-rerank/CMakeFiles
 src/GB-rerank/CMakeFiles/GB-Rerank.dir/GB-rerank.cpp.o: src/GB-rerank/GB-rerank.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/GB-rerank/CMakeFiles/GB-Rerank.dir/GB-rerank.cpp.o"
-	cd /h1/apereira/F2Dock/src/GB-rerank && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/GB-Rerank.dir/GB-rerank.cpp.o -c /h1/apereira/F2Dock/src/GB-rerank/GB-rerank.cpp
+	cd /h1/apereira/F2Dock/src/GB-rerank && /usr/bin/mpic++.openmpi   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/GB-Rerank.dir/GB-rerank.cpp.o -c /h1/apereira/F2Dock/src/GB-rerank/GB-rerank.cpp
 
 src/GB-rerank/CMakeFiles/GB-Rerank.dir/GB-rerank.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/GB-Rerank.dir/GB-rerank.cpp.i"
-	cd /h1/apereira/F2Dock/src/GB-rerank && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/GB-rerank/GB-rerank.cpp > CMakeFiles/GB-Rerank.dir/GB-rerank.cpp.i
+	cd /h1/apereira/F2Dock/src/GB-rerank && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/GB-rerank/GB-rerank.cpp > CMakeFiles/GB-Rerank.dir/GB-rerank.cpp.i
 
 src/GB-rerank/CMakeFiles/GB-Rerank.dir/GB-rerank.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/GB-Rerank.dir/GB-rerank.cpp.s"
-	cd /h1/apereira/F2Dock/src/GB-rerank && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/GB-rerank/GB-rerank.cpp -o CMakeFiles/GB-Rerank.dir/GB-rerank.cpp.s
+	cd /h1/apereira/F2Dock/src/GB-rerank && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/GB-rerank/GB-rerank.cpp -o CMakeFiles/GB-Rerank.dir/GB-rerank.cpp.s
 
 src/GB-rerank/CMakeFiles/GB-Rerank.dir/GB-rerank.cpp.o.requires:
 .PHONY : src/GB-rerank/CMakeFiles/GB-Rerank.dir/GB-rerank.cpp.o.requires
@@ -77,15 +77,15 @@ src/GB-rerank/CMakeFiles/GB-Rerank.dir/pairingHeap.cpp.o: src/GB-rerank/CMakeFil
 src/GB-rerank/CMakeFiles/GB-Rerank.dir/pairingHeap.cpp.o: src/GB-rerank/pairingHeap.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/GB-rerank/CMakeFiles/GB-Rerank.dir/pairingHeap.cpp.o"
-	cd /h1/apereira/F2Dock/src/GB-rerank && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/GB-Rerank.dir/pairingHeap.cpp.o -c /h1/apereira/F2Dock/src/GB-rerank/pairingHeap.cpp
+	cd /h1/apereira/F2Dock/src/GB-rerank && /usr/bin/mpic++.openmpi   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/GB-Rerank.dir/pairingHeap.cpp.o -c /h1/apereira/F2Dock/src/GB-rerank/pairingHeap.cpp
 
 src/GB-rerank/CMakeFiles/GB-Rerank.dir/pairingHeap.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/GB-Rerank.dir/pairingHeap.cpp.i"
-	cd /h1/apereira/F2Dock/src/GB-rerank && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/GB-rerank/pairingHeap.cpp > CMakeFiles/GB-Rerank.dir/pairingHeap.cpp.i
+	cd /h1/apereira/F2Dock/src/GB-rerank && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/GB-rerank/pairingHeap.cpp > CMakeFiles/GB-Rerank.dir/pairingHeap.cpp.i
 
 src/GB-rerank/CMakeFiles/GB-Rerank.dir/pairingHeap.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/GB-Rerank.dir/pairingHeap.cpp.s"
-	cd /h1/apereira/F2Dock/src/GB-rerank && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/GB-rerank/pairingHeap.cpp -o CMakeFiles/GB-Rerank.dir/pairingHeap.cpp.s
+	cd /h1/apereira/F2Dock/src/GB-rerank && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/GB-rerank/pairingHeap.cpp -o CMakeFiles/GB-Rerank.dir/pairingHeap.cpp.s
 
 src/GB-rerank/CMakeFiles/GB-Rerank.dir/pairingHeap.cpp.o.requires:
 .PHONY : src/GB-rerank/CMakeFiles/GB-Rerank.dir/pairingHeap.cpp.o.requires

@@ -19,6 +19,8 @@ sys/timeb.h
 -
 sys/time.h
 -
+mpi.h
+-
 
 /h1/apereira/F2Dock/src/f2dock/F2Dock.cpp
 stdio.h
@@ -37,20 +39,6 @@ string
 -
 ElementInformation.h
 /h1/apereira/F2Dock/src/f2dock/ElementInformation.h
-
-/h1/apereira/F2Dock/src/f2dock/TopValues.cpp
-stdio.h
--
-math.h
--
-TopValues.h
-/h1/apereira/F2Dock/src/f2dock/TopValues.h
-
-/h1/apereira/F2Dock/src/f2dock/ValuePosition3D.cpp
-stdio.h
--
-ValuePosition3D.h
-/h1/apereira/F2Dock/src/f2dock/ValuePosition3D.h
 
 src/f2dock/../../inc/PG-range/1D-IntegerRange.h
 cuckoo.h

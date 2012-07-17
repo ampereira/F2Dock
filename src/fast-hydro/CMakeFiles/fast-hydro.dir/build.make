@@ -53,15 +53,15 @@ src/fast-hydro/CMakeFiles/fast-hydro.dir/pseudoGsol.cpp.o: src/fast-hydro/CMakeF
 src/fast-hydro/CMakeFiles/fast-hydro.dir/pseudoGsol.cpp.o: src/fast-hydro/pseudoGsol.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/fast-hydro/CMakeFiles/fast-hydro.dir/pseudoGsol.cpp.o"
-	cd /h1/apereira/F2Dock/src/fast-hydro && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/fast-hydro.dir/pseudoGsol.cpp.o -c /h1/apereira/F2Dock/src/fast-hydro/pseudoGsol.cpp
+	cd /h1/apereira/F2Dock/src/fast-hydro && /usr/bin/mpic++.openmpi   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/fast-hydro.dir/pseudoGsol.cpp.o -c /h1/apereira/F2Dock/src/fast-hydro/pseudoGsol.cpp
 
 src/fast-hydro/CMakeFiles/fast-hydro.dir/pseudoGsol.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/fast-hydro.dir/pseudoGsol.cpp.i"
-	cd /h1/apereira/F2Dock/src/fast-hydro && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/fast-hydro/pseudoGsol.cpp > CMakeFiles/fast-hydro.dir/pseudoGsol.cpp.i
+	cd /h1/apereira/F2Dock/src/fast-hydro && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/fast-hydro/pseudoGsol.cpp > CMakeFiles/fast-hydro.dir/pseudoGsol.cpp.i
 
 src/fast-hydro/CMakeFiles/fast-hydro.dir/pseudoGsol.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/fast-hydro.dir/pseudoGsol.cpp.s"
-	cd /h1/apereira/F2Dock/src/fast-hydro && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/fast-hydro/pseudoGsol.cpp -o CMakeFiles/fast-hydro.dir/pseudoGsol.cpp.s
+	cd /h1/apereira/F2Dock/src/fast-hydro && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/fast-hydro/pseudoGsol.cpp -o CMakeFiles/fast-hydro.dir/pseudoGsol.cpp.s
 
 src/fast-hydro/CMakeFiles/fast-hydro.dir/pseudoGsol.cpp.o.requires:
 .PHONY : src/fast-hydro/CMakeFiles/fast-hydro.dir/pseudoGsol.cpp.o.requires
@@ -77,15 +77,15 @@ src/fast-hydro/CMakeFiles/fast-hydro.dir/testPseudoGsol.cpp.o: src/fast-hydro/CM
 src/fast-hydro/CMakeFiles/fast-hydro.dir/testPseudoGsol.cpp.o: src/fast-hydro/testPseudoGsol.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/fast-hydro/CMakeFiles/fast-hydro.dir/testPseudoGsol.cpp.o"
-	cd /h1/apereira/F2Dock/src/fast-hydro && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/fast-hydro.dir/testPseudoGsol.cpp.o -c /h1/apereira/F2Dock/src/fast-hydro/testPseudoGsol.cpp
+	cd /h1/apereira/F2Dock/src/fast-hydro && /usr/bin/mpic++.openmpi   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/fast-hydro.dir/testPseudoGsol.cpp.o -c /h1/apereira/F2Dock/src/fast-hydro/testPseudoGsol.cpp
 
 src/fast-hydro/CMakeFiles/fast-hydro.dir/testPseudoGsol.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/fast-hydro.dir/testPseudoGsol.cpp.i"
-	cd /h1/apereira/F2Dock/src/fast-hydro && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/fast-hydro/testPseudoGsol.cpp > CMakeFiles/fast-hydro.dir/testPseudoGsol.cpp.i
+	cd /h1/apereira/F2Dock/src/fast-hydro && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/fast-hydro/testPseudoGsol.cpp > CMakeFiles/fast-hydro.dir/testPseudoGsol.cpp.i
 
 src/fast-hydro/CMakeFiles/fast-hydro.dir/testPseudoGsol.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/fast-hydro.dir/testPseudoGsol.cpp.s"
-	cd /h1/apereira/F2Dock/src/fast-hydro && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/fast-hydro/testPseudoGsol.cpp -o CMakeFiles/fast-hydro.dir/testPseudoGsol.cpp.s
+	cd /h1/apereira/F2Dock/src/fast-hydro && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/fast-hydro/testPseudoGsol.cpp -o CMakeFiles/fast-hydro.dir/testPseudoGsol.cpp.s
 
 src/fast-hydro/CMakeFiles/fast-hydro.dir/testPseudoGsol.cpp.o.requires:
 .PHONY : src/fast-hydro/CMakeFiles/fast-hydro.dir/testPseudoGsol.cpp.o.requires

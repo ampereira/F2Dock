@@ -29,6 +29,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 #include <string>
 #include "ElementInformation.h"
 
+#include <mpi.h>
+
 using namespace std;
 
 /*
@@ -1985,6 +1987,9 @@ bool getComplexType( PARAMS_IN *p, char *paramFile )
 int main( int argc, char* argv[] )
 {
 	char *fixedMolFileName, *movingMolFileName, paramFileName[256];
+
+	MPI_Init(&argc, &argv);
+	MPI_Finalize();
 
 	if (argc<2 || argc>3 ) {
 		printf("Usage: F2Dock -score|saveGrid|vdw|effGridFile parameterFile\n");

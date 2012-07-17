@@ -53,15 +53,15 @@ src/vol/CMakeFiles/vol.dir/RAWIV.cpp.o: src/vol/CMakeFiles/vol.dir/flags.make
 src/vol/CMakeFiles/vol.dir/RAWIV.cpp.o: src/vol/RAWIV.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/vol/CMakeFiles/vol.dir/RAWIV.cpp.o"
-	cd /h1/apereira/F2Dock/src/vol && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/vol.dir/RAWIV.cpp.o -c /h1/apereira/F2Dock/src/vol/RAWIV.cpp
+	cd /h1/apereira/F2Dock/src/vol && /usr/bin/mpic++.openmpi   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/vol.dir/RAWIV.cpp.o -c /h1/apereira/F2Dock/src/vol/RAWIV.cpp
 
 src/vol/CMakeFiles/vol.dir/RAWIV.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/vol.dir/RAWIV.cpp.i"
-	cd /h1/apereira/F2Dock/src/vol && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/vol/RAWIV.cpp > CMakeFiles/vol.dir/RAWIV.cpp.i
+	cd /h1/apereira/F2Dock/src/vol && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/vol/RAWIV.cpp > CMakeFiles/vol.dir/RAWIV.cpp.i
 
 src/vol/CMakeFiles/vol.dir/RAWIV.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/vol.dir/RAWIV.cpp.s"
-	cd /h1/apereira/F2Dock/src/vol && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/vol/RAWIV.cpp -o CMakeFiles/vol.dir/RAWIV.cpp.s
+	cd /h1/apereira/F2Dock/src/vol && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/vol/RAWIV.cpp -o CMakeFiles/vol.dir/RAWIV.cpp.s
 
 src/vol/CMakeFiles/vol.dir/RAWIV.cpp.o.requires:
 .PHONY : src/vol/CMakeFiles/vol.dir/RAWIV.cpp.o.requires

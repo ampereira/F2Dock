@@ -40,6 +40,10 @@ using CCVOpenGLMath::Vector;
 #define 	M_PI   3.14159265358979323846
 #endif
 
+#ifdef MPI
+#include <mpi.h>
+#endif
+
 // variables for the rotation server for pthreads
 pthread_mutex_t rotLock;
 int curRotation = 0, maxRotation = 0, processedRotations = 0;
@@ -5999,7 +6003,7 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 
 	double alpha = pr->alpha;
 
-	float*   = pr->rotations;
+	float* rotations = pr->rotations;
 	int numberOfRotations = pr->numberOfRotations;
 
 	double skinSkinWeight = pr->skinSkinWeight;
@@ -6072,7 +6076,7 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 		localTopValues[ i ] = 0;
 
 	//  double numFreq3 = numFreq*numFreq*numFreq;
-	FFTW_complex* = (FFTW_complex*)FFTW_malloc( sizeof(FFTW_complex)*numFreq3 ) ;
+	FFTW_complex* centerFrequenciesA = (FFTW_complex*)FFTW_malloc( sizeof(FFTW_complex)*numFreq3 ) ;
 
 	FFTW_complex* centerElecFrequenciesA = 0;
 	FFTW_complex* smallElectrostaticsKernel = 0;
@@ -6967,9 +6971,12 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 	 *	Faz realmente coisas
 	 */
 
+	 // MPI from here?
+
 	initRotationServer( numberOfRotations, numThreads );
 
 	double functionScaleFactor = pow( numFreq * alpha, 6 ) / pr->scoreScaleUpFactor;
+
 
 	for ( int i = 0; i < numThreads; i++ )
 	{
@@ -7117,8 +7124,17 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 			prT[ i ].sparseProfile_11 = sparseProfile_11[ i ];
 		}
 
-		pthread_create( &p[ i ], NULL, startApplyRotationsThread, ( void * ) &prT[ i ] );
 	}
+
+
+	#ifdef MPI
+	MPI::Init();
+	int rank = MPI::COMM_WORLD.Get_rank();	// Process rank
+	int np   = MPI::COMM_WORLD.Get_size();	// Number of processes in COMM_WORLD
+	#endif
+
+	for ( int i = 0; i < numThreads; i++ )
+		pthread_create( &p[ i ], NULL, startApplyRotationsThread, ( void * ) &prT[ i ] );
 
 	// Threads finish execution; synchronize point
 	for ( int i = 0; i < numThreads; i++ )
@@ -7347,6 +7363,8 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 		}
 	}
 
+	// MPI untill here?
+
 	// Free some of the memory allocated for the FFTs
 	FFTW_free( fkB );
 	if ( elecScale != 0 ) 
@@ -7572,6 +7590,10 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 	}
 
 	fclose( fpOpt );
+
+	#ifdef MPI
+	MPI::Finalize();
+	#endif
 
 	return 0;
 }
