@@ -53,15 +53,15 @@ src/PostFiltering/CMakeFiles/FilterOutput.dir/FilterOutput.cpp.o: src/PostFilter
 src/PostFiltering/CMakeFiles/FilterOutput.dir/FilterOutput.cpp.o: src/PostFiltering/FilterOutput.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/PostFiltering/CMakeFiles/FilterOutput.dir/FilterOutput.cpp.o"
-	cd /h1/apereira/F2Dock/src/PostFiltering && /usr/bin/mpic++.openmpi   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/FilterOutput.dir/FilterOutput.cpp.o -c /h1/apereira/F2Dock/src/PostFiltering/FilterOutput.cpp
+	cd /h1/apereira/F2Dock/src/PostFiltering && /h1/apereira/OpenMPI/bin/mpiCC   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/FilterOutput.dir/FilterOutput.cpp.o -c /h1/apereira/F2Dock/src/PostFiltering/FilterOutput.cpp
 
 src/PostFiltering/CMakeFiles/FilterOutput.dir/FilterOutput.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/FilterOutput.dir/FilterOutput.cpp.i"
-	cd /h1/apereira/F2Dock/src/PostFiltering && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/PostFiltering/FilterOutput.cpp > CMakeFiles/FilterOutput.dir/FilterOutput.cpp.i
+	cd /h1/apereira/F2Dock/src/PostFiltering && /h1/apereira/OpenMPI/bin/mpiCC  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/PostFiltering/FilterOutput.cpp > CMakeFiles/FilterOutput.dir/FilterOutput.cpp.i
 
 src/PostFiltering/CMakeFiles/FilterOutput.dir/FilterOutput.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/FilterOutput.dir/FilterOutput.cpp.s"
-	cd /h1/apereira/F2Dock/src/PostFiltering && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/PostFiltering/FilterOutput.cpp -o CMakeFiles/FilterOutput.dir/FilterOutput.cpp.s
+	cd /h1/apereira/F2Dock/src/PostFiltering && /h1/apereira/OpenMPI/bin/mpiCC  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/PostFiltering/FilterOutput.cpp -o CMakeFiles/FilterOutput.dir/FilterOutput.cpp.s
 
 src/PostFiltering/CMakeFiles/FilterOutput.dir/FilterOutput.cpp.o.requires:
 .PHONY : src/PostFiltering/CMakeFiles/FilterOutput.dir/FilterOutput.cpp.o.requires

@@ -53,15 +53,15 @@ src/utils/CMakeFiles/utils.dir/utils.cpp.o: src/utils/CMakeFiles/utils.dir/flags
 src/utils/CMakeFiles/utils.dir/utils.cpp.o: src/utils/utils.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/utils/CMakeFiles/utils.dir/utils.cpp.o"
-	cd /h1/apereira/F2Dock/src/utils && /usr/bin/mpic++.openmpi   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/utils.dir/utils.cpp.o -c /h1/apereira/F2Dock/src/utils/utils.cpp
+	cd /h1/apereira/F2Dock/src/utils && /h1/apereira/OpenMPI/bin/mpiCC   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/utils.dir/utils.cpp.o -c /h1/apereira/F2Dock/src/utils/utils.cpp
 
 src/utils/CMakeFiles/utils.dir/utils.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/utils.dir/utils.cpp.i"
-	cd /h1/apereira/F2Dock/src/utils && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/utils/utils.cpp > CMakeFiles/utils.dir/utils.cpp.i
+	cd /h1/apereira/F2Dock/src/utils && /h1/apereira/OpenMPI/bin/mpiCC  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/utils/utils.cpp > CMakeFiles/utils.dir/utils.cpp.i
 
 src/utils/CMakeFiles/utils.dir/utils.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/utils.dir/utils.cpp.s"
-	cd /h1/apereira/F2Dock/src/utils && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/utils/utils.cpp -o CMakeFiles/utils.dir/utils.cpp.s
+	cd /h1/apereira/F2Dock/src/utils && /h1/apereira/OpenMPI/bin/mpiCC  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/utils/utils.cpp -o CMakeFiles/utils.dir/utils.cpp.s
 
 src/utils/CMakeFiles/utils.dir/utils.cpp.o.requires:
 .PHONY : src/utils/CMakeFiles/utils.dir/utils.cpp.o.requires

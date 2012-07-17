@@ -53,15 +53,15 @@ src/fast-resCont/CMakeFiles/fast-resCont.dir/resContFilter.cpp.o: src/fast-resCo
 src/fast-resCont/CMakeFiles/fast-resCont.dir/resContFilter.cpp.o: src/fast-resCont/resContFilter.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/fast-resCont/CMakeFiles/fast-resCont.dir/resContFilter.cpp.o"
-	cd /h1/apereira/F2Dock/src/fast-resCont && /usr/bin/mpic++.openmpi   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/fast-resCont.dir/resContFilter.cpp.o -c /h1/apereira/F2Dock/src/fast-resCont/resContFilter.cpp
+	cd /h1/apereira/F2Dock/src/fast-resCont && /h1/apereira/OpenMPI/bin/mpiCC   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/fast-resCont.dir/resContFilter.cpp.o -c /h1/apereira/F2Dock/src/fast-resCont/resContFilter.cpp
 
 src/fast-resCont/CMakeFiles/fast-resCont.dir/resContFilter.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/fast-resCont.dir/resContFilter.cpp.i"
-	cd /h1/apereira/F2Dock/src/fast-resCont && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/fast-resCont/resContFilter.cpp > CMakeFiles/fast-resCont.dir/resContFilter.cpp.i
+	cd /h1/apereira/F2Dock/src/fast-resCont && /h1/apereira/OpenMPI/bin/mpiCC  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/fast-resCont/resContFilter.cpp > CMakeFiles/fast-resCont.dir/resContFilter.cpp.i
 
 src/fast-resCont/CMakeFiles/fast-resCont.dir/resContFilter.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/fast-resCont.dir/resContFilter.cpp.s"
-	cd /h1/apereira/F2Dock/src/fast-resCont && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/fast-resCont/resContFilter.cpp -o CMakeFiles/fast-resCont.dir/resContFilter.cpp.s
+	cd /h1/apereira/F2Dock/src/fast-resCont && /h1/apereira/OpenMPI/bin/mpiCC  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/fast-resCont/resContFilter.cpp -o CMakeFiles/fast-resCont.dir/resContFilter.cpp.s
 
 src/fast-resCont/CMakeFiles/fast-resCont.dir/resContFilter.cpp.o.requires:
 .PHONY : src/fast-resCont/CMakeFiles/fast-resCont.dir/resContFilter.cpp.o.requires

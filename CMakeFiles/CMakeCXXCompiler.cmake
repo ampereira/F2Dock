@@ -1,4 +1,4 @@
-SET(CMAKE_CXX_COMPILER "/usr/bin/mpic++.openmpi")
+SET(CMAKE_CXX_COMPILER "/h1/apereira/OpenMPI/bin/mpiCC")
 SET(CMAKE_CXX_COMPILER_ARG1 "")
 SET(CMAKE_CXX_COMPILER_ID "GNU")
 SET(CMAKE_CXX_PLATFORM_ID "Linux")
@@ -41,5 +41,5 @@ ENDIF(CMAKE_CXX_COMPILER_ABI)
 SET(CMAKE_CXX_HAS_ISYSROOT "")
 
 
-SET(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "mpi_cxx;mpi;open-rte;open-pal;dl;nsl;util;dl;stdc++;m;pthread;c")
-SET(CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES "/usr/lib/openmpi/lib;/usr/lib/gcc/x86_64-linux-gnu/4.4.3;/usr/lib;/lib")
+SET(CMAKE_CXX_IMPLICIT_LINK_LIBRARIES "mpi_cxx;mpi;dl;rt;nsl;util;m;dl;stdc++;m;pthread;c")
+SET(CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES "/h1/apereira/OpenMPI/lib;/usr/lib/gcc/x86_64-linux-gnu/4.4.3;/usr/lib;/lib")

@@ -734,11 +734,11 @@ src/f2dock/preinstall:
 # Target rules for target src/f2dock/CMakeFiles/F2Dock.dir
 
 # All Build rule for target.
+src/f2dock/CMakeFiles/F2Dock.dir/all: src/fft-utils/CMakeFiles/fft-utils.dir/all
 src/f2dock/CMakeFiles/F2Dock.dir/all: src/misc-ident/CMakeFiles/misc-ident.dir/all
 src/f2dock/CMakeFiles/F2Dock.dir/all: src/utils/CMakeFiles/utils.dir/all
 src/f2dock/CMakeFiles/F2Dock.dir/all: src/vol/CMakeFiles/vol.dir/all
 src/f2dock/CMakeFiles/F2Dock.dir/all: src/math/CMakeFiles/math.dir/all
-src/f2dock/CMakeFiles/F2Dock.dir/all: src/fft-utils/CMakeFiles/fft-utils.dir/all
 src/f2dock/CMakeFiles/F2Dock.dir/all: src/fast-clash/CMakeFiles/fast-clash.dir/all
 src/f2dock/CMakeFiles/F2Dock.dir/all: src/fast-GB/CMakeFiles/fast-GB.dir/all
 src/f2dock/CMakeFiles/F2Dock.dir/all: src/fast-hydro/CMakeFiles/fast-hydro.dir/all

@@ -53,15 +53,15 @@ src/PG-range/CMakeFiles/PG-range.dir/PG.cc.o: src/PG-range/CMakeFiles/PG-range.d
 src/PG-range/CMakeFiles/PG-range.dir/PG.cc.o: src/PG-range/PG.cc
 	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/PG-range/CMakeFiles/PG-range.dir/PG.cc.o"
-	cd /h1/apereira/F2Dock/src/PG-range && /usr/bin/mpic++.openmpi   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/PG-range.dir/PG.cc.o -c /h1/apereira/F2Dock/src/PG-range/PG.cc
+	cd /h1/apereira/F2Dock/src/PG-range && /h1/apereira/OpenMPI/bin/mpiCC   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/PG-range.dir/PG.cc.o -c /h1/apereira/F2Dock/src/PG-range/PG.cc
 
 src/PG-range/CMakeFiles/PG-range.dir/PG.cc.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/PG-range.dir/PG.cc.i"
-	cd /h1/apereira/F2Dock/src/PG-range && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/PG-range/PG.cc > CMakeFiles/PG-range.dir/PG.cc.i
+	cd /h1/apereira/F2Dock/src/PG-range && /h1/apereira/OpenMPI/bin/mpiCC  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/PG-range/PG.cc > CMakeFiles/PG-range.dir/PG.cc.i
 
 src/PG-range/CMakeFiles/PG-range.dir/PG.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/PG-range.dir/PG.cc.s"
-	cd /h1/apereira/F2Dock/src/PG-range && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/PG-range/PG.cc -o CMakeFiles/PG-range.dir/PG.cc.s
+	cd /h1/apereira/F2Dock/src/PG-range && /h1/apereira/OpenMPI/bin/mpiCC  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/PG-range/PG.cc -o CMakeFiles/PG-range.dir/PG.cc.s
 
 src/PG-range/CMakeFiles/PG-range.dir/PG.cc.o.requires:
 .PHONY : src/PG-range/CMakeFiles/PG-range.dir/PG.cc.o.requires
@@ -77,15 +77,15 @@ src/PG-range/CMakeFiles/PG-range.dir/cuckoo.cc.o: src/PG-range/CMakeFiles/PG-ran
 src/PG-range/CMakeFiles/PG-range.dir/cuckoo.cc.o: src/PG-range/cuckoo.cc
 	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/PG-range/CMakeFiles/PG-range.dir/cuckoo.cc.o"
-	cd /h1/apereira/F2Dock/src/PG-range && /usr/bin/mpic++.openmpi   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/PG-range.dir/cuckoo.cc.o -c /h1/apereira/F2Dock/src/PG-range/cuckoo.cc
+	cd /h1/apereira/F2Dock/src/PG-range && /h1/apereira/OpenMPI/bin/mpiCC   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/PG-range.dir/cuckoo.cc.o -c /h1/apereira/F2Dock/src/PG-range/cuckoo.cc
 
 src/PG-range/CMakeFiles/PG-range.dir/cuckoo.cc.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/PG-range.dir/cuckoo.cc.i"
-	cd /h1/apereira/F2Dock/src/PG-range && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/PG-range/cuckoo.cc > CMakeFiles/PG-range.dir/cuckoo.cc.i
+	cd /h1/apereira/F2Dock/src/PG-range && /h1/apereira/OpenMPI/bin/mpiCC  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/PG-range/cuckoo.cc > CMakeFiles/PG-range.dir/cuckoo.cc.i
 
 src/PG-range/CMakeFiles/PG-range.dir/cuckoo.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/PG-range.dir/cuckoo.cc.s"
-	cd /h1/apereira/F2Dock/src/PG-range && /usr/bin/mpic++.openmpi  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/PG-range/cuckoo.cc -o CMakeFiles/PG-range.dir/cuckoo.cc.s
+	cd /h1/apereira/F2Dock/src/PG-range && /h1/apereira/OpenMPI/bin/mpiCC  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/PG-range/cuckoo.cc -o CMakeFiles/PG-range.dir/cuckoo.cc.s
 
 src/PG-range/CMakeFiles/PG-range.dir/cuckoo.cc.o.requires:
 .PHONY : src/PG-range/CMakeFiles/PG-range.dir/cuckoo.cc.o.requires

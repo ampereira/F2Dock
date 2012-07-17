@@ -40,9 +40,9 @@ using CCVOpenGLMath::Vector;
 #define 	M_PI   3.14159265358979323846
 #endif
 
-#ifdef MPI
-#include <mpi.h>
-#endif
+// MPI global variables
+extern int rank;
+extern int np;
 
 // variables for the rotation server for pthreads
 pthread_mutex_t rotLock;
@@ -5883,6 +5883,7 @@ void initHBondFilter( PARAMS_IN *pr )
 
 int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 {
+	if(!rank){
 	int interpFuncExtent;
 	double scale;
 	if ( !computeGridParameters( pr, &interpFuncExtent, &scale ) ) return -1;
@@ -7125,13 +7126,7 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 		}
 
 	}
-
-
-	#ifdef MPI
-	MPI::Init();
-	int rank = MPI::COMM_WORLD.Get_rank();	// Process rank
-	int np   = MPI::COMM_WORLD.Get_size();	// Number of processes in COMM_WORLD
-	#endif
+	}
 
 	for ( int i = 0; i < numThreads; i++ )
 		pthread_create( &p[ i ], NULL, startApplyRotationsThread, ( void * ) &prT[ i ] );
