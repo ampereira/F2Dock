@@ -1,6 +1,6 @@
 FILE(REMOVE_RECURSE
-  "CMakeFiles/PG-range.dir/cuckoo.cc.o"
   "CMakeFiles/PG-range.dir/PG.cc.o"
+  "CMakeFiles/PG-range.dir/cuckoo.cc.o"
   "../../lib/libPG-range.pdb"
   "../../lib/libPG-range.a"
 )

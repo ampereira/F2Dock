@@ -6,17 +6,17 @@
 
 #IncludeRegexTransform: 
 
-/Users/andre/F2Dock-refactored/src/fast-hydro/pseudoGsol.cpp
+/h1/apereira/F2Dock/src/fast-hydro/pseudoGsol.cpp
 pseudoGsol.h
-/Users/andre/F2Dock-refactored/src/fast-hydro/pseudoGsol.h
+/h1/apereira/F2Dock/src/fast-hydro/pseudoGsol.h
 
-/Users/andre/F2Dock-refactored/src/fast-hydro/testPseudoGsol.cpp
+/h1/apereira/F2Dock/src/fast-hydro/testPseudoGsol.cpp
 stdio.h
 -
 ../utils/utils.h
-/Users/andre/F2Dock-refactored/src/fast-hydro/../utils/utils.h
+/h1/apereira/F2Dock/src/fast-hydro/../utils/utils.h
 pseudoGsol.h
-/Users/andre/F2Dock-refactored/src/fast-hydro/pseudoGsol.h
+/h1/apereira/F2Dock/src/fast-hydro/pseudoGsol.h
 
 src/fast-hydro/../../inc/PG-range/1D-IntegerRange.h
 cuckoo.h

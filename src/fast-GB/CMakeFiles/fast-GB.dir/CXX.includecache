@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/Users/andre/F2Dock-refactored/src/fast-GB/GpolTest.cpp
+/h1/apereira/F2Dock/src/fast-GB/GpolTest.cpp
 stdio.h
 -
 stdlib.h
@@ -14,27 +14,27 @@ stdlib.h
 string.h
 -
 fastBornRadius.h
-/Users/andre/F2Dock-refactored/src/fast-GB/fastBornRadius.h
+/h1/apereira/F2Dock/src/fast-GB/fastBornRadius.h
 fastGpol.h
-/Users/andre/F2Dock-refactored/src/fast-GB/fastGpol.h
+/h1/apereira/F2Dock/src/fast-GB/fastGpol.h
 ../utils/utils.h
-/Users/andre/F2Dock-refactored/src/fast-GB/../utils/utils.h
+/h1/apereira/F2Dock/src/fast-GB/../utils/utils.h
 
-/Users/andre/F2Dock-refactored/src/fast-GB/SSEApproxMath.cpp
+/h1/apereira/F2Dock/src/fast-GB/SSEApproxMath.cpp
 SSEApproxMath.h
-/Users/andre/F2Dock-refactored/src/fast-GB/SSEApproxMath.h
+/h1/apereira/F2Dock/src/fast-GB/SSEApproxMath.h
 
-/Users/andre/F2Dock-refactored/src/fast-GB/fastBornRadius.cpp
+/h1/apereira/F2Dock/src/fast-GB/fastBornRadius.cpp
 fastBornRadius.h
-/Users/andre/F2Dock-refactored/src/fast-GB/fastBornRadius.h
+/h1/apereira/F2Dock/src/fast-GB/fastBornRadius.h
 
-/Users/andre/F2Dock-refactored/src/fast-GB/fastDispE.cpp
+/h1/apereira/F2Dock/src/fast-GB/fastDispE.cpp
 fastDispE.h
-/Users/andre/F2Dock-refactored/src/fast-GB/fastDispE.h
+/h1/apereira/F2Dock/src/fast-GB/fastDispE.h
 
-/Users/andre/F2Dock-refactored/src/fast-GB/fastGpol.cpp
+/h1/apereira/F2Dock/src/fast-GB/fastGpol.cpp
 fastGpol.h
-/Users/andre/F2Dock-refactored/src/fast-GB/fastGpol.h
+/h1/apereira/F2Dock/src/fast-GB/fastGpol.h
 
 src/fast-GB/../../inc/fast-GB/../utils/utils.h
 iostream

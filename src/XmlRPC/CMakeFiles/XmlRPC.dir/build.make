@@ -4,7 +4,7 @@
 #=============================================================================
 # Special targets provided by cmake.
 
-# Disable implicit rules so canonical targets will work.
+# Disable implicit rules so canoncical targets will work.
 .SUFFIXES:
 
 # Remove some rules from gmake that .SUFFIXES does not remove.
@@ -26,19 +26,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /usr/local/bin/cmake
+CMAKE_COMMAND = /org/centers/cvc/software/share/usr.linux.x86_64/bin/cmake
 
 # The command to remove a file.
-RM = /usr/local/bin/cmake -E remove -f
+RM = /org/centers/cvc/software/share/usr.linux.x86_64/bin/cmake -E remove -f
 
 # The program to use to edit the cache.
-CMAKE_EDIT_COMMAND = /usr/local/bin/ccmake
+CMAKE_EDIT_COMMAND = /org/centers/cvc/software/share/usr.linux.x86_64/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/andre/F2Dock-refactored
+CMAKE_SOURCE_DIR = /h1/apereira/F2Dock
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/andre/F2Dock-refactored
+CMAKE_BINARY_DIR = /h1/apereira/F2Dock
 
 # Include any dependencies generated for this target.
 include src/XmlRPC/CMakeFiles/XmlRPC.dir/depend.make
@@ -51,17 +51,17 @@ include src/XmlRPC/CMakeFiles/XmlRPC.dir/flags.make
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcClient.cpp.o: src/XmlRPC/CMakeFiles/XmlRPC.dir/flags.make
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcClient.cpp.o: src/XmlRPC/XmlRpcClient.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/andre/F2Dock-refactored/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcClient.cpp.o"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/XmlRPC.dir/XmlRpcClient.cpp.o -c /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcClient.cpp
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/XmlRPC.dir/XmlRpcClient.cpp.o -c /h1/apereira/F2Dock/src/XmlRPC/XmlRpcClient.cpp
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcClient.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/XmlRPC.dir/XmlRpcClient.cpp.i"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcClient.cpp > CMakeFiles/XmlRPC.dir/XmlRpcClient.cpp.i
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/XmlRPC/XmlRpcClient.cpp > CMakeFiles/XmlRPC.dir/XmlRpcClient.cpp.i
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcClient.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/XmlRPC.dir/XmlRpcClient.cpp.s"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcClient.cpp -o CMakeFiles/XmlRPC.dir/XmlRpcClient.cpp.s
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/XmlRPC/XmlRpcClient.cpp -o CMakeFiles/XmlRPC.dir/XmlRpcClient.cpp.s
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcClient.cpp.o.requires:
 .PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcClient.cpp.o.requires
@@ -71,20 +71,21 @@ src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcClient.cpp.o.provides: src/XmlRPC/CMakeFi
 .PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcClient.cpp.o.provides
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcClient.cpp.o.provides.build: src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcClient.cpp.o
+.PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcClient.cpp.o.provides.build
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcDispatch.cpp.o: src/XmlRPC/CMakeFiles/XmlRPC.dir/flags.make
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcDispatch.cpp.o: src/XmlRPC/XmlRpcDispatch.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/andre/F2Dock-refactored/CMakeFiles $(CMAKE_PROGRESS_2)
+	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcDispatch.cpp.o"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/XmlRPC.dir/XmlRpcDispatch.cpp.o -c /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcDispatch.cpp
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/XmlRPC.dir/XmlRpcDispatch.cpp.o -c /h1/apereira/F2Dock/src/XmlRPC/XmlRpcDispatch.cpp
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcDispatch.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/XmlRPC.dir/XmlRpcDispatch.cpp.i"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcDispatch.cpp > CMakeFiles/XmlRPC.dir/XmlRpcDispatch.cpp.i
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/XmlRPC/XmlRpcDispatch.cpp > CMakeFiles/XmlRPC.dir/XmlRpcDispatch.cpp.i
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcDispatch.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/XmlRPC.dir/XmlRpcDispatch.cpp.s"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcDispatch.cpp -o CMakeFiles/XmlRPC.dir/XmlRpcDispatch.cpp.s
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/XmlRPC/XmlRpcDispatch.cpp -o CMakeFiles/XmlRPC.dir/XmlRpcDispatch.cpp.s
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcDispatch.cpp.o.requires:
 .PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcDispatch.cpp.o.requires
@@ -94,20 +95,21 @@ src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcDispatch.cpp.o.provides: src/XmlRPC/CMake
 .PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcDispatch.cpp.o.provides
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcDispatch.cpp.o.provides.build: src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcDispatch.cpp.o
+.PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcDispatch.cpp.o.provides.build
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServer.cpp.o: src/XmlRPC/CMakeFiles/XmlRPC.dir/flags.make
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServer.cpp.o: src/XmlRPC/XmlRpcServer.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/andre/F2Dock-refactored/CMakeFiles $(CMAKE_PROGRESS_3)
+	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_3)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServer.cpp.o"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/XmlRPC.dir/XmlRpcServer.cpp.o -c /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcServer.cpp
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/XmlRPC.dir/XmlRpcServer.cpp.o -c /h1/apereira/F2Dock/src/XmlRPC/XmlRpcServer.cpp
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServer.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/XmlRPC.dir/XmlRpcServer.cpp.i"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcServer.cpp > CMakeFiles/XmlRPC.dir/XmlRpcServer.cpp.i
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/XmlRPC/XmlRpcServer.cpp > CMakeFiles/XmlRPC.dir/XmlRpcServer.cpp.i
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServer.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/XmlRPC.dir/XmlRpcServer.cpp.s"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcServer.cpp -o CMakeFiles/XmlRPC.dir/XmlRpcServer.cpp.s
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/XmlRPC/XmlRpcServer.cpp -o CMakeFiles/XmlRPC.dir/XmlRpcServer.cpp.s
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServer.cpp.o.requires:
 .PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServer.cpp.o.requires
@@ -117,20 +119,21 @@ src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServer.cpp.o.provides: src/XmlRPC/CMakeFi
 .PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServer.cpp.o.provides
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServer.cpp.o.provides.build: src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServer.cpp.o
+.PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServer.cpp.o.provides.build
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServerConnection.cpp.o: src/XmlRPC/CMakeFiles/XmlRPC.dir/flags.make
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServerConnection.cpp.o: src/XmlRPC/XmlRpcServerConnection.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/andre/F2Dock-refactored/CMakeFiles $(CMAKE_PROGRESS_4)
+	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_4)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServerConnection.cpp.o"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/XmlRPC.dir/XmlRpcServerConnection.cpp.o -c /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcServerConnection.cpp
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/XmlRPC.dir/XmlRpcServerConnection.cpp.o -c /h1/apereira/F2Dock/src/XmlRPC/XmlRpcServerConnection.cpp
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServerConnection.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/XmlRPC.dir/XmlRpcServerConnection.cpp.i"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcServerConnection.cpp > CMakeFiles/XmlRPC.dir/XmlRpcServerConnection.cpp.i
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/XmlRPC/XmlRpcServerConnection.cpp > CMakeFiles/XmlRPC.dir/XmlRpcServerConnection.cpp.i
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServerConnection.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/XmlRPC.dir/XmlRpcServerConnection.cpp.s"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcServerConnection.cpp -o CMakeFiles/XmlRPC.dir/XmlRpcServerConnection.cpp.s
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/XmlRPC/XmlRpcServerConnection.cpp -o CMakeFiles/XmlRPC.dir/XmlRpcServerConnection.cpp.s
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServerConnection.cpp.o.requires:
 .PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServerConnection.cpp.o.requires
@@ -140,20 +143,21 @@ src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServerConnection.cpp.o.provides: src/XmlR
 .PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServerConnection.cpp.o.provides
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServerConnection.cpp.o.provides.build: src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServerConnection.cpp.o
+.PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServerConnection.cpp.o.provides.build
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServerMethod.cpp.o: src/XmlRPC/CMakeFiles/XmlRPC.dir/flags.make
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServerMethod.cpp.o: src/XmlRPC/XmlRpcServerMethod.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/andre/F2Dock-refactored/CMakeFiles $(CMAKE_PROGRESS_5)
+	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_5)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServerMethod.cpp.o"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/XmlRPC.dir/XmlRpcServerMethod.cpp.o -c /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcServerMethod.cpp
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/XmlRPC.dir/XmlRpcServerMethod.cpp.o -c /h1/apereira/F2Dock/src/XmlRPC/XmlRpcServerMethod.cpp
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServerMethod.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/XmlRPC.dir/XmlRpcServerMethod.cpp.i"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcServerMethod.cpp > CMakeFiles/XmlRPC.dir/XmlRpcServerMethod.cpp.i
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/XmlRPC/XmlRpcServerMethod.cpp > CMakeFiles/XmlRPC.dir/XmlRpcServerMethod.cpp.i
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServerMethod.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/XmlRPC.dir/XmlRpcServerMethod.cpp.s"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcServerMethod.cpp -o CMakeFiles/XmlRPC.dir/XmlRpcServerMethod.cpp.s
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/XmlRPC/XmlRpcServerMethod.cpp -o CMakeFiles/XmlRPC.dir/XmlRpcServerMethod.cpp.s
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServerMethod.cpp.o.requires:
 .PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServerMethod.cpp.o.requires
@@ -163,20 +167,21 @@ src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServerMethod.cpp.o.provides: src/XmlRPC/C
 .PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServerMethod.cpp.o.provides
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServerMethod.cpp.o.provides.build: src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServerMethod.cpp.o
+.PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcServerMethod.cpp.o.provides.build
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcSocket.cpp.o: src/XmlRPC/CMakeFiles/XmlRPC.dir/flags.make
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcSocket.cpp.o: src/XmlRPC/XmlRpcSocket.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/andre/F2Dock-refactored/CMakeFiles $(CMAKE_PROGRESS_6)
+	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_6)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcSocket.cpp.o"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/XmlRPC.dir/XmlRpcSocket.cpp.o -c /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcSocket.cpp
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/XmlRPC.dir/XmlRpcSocket.cpp.o -c /h1/apereira/F2Dock/src/XmlRPC/XmlRpcSocket.cpp
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcSocket.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/XmlRPC.dir/XmlRpcSocket.cpp.i"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcSocket.cpp > CMakeFiles/XmlRPC.dir/XmlRpcSocket.cpp.i
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/XmlRPC/XmlRpcSocket.cpp > CMakeFiles/XmlRPC.dir/XmlRpcSocket.cpp.i
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcSocket.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/XmlRPC.dir/XmlRpcSocket.cpp.s"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcSocket.cpp -o CMakeFiles/XmlRPC.dir/XmlRpcSocket.cpp.s
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/XmlRPC/XmlRpcSocket.cpp -o CMakeFiles/XmlRPC.dir/XmlRpcSocket.cpp.s
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcSocket.cpp.o.requires:
 .PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcSocket.cpp.o.requires
@@ -186,20 +191,21 @@ src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcSocket.cpp.o.provides: src/XmlRPC/CMakeFi
 .PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcSocket.cpp.o.provides
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcSocket.cpp.o.provides.build: src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcSocket.cpp.o
+.PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcSocket.cpp.o.provides.build
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcSource.cpp.o: src/XmlRPC/CMakeFiles/XmlRPC.dir/flags.make
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcSource.cpp.o: src/XmlRPC/XmlRpcSource.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/andre/F2Dock-refactored/CMakeFiles $(CMAKE_PROGRESS_7)
+	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_7)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcSource.cpp.o"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/XmlRPC.dir/XmlRpcSource.cpp.o -c /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcSource.cpp
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/XmlRPC.dir/XmlRpcSource.cpp.o -c /h1/apereira/F2Dock/src/XmlRPC/XmlRpcSource.cpp
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcSource.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/XmlRPC.dir/XmlRpcSource.cpp.i"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcSource.cpp > CMakeFiles/XmlRPC.dir/XmlRpcSource.cpp.i
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/XmlRPC/XmlRpcSource.cpp > CMakeFiles/XmlRPC.dir/XmlRpcSource.cpp.i
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcSource.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/XmlRPC.dir/XmlRpcSource.cpp.s"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcSource.cpp -o CMakeFiles/XmlRPC.dir/XmlRpcSource.cpp.s
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/XmlRPC/XmlRpcSource.cpp -o CMakeFiles/XmlRPC.dir/XmlRpcSource.cpp.s
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcSource.cpp.o.requires:
 .PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcSource.cpp.o.requires
@@ -209,20 +215,21 @@ src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcSource.cpp.o.provides: src/XmlRPC/CMakeFi
 .PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcSource.cpp.o.provides
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcSource.cpp.o.provides.build: src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcSource.cpp.o
+.PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcSource.cpp.o.provides.build
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcUtil.cpp.o: src/XmlRPC/CMakeFiles/XmlRPC.dir/flags.make
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcUtil.cpp.o: src/XmlRPC/XmlRpcUtil.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/andre/F2Dock-refactored/CMakeFiles $(CMAKE_PROGRESS_8)
+	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_8)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcUtil.cpp.o"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/XmlRPC.dir/XmlRpcUtil.cpp.o -c /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcUtil.cpp
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/XmlRPC.dir/XmlRpcUtil.cpp.o -c /h1/apereira/F2Dock/src/XmlRPC/XmlRpcUtil.cpp
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcUtil.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/XmlRPC.dir/XmlRpcUtil.cpp.i"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcUtil.cpp > CMakeFiles/XmlRPC.dir/XmlRpcUtil.cpp.i
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/XmlRPC/XmlRpcUtil.cpp > CMakeFiles/XmlRPC.dir/XmlRpcUtil.cpp.i
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcUtil.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/XmlRPC.dir/XmlRpcUtil.cpp.s"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcUtil.cpp -o CMakeFiles/XmlRPC.dir/XmlRpcUtil.cpp.s
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/XmlRPC/XmlRpcUtil.cpp -o CMakeFiles/XmlRPC.dir/XmlRpcUtil.cpp.s
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcUtil.cpp.o.requires:
 .PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcUtil.cpp.o.requires
@@ -232,20 +239,21 @@ src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcUtil.cpp.o.provides: src/XmlRPC/CMakeFile
 .PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcUtil.cpp.o.provides
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcUtil.cpp.o.provides.build: src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcUtil.cpp.o
+.PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcUtil.cpp.o.provides.build
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcValue.cpp.o: src/XmlRPC/CMakeFiles/XmlRPC.dir/flags.make
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcValue.cpp.o: src/XmlRPC/XmlRpcValue.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/andre/F2Dock-refactored/CMakeFiles $(CMAKE_PROGRESS_9)
+	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_9)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcValue.cpp.o"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/XmlRPC.dir/XmlRpcValue.cpp.o -c /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcValue.cpp
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/XmlRPC.dir/XmlRpcValue.cpp.o -c /h1/apereira/F2Dock/src/XmlRPC/XmlRpcValue.cpp
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcValue.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/XmlRPC.dir/XmlRpcValue.cpp.i"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcValue.cpp > CMakeFiles/XmlRPC.dir/XmlRpcValue.cpp.i
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/XmlRPC/XmlRpcValue.cpp > CMakeFiles/XmlRPC.dir/XmlRpcValue.cpp.i
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcValue.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/XmlRPC.dir/XmlRpcValue.cpp.s"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcValue.cpp -o CMakeFiles/XmlRPC.dir/XmlRpcValue.cpp.s
+	cd /h1/apereira/F2Dock/src/XmlRPC && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/XmlRPC/XmlRpcValue.cpp -o CMakeFiles/XmlRPC.dir/XmlRpcValue.cpp.s
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcValue.cpp.o.requires:
 .PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcValue.cpp.o.requires
@@ -255,6 +263,7 @@ src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcValue.cpp.o.provides: src/XmlRPC/CMakeFil
 .PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcValue.cpp.o.provides
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcValue.cpp.o.provides.build: src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcValue.cpp.o
+.PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcValue.cpp.o.provides.build
 
 # Object files for target XmlRPC
 XmlRPC_OBJECTS = \
@@ -283,8 +292,8 @@ lib/libXmlRPC.a: src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlRpcValue.cpp.o
 lib/libXmlRPC.a: src/XmlRPC/CMakeFiles/XmlRPC.dir/build.make
 lib/libXmlRPC.a: src/XmlRPC/CMakeFiles/XmlRPC.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX static library ../../lib/libXmlRPC.a"
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && $(CMAKE_COMMAND) -P CMakeFiles/XmlRPC.dir/cmake_clean_target.cmake
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/XmlRPC.dir/link.txt --verbose=$(VERBOSE)
+	cd /h1/apereira/F2Dock/src/XmlRPC && $(CMAKE_COMMAND) -P CMakeFiles/XmlRPC.dir/cmake_clean_target.cmake
+	cd /h1/apereira/F2Dock/src/XmlRPC && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/XmlRPC.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 src/XmlRPC/CMakeFiles/XmlRPC.dir/build: lib/libXmlRPC.a
@@ -302,10 +311,10 @@ src/XmlRPC/CMakeFiles/XmlRPC.dir/requires: src/XmlRPC/CMakeFiles/XmlRPC.dir/XmlR
 .PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/requires
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/clean:
-	cd /Users/andre/F2Dock-refactored/src/XmlRPC && $(CMAKE_COMMAND) -P CMakeFiles/XmlRPC.dir/cmake_clean.cmake
+	cd /h1/apereira/F2Dock/src/XmlRPC && $(CMAKE_COMMAND) -P CMakeFiles/XmlRPC.dir/cmake_clean.cmake
 .PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/clean
 
 src/XmlRPC/CMakeFiles/XmlRPC.dir/depend:
-	cd /Users/andre/F2Dock-refactored && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/andre/F2Dock-refactored /Users/andre/F2Dock-refactored/src/XmlRPC /Users/andre/F2Dock-refactored /Users/andre/F2Dock-refactored/src/XmlRPC /Users/andre/F2Dock-refactored/src/XmlRPC/CMakeFiles/XmlRPC.dir/DependInfo.cmake --color=$(COLOR)
+	cd /h1/apereira/F2Dock && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /h1/apereira/F2Dock /h1/apereira/F2Dock/src/XmlRPC /h1/apereira/F2Dock /h1/apereira/F2Dock/src/XmlRPC /h1/apereira/F2Dock/src/XmlRPC/CMakeFiles/XmlRPC.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : src/XmlRPC/CMakeFiles/XmlRPC.dir/depend
 

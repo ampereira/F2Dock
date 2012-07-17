@@ -6,9 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/Users/andre/F2Dock-refactored/src/PG-range/PG.cc
+/h1/apereira/F2Dock/src/PG-range/PG.cc
 PG.h
-/Users/andre/F2Dock-refactored/src/PG-range/PG.h
+/h1/apereira/F2Dock/src/PG-range/PG.h
 cmath
 -
 time.h
@@ -16,7 +16,7 @@ time.h
 sys/time.h
 -
 
-/Users/andre/F2Dock-refactored/src/PG-range/cuckoo.cc
+/h1/apereira/F2Dock/src/PG-range/cuckoo.cc
 stdio.h
 -
 stdlib.h
@@ -28,7 +28,7 @@ time.h
 math.h
 -
 cuckoo.h
-/Users/andre/F2Dock-refactored/src/PG-range/cuckoo.h
+/h1/apereira/F2Dock/src/PG-range/cuckoo.h
 
 src/PG-range/../../inc/PG-range/1D-IntegerRange.h
 cuckoo.h

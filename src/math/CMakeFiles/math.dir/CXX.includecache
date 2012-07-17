@@ -6,61 +6,61 @@
 
 #IncludeRegexTransform: 
 
-/Users/andre/F2Dock-refactored/src/math/Gaussian.cpp
+/h1/apereira/F2Dock/src/math/Gaussian.cpp
 math.h
 -
 stdio.h
 -
 Gaussian.h
-/Users/andre/F2Dock-refactored/src/math/Gaussian.h
+/h1/apereira/F2Dock/src/math/Gaussian.h
 
-/Users/andre/F2Dock-refactored/src/math/Matrix.cpp
+/h1/apereira/F2Dock/src/math/Matrix.cpp
 Matrix.h
-/Users/andre/F2Dock-refactored/src/math/Matrix.h
+/h1/apereira/F2Dock/src/math/Matrix.h
 Vector.h
-/Users/andre/F2Dock-refactored/src/math/Vector.h
+/h1/apereira/F2Dock/src/math/Vector.h
 Ray.h
-/Users/andre/F2Dock-refactored/src/math/Ray.h
+/h1/apereira/F2Dock/src/math/Ray.h
 math.h
 -
 stdio.h
 -
 
-/Users/andre/F2Dock-refactored/src/math/Quaternion.cpp
+/h1/apereira/F2Dock/src/math/Quaternion.cpp
 Quaternion.h
-/Users/andre/F2Dock-refactored/src/math/Quaternion.h
+/h1/apereira/F2Dock/src/math/Quaternion.h
 Vector.h
-/Users/andre/F2Dock-refactored/src/math/Vector.h
+/h1/apereira/F2Dock/src/math/Vector.h
 Ray.h
-/Users/andre/F2Dock-refactored/src/math/Ray.h
+/h1/apereira/F2Dock/src/math/Ray.h
 Matrix.h
-/Users/andre/F2Dock-refactored/src/math/Matrix.h
+/h1/apereira/F2Dock/src/math/Matrix.h
 math.h
 -
 
-/Users/andre/F2Dock-refactored/src/math/Ray.cpp
+/h1/apereira/F2Dock/src/math/Ray.cpp
 Ray.h
-/Users/andre/F2Dock-refactored/src/math/Ray.h
+/h1/apereira/F2Dock/src/math/Ray.h
 math.h
 -
 stdio.h
 -
 
-/Users/andre/F2Dock-refactored/src/math/SmoothingFunction.cpp
+/h1/apereira/F2Dock/src/math/SmoothingFunction.cpp
 math.h
 -
 SmoothingFunction.h
-/Users/andre/F2Dock-refactored/src/math/SmoothingFunction.h
+/h1/apereira/F2Dock/src/math/SmoothingFunction.h
 
-/Users/andre/F2Dock-refactored/src/math/Tuple.cpp
+/h1/apereira/F2Dock/src/math/Tuple.cpp
 Tuple.h
-/Users/andre/F2Dock-refactored/src/math/Tuple.h
+/h1/apereira/F2Dock/src/math/Tuple.h
 stdio.h
 -
 
-/Users/andre/F2Dock-refactored/src/math/Vector.cpp
+/h1/apereira/F2Dock/src/math/Vector.cpp
 Vector.h
-/Users/andre/F2Dock-refactored/src/math/Vector.h
+/h1/apereira/F2Dock/src/math/Vector.h
 math.h
 -
 

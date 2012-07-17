@@ -8,7 +8,7 @@ default_target: all
 #=============================================================================
 # Special targets provided by cmake.
 
-# Disable implicit rules so canonical targets will work.
+# Disable implicit rules so canoncical targets will work.
 .SUFFIXES:
 
 # Remove some rules from gmake that .SUFFIXES does not remove.
@@ -30,19 +30,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /usr/local/bin/cmake
+CMAKE_COMMAND = /org/centers/cvc/software/share/usr.linux.x86_64/bin/cmake
 
 # The command to remove a file.
-RM = /usr/local/bin/cmake -E remove -f
+RM = /org/centers/cvc/software/share/usr.linux.x86_64/bin/cmake -E remove -f
 
 # The program to use to edit the cache.
-CMAKE_EDIT_COMMAND = /usr/local/bin/ccmake
+CMAKE_EDIT_COMMAND = /org/centers/cvc/software/share/usr.linux.x86_64/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/andre/F2Dock-refactored
+CMAKE_SOURCE_DIR = /h1/apereira/F2Dock
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/andre/F2Dock-refactored
+CMAKE_BINARY_DIR = /h1/apereira/F2Dock
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -50,7 +50,7 @@ CMAKE_BINARY_DIR = /Users/andre/F2Dock-refactored
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
-	/usr/local/bin/ccmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/org/centers/cvc/software/share/usr.linux.x86_64/bin/ccmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -60,7 +60,7 @@ edit_cache/fast: edit_cache
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/local/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/org/centers/cvc/software/share/usr.linux.x86_64/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -69,14 +69,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /Users/andre/F2Dock-refactored && $(CMAKE_COMMAND) -E cmake_progress_start /Users/andre/F2Dock-refactored/CMakeFiles /Users/andre/F2Dock-refactored/src/F2DockServer/CMakeFiles/progress.marks
-	cd /Users/andre/F2Dock-refactored && $(MAKE) -f CMakeFiles/Makefile2 src/F2DockServer/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/andre/F2Dock-refactored/CMakeFiles 0
+	cd /h1/apereira/F2Dock && $(CMAKE_COMMAND) -E cmake_progress_start /h1/apereira/F2Dock/CMakeFiles /h1/apereira/F2Dock/src/F2DockServer/CMakeFiles/progress.marks
+	cd /h1/apereira/F2Dock && $(MAKE) -f CMakeFiles/Makefile2 src/F2DockServer/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /h1/apereira/F2Dock/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /Users/andre/F2Dock-refactored && $(MAKE) -f CMakeFiles/Makefile2 src/F2DockServer/clean
+	cd /h1/apereira/F2Dock && $(MAKE) -f CMakeFiles/Makefile2 src/F2DockServer/clean
 .PHONY : clean
 
 # The main clean target
@@ -85,22 +85,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /Users/andre/F2Dock-refactored && $(MAKE) -f CMakeFiles/Makefile2 src/F2DockServer/preinstall
+	cd /h1/apereira/F2Dock && $(MAKE) -f CMakeFiles/Makefile2 src/F2DockServer/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /Users/andre/F2Dock-refactored && $(MAKE) -f CMakeFiles/Makefile2 src/F2DockServer/preinstall
+	cd /h1/apereira/F2Dock && $(MAKE) -f CMakeFiles/Makefile2 src/F2DockServer/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /Users/andre/F2Dock-refactored && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /h1/apereira/F2Dock && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 src/F2DockServer/CMakeFiles/F2DockServer.dir/rule:
-	cd /Users/andre/F2Dock-refactored && $(MAKE) -f CMakeFiles/Makefile2 src/F2DockServer/CMakeFiles/F2DockServer.dir/rule
+	cd /h1/apereira/F2Dock && $(MAKE) -f CMakeFiles/Makefile2 src/F2DockServer/CMakeFiles/F2DockServer.dir/rule
 .PHONY : src/F2DockServer/CMakeFiles/F2DockServer.dir/rule
 
 # Convenience name for target.
@@ -109,7 +109,7 @@ F2DockServer: src/F2DockServer/CMakeFiles/F2DockServer.dir/rule
 
 # fast build rule for target.
 F2DockServer/fast:
-	cd /Users/andre/F2Dock-refactored && $(MAKE) -f src/F2DockServer/CMakeFiles/F2DockServer.dir/build.make src/F2DockServer/CMakeFiles/F2DockServer.dir/build
+	cd /h1/apereira/F2Dock && $(MAKE) -f src/F2DockServer/CMakeFiles/F2DockServer.dir/build.make src/F2DockServer/CMakeFiles/F2DockServer.dir/build
 .PHONY : F2DockServer/fast
 
 F2DockServer.o: F2DockServer.cpp.o
@@ -117,7 +117,7 @@ F2DockServer.o: F2DockServer.cpp.o
 
 # target to build an object file
 F2DockServer.cpp.o:
-	cd /Users/andre/F2Dock-refactored && $(MAKE) -f src/F2DockServer/CMakeFiles/F2DockServer.dir/build.make src/F2DockServer/CMakeFiles/F2DockServer.dir/F2DockServer.cpp.o
+	cd /h1/apereira/F2Dock && $(MAKE) -f src/F2DockServer/CMakeFiles/F2DockServer.dir/build.make src/F2DockServer/CMakeFiles/F2DockServer.dir/F2DockServer.cpp.o
 .PHONY : F2DockServer.cpp.o
 
 F2DockServer.i: F2DockServer.cpp.i
@@ -125,7 +125,7 @@ F2DockServer.i: F2DockServer.cpp.i
 
 # target to preprocess a source file
 F2DockServer.cpp.i:
-	cd /Users/andre/F2Dock-refactored && $(MAKE) -f src/F2DockServer/CMakeFiles/F2DockServer.dir/build.make src/F2DockServer/CMakeFiles/F2DockServer.dir/F2DockServer.cpp.i
+	cd /h1/apereira/F2Dock && $(MAKE) -f src/F2DockServer/CMakeFiles/F2DockServer.dir/build.make src/F2DockServer/CMakeFiles/F2DockServer.dir/F2DockServer.cpp.i
 .PHONY : F2DockServer.cpp.i
 
 F2DockServer.s: F2DockServer.cpp.s
@@ -133,7 +133,7 @@ F2DockServer.s: F2DockServer.cpp.s
 
 # target to generate assembly for a file
 F2DockServer.cpp.s:
-	cd /Users/andre/F2Dock-refactored && $(MAKE) -f src/F2DockServer/CMakeFiles/F2DockServer.dir/build.make src/F2DockServer/CMakeFiles/F2DockServer.dir/F2DockServer.cpp.s
+	cd /h1/apereira/F2Dock && $(MAKE) -f src/F2DockServer/CMakeFiles/F2DockServer.dir/build.make src/F2DockServer/CMakeFiles/F2DockServer.dir/F2DockServer.cpp.s
 .PHONY : F2DockServer.cpp.s
 
 # Help Target
@@ -159,6 +159,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /Users/andre/F2Dock-refactored && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /h1/apereira/F2Dock && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 
