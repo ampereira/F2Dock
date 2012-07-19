@@ -55,7 +55,8 @@ int countLines(char *filename)
 	while ( fgets( s, 1999, fp ) != NULL )
 	{
 		int j = skipWhiteSpaces( s, 0 );
-		if ( s[ j ] != '#' ) i++;
+		if ( s[ j ] != '#' ) 
+			i++;
 	}
 
 	fclose(fp);
@@ -126,6 +127,43 @@ bool readRotations(char *rotationFile, PARAMS_IN *p)
 	return true;
 }
 
+bool readRotations2(char *rotationFile, PARAMS_IN *p)
+{
+	// number of rotations (0 value included)
+	int numberOfRotations = p->numberOfRotations;
+	int nmax = countLines(rotationFile);
+
+	if(nmax < numberOfRotations)
+		numberOfRotations = nmax;
+
+	float *rotations = new float[ ( numberOfRotations + 1 ) * 9 ];
+
+	FILE* fpRot = fopen( rotationFile, "r" );
+	if (  fpRot == NULL )
+	{
+		printf( "Error: Failed to open parameter file %s!\n", rotationFile);
+		return false;
+	}
+
+	int i=0, off;
+	while ( i <= numberOfRotations ) {
+		off = i*9;
+
+		if (fscanf( fpRot, "%f %f %f %f %f %f %f %f %f\n",
+					&rotations[off  ], &rotations[off+1], &rotations[off+2], \
+					&rotations[off+3], &rotations[off+4], &rotations[off+5], \
+					&rotations[off+6], &rotations[off+7], &rotations[off+8] ) == 9 )
+			i++;
+		else
+			break;
+	}
+
+	fclose( fpRot );
+	p->rotations = rotations;
+	p->numberOfRotations = numberOfRotations;
+
+	return true;
+}
 
 void createRotationsNeighborhoodGraph( PARAMS_IN *p )
 {
@@ -793,7 +831,7 @@ bool setParamFromFile(PARAMS_IN *p, char *paramFile)
 	char s[ 2000 ], line[ 2000 ];  // buffer to read lines
 	char *key, *val;
 	char sep[] = " ";
-	MPI_File *fp;
+	FILE *fp;
 	int nbrot=-1; // variable used to overwrite total number of rotations in file
 	// if the param file provides numRot =
 	int ival;
@@ -806,10 +844,10 @@ bool setParamFromFile(PARAMS_IN *p, char *paramFile)
 
 	if ( paramFile[ 0 ] )
 	{
-		// Opens file on all processes
-		int rc = MPI_File_open(MPI_COMM_WORLD, paramFile, MPI_MODE_RDONLY, MPI_INFO_NULL, fp);
+		// Opens file on all proc
+		fp = fopen( paramFile, "r" );
 
-		if ( rc )
+		if (  fp == NULL )
 		{
 			printf( "\n\nError: Failed to open parameter file %s!\n\n",
 					paramFile );
@@ -1792,9 +1830,10 @@ bool setParamFromFile(PARAMS_IN *p, char *paramFile)
 			    }
 
 		}
-		MPI_File_close( fp );
+		fclose( fp );
 	}
 
+	// The identity rotation matrix
 	if (p->rotations == NULL) { // no user specified rotation file
 		p->rotations = new float[ 9 ];
 		p->rotations[ 0 ] = 1;
@@ -1873,10 +1912,12 @@ bool setParamFromFile(PARAMS_IN *p, char *paramFile)
 	if ( p->pseudoAtomRadius >= 0 )
 	{
 		for ( int j = 0; j < p->numCentersA; j++ )
-			if ( p->typeA[ j ] == 'E' ) p->radiiA[ j ] = p->pseudoAtomRadius;
+			if ( p->typeA[ j ] == 'E' ) 
+				p->radiiA[ j ] = p->pseudoAtomRadius;
 	}
 
-	if ( p->pruneAngle > 0 ) createRotationsNeighborhoodGraph( p );
+	if ( p->pruneAngle > 0 ) 
+		createRotationsNeighborhoodGraph( p );
 
 	if ( p->hbondWeight != 0 )
 	{
@@ -1985,337 +2026,295 @@ bool getComplexType( PARAMS_IN *p, char *paramFile )
 	return true;
 }
 
+// Sets the default values for the PARAMS_IN structure
+void setDefaultValues(PARAMS_IN *pr){
+	pr->id = NULL;
+	pr->performDocking = 1;
+	pr->numThreads = 4;
+	pr->breakDownScores = 0;
+	pr->numberOfPositions = 20000;
+	pr->gridSize = 256;
+	pr->gridSizeSpecified = false;
+	pr->gridSpacing = 1.2;
+	pr->enforceExactGridSpacing = false;
+	pr->gridSpacingSpecified = false;
+	pr->interpFuncExtentInAngstroms = 0;
+	pr->numFreq = 64;
+	pr->numFreqSpecified = false;
+	pr->smoothSkin = false;
+	pr->singleLayerLigandSkin = false;  // if set to 'true', only the surface atoms of the ligand are considered as skin atoms
+	pr->pseudoAtomRadius = 1.1;  		// if set to a non-negative value, this value overrides the receptor pseudo atoms radii read from the F2D file
+	pr->pseudoAtomDistance = 1.7; 		// distnace of the pseudo atom centers from the vdW surface of the static molecule
+	pr->rotateVolume = true;    		// by default, rotate the volume instead of the atoms of molecule B
+	pr->dockVolume = false;     		// by default, dock molecules with explicitly specified atoms instead of volumes
+	pr->initRot.reset( );				// initial rotation matrix ( default is < 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 > unless either explicitly set or randomRotate is 'true' )
+	pr->useSparseFFT = true;    		// speed up FFT using the sparsity of input and/or output matrices
+	pr->narrowBand = true;     			// if 'true', consider only the solutions within a narrow band in the output grid
+	//  pr->gridFile = NULL;
+	pr->numEfficientGridSizes = 0;
+	pr->efficientGridSizes = NULL;
+	pr->minEffGridSize = 0;
+	pr->maxEffGridSize = 0;
+	//  pr->interpFuncExtent = 3;
+	pr->numCentersA = 0;
+	pr->numCentersB = 0;
+	pr->numberOfRotations = 1000000;
+	pr->distanceCutoff = 5.0;
+	pr->alpha = 1;
+	pr->blobbiness = -2.3;
+	pr->blobbinessSpecified = false;
+	pr->skinSkinWeight = 0.57;
+	pr->coreCoreWeight = 5.0;
+	pr->skinCoreWeight = -0.23;
+	pr->realSCWeight = 1.0;
+	pr->imaginarySCWeight = 0.0;
+	pr->elecKernelVoidRad = 0.0;
+	pr->elecKernelDistLow = 6.0;
+	pr->elecKernelDistHigh = 8.0;
+	pr->elecKernelValLow = 4.0;
+	pr->elecKernelValHigh = 80.0;
+	pr->elecScale = 0.72;
+	pr->elecRadiusInGrids = 2.9;  		// the radius of the sphere inside which a charge is diffused using a Gaussian
+	pr->hbondWeight = 0.0;
+	pr->hbondDistanceCutoff = 2.0;  	// the distance cutoff ( in angstroms ) for hydrogen bonds
+	pr->hydrophobicityWeight = 8.5;
+	pr->hydrophobicityProductWeight = 0.001;
+	pr->hydroRatioTolerance = 10.0;
+	pr->hydroMinRatio = 0.5;  
+	pr->hydroRatioNumeratorLow = 2.0;
+	pr->hydroRatioNumeratorHigh = 100.0;  
+	pr->hydroRatioDenominatorLow = 0.2;
+	pr->hydroRatioDenominatorHigh = 6.0;  
+	pr->twoWayHydrophobicity = true;
+	pr->hydroPhobicPhobicWeight = 0;
+	pr->hydroPhilicPhilicWeight = 0;
+	pr->hydroPhobicPhilicWeight = 0;
+	pr->hydroRadExt = 1.5;  			// in Angstroms
+	pr->useInterfacePropensity = true;  // instead of just hydrophobic residues:
+	// S. Jones & J. M. Thornton, Analysis of Protein-Protein Interaction Sites using Surface Patches,
+	// JMB 272, pp. 121-132, 1997
+	pr->perResidueHydrophobicity = true;
+	pr->numTopHydrophobicResidues = 100;// only the residues with the topmost `numTopHydrophobicResidues' hydrophobicity
+	// values will be considered
+	pr->staticMolHydroDistCutoff = 4.0; // distance cutoff from the skin atom centers for the atoms of the static
+	// molecule which contribute to hydrophobicity computation
+	// (this is a center-to-surface distance cutoff)
+	pr->simpleShapeWeight = 0.000001;   // simplified shape complementarity
+	pr->simpleChargeWeight = 2.0;       // simplified charge complementarity
+	pr->simpleRadExt = 1.5;             // in Angstroms
+	pr->scoreScaleUpFactor = 10000;
+	pr->bandwidth = 2;
+	pr->gradFactor = 1.1;
+	pr->curvatureWeightedStaticMol = true;   	// if 'true', construct curvature-weighted receptor skin
+	pr->curvatureWeightedMovingMol = false;   	// if 'true', construct curvature-weighted ligand skin
+	pr->curvatureWeightingRadius = 4.5;       	// radius (in angstroms) of the influence zone sphere for curvature weighting
+	pr->spreadReceptorSkin = false;
+	pr->randomRotate = false;
+	pr->staticMoleculePdb = NULL;
+	pr->movingMoleculePdb = NULL;
+	pr->staticMoleculeF2d = NULL;
+	pr->movingMoleculeF2d = NULL;
+	pr->staticMoleculePQR = NULL;  
+	pr->movingMoleculePQR = NULL;
+	pr->staticMoleculeSCReRaw = NULL;
+	pr->staticMoleculeSCImRaw = NULL;
+	pr->staticMoleculeElecReRaw = NULL;
+	pr->movingMoleculeSCReRaw = NULL;
+	pr->movingMoleculeSCImRaw = NULL;
+	pr->movingMoleculeElecReRaw = NULL;
+	pr->outputFilename = NULL;
+	pr->numCentersA = 0;
+	pr->numCentersB = 0;
+	pr->typeA = NULL;
+	pr->typeB = NULL;
+	pr->atNamesA = NULL;
+	pr->atNamesB = NULL;
+	pr->resTypesA = NULL;
+	pr->resTypesB = NULL;
+	pr->resNumsA = NULL;
+	pr->resNumsB = NULL;
+	pr->chargesA = NULL;
+	pr->hydrophobicityA = NULL;
+	pr->radiiA = NULL;
+	pr->chargesB = NULL;
+	pr->hydrophobicityB = NULL;
+	pr->radiiB = NULL;
+	pr->hbondTypeA = NULL;
+	pr->hbondTypeB = NULL;
+	pr->rotations = NULL;
+	pr->rotGraph = NULL;
+	pr->pruneAngle = 0;
+	// static molecule
+	pr->xkAOrig = NULL;
+	pr->ykAOrig = NULL;
+	pr->zkAOrig = NULL;
+	// moving molecule
+	pr->xkBOrig = NULL;
+	pr->ykBOrig = NULL;
+	pr->zkBOrig = NULL;
+	// RMSD calculations
+	pr->nbRMSDAtoms = 0; 				// # of atoms used to compute RMSD
+	pr->atNums = NULL;   				// indices of atoms in moving molecules
+	pr->xRef = NULL;  					// X-coord of atoms in reference position
+	pr->yRef = NULL;  					// Y-coord of atoms in reference position
+	pr->zRef = NULL;  					// Z-coord of atoms in reference position
+	pr->transformationFilename = NULL; 	// contains 4 x 4 transformation matrices for the moving molecule for postprocessing (e->g->, vdW calculation)
+	pr->vdWGridSize = 512;  			// grid size for vdW potential computation
+	pr->compQuadVdW = false;      		// if set to true, the vdW potential is also computed using the quadratic time algorithm
+	pr->surfaceBasedVdW = false;  		// if set to true, only the surface atoms of the moving molecule are used for vdW computation
+	pr->applyVdWFilter = true;   		// if set to true, on-the-fly filtering based on vdW potential is performed
+	pr->vdWCutoffLow = 0;         		// when applyVdWFilter is true and #clashes < clashTolerance / 2, poses with vdW potential > vdWCutoffLow are penalized
+	pr->vdWCutoffHigh = 5;        		// when applyVdWFilter is true and #clashes >= clashTolerance / 2, poses with vdW potential > vdWCutoffHigh are penalized  
+	pr->vdWEqmRadScale = 0.3;    		// all r_eqm values are multiplied by this factor
+	pr->vdWWellWidth = 0;  				// smooth vdW energy well width
+	pr->vdWTolerance = 20;           	// when pruneAngle is positive and applyVdWFilter is set,
+	// a node is considered good it has a neighbor with
+	// vdWScore <= vdWCutoffLow + vdWTolerance
+	pr->applyClashFilter = true;    	// if set to true, on-the-fly filtering based on number of atomic clashes is performed
+	pr->eqmDistFrac = 0.5;           	// two atoms clash if distance between atom centers < eqmDistFrac * r_eqm_XY
+	pr->clashTolerance = 10;        	// maximum number of clashes tolerated
+	pr->forbiddenVolClashTolerance = 0; 
+	pr->applyForbiddenVolumeFilter = false;
+	pr->forbiddenVolumeFileType = -1; 
+	pr->clashWeight = -0.5;         	// weight given to each clash when added to total score
+	pr->applyMiscFilter = false;     	// when set to 'true' various minor filters are applied
+	pr->applyPseudoGsolFilter = true;   // if set to true, on-the-fly filtering based on pseudo solvation energy is performed
+	pr->pseudoGsolCutoff = 0;           // when applyPseudoGsolFilter is set to true, all solutions with pseudo solvation energy above pseudoGsolCutoff are discarded
+	pr->pseudoGsolWeight = 0.0;         // after cutoff surviving docking poses have their scores increased (additive) by weighted pseudoGsol value
+	pr->pseudoGsolFilterLowestRank = 1500;
+	pr->applyDispersionFilter = false;  // if set to true, on-the-fly filtering based on solute-solvent dispersion energy is performed
+	pr->dispersionCutoff = 0.0;         // when applyDispersionFilter is set to true, all solutions with dispersion energy change below dispersionCutoff are discarded
+	pr->dispersionWeight = 0.0;         // after cutoff surviving docking poses have their scores increased (additive) by weighted disperions energy change
+	pr->dispersionEnergyLimit = 1000.0; // dispersion energy will be trancated to remain within [ dispersionEnergyLimit, dispersionEnergyLimit ]
+	pr->dispersionMinAtomRadius = 0.1;  // smallest atom radius for dispersion energy calculation
+	pr->filterScaleDownFactor = 0.2;    // if a solution is filtered scale down its score by this factor instead of discarding it
+	pr->filterDepth = 4;           		// for a given rotation, all configurations that are ranked beyond filterDepth
+	// when sorted by decreasing order by score are automatically filtered
+	// ( value -1 means no such automatic filtering will be done )
+	pr->peaksPerRotation = 4;  			// at most how many solutions per rotation should be retained
+	// initially set to 0; will be set to (pr.numFreq)^3 if the user does not set it
+	pr->clusterTransRad = 1.2;   		// radius (in angstroms) of a cluster in translational space;
+	// if a solution is kept, no solution within clusterTransRad of it can be retained
+	pr->clusterTransSize = 1;  			// maximum number of solutions retained within a cluster in translational space
+	pr->clusterRotRad = 0;     			// radius (in degrees) of a cluster in rotational space;
+	// if a solution is kept, no solution within clusterTransRad and clusterRotRad of it can be retained
 
+	if ( pr->complexType == 'A' )
+	{
+		pr->skinSkinWeight = 0.73;
+		pr->skinCoreWeight = -0.31;
+		pr->coreCoreWeight = 31.0;
+		pr->simpleChargeWeight = 0.1;
+		pr->clashTolerance = 2;
+		pr->clashWeight = -30; 
+		pr->hydroMinRatio = 1.5;  
+		pr->hydroRatioTolerance = 8.0;      
+		pr->hydroRatioNumeratorLow = 1.25;
+		pr->hydroRatioDenominatorLow = 0.45;
+		pr->hydroRatioDenominatorHigh = 2.5;              
+		pr->vdWCutoffHigh = 0;
+		pr->filterDepth = 3;
+		pr->peaksPerRotation = 3;      
+	}
+	else 
+		if ( pr->complexType == 'E' )
+		{
+			pr->curvatureWeightingRadius = 6.0;    
+			pr->skinSkinWeight = 0.78;
+			pr->skinCoreWeight = -0.08;
+			pr->coreCoreWeight = 5.0;
+			pr->elecScale = 0.15;
+			pr->elecKernelVoidRad = 3.0;
+			pr->elecKernelDistLow = 6.0;
+			pr->elecKernelDistHigh = 8.0;
+			pr->elecKernelValLow = 1.0;
+			pr->elecKernelValHigh = 80.0;
+			pr->simpleChargeWeight = 5.5;
+			pr->clashTolerance = 9;
+			pr->hydrophobicityWeight = 9.0;
+			pr->hydroMinRatio = 1.22;  
+			pr->hydroRatioTolerance = 8.0;      
+			pr->hydroRatioNumeratorLow = 2.0;
+			pr->hydroRatioDenominatorLow = 1.0;
+			pr->hydroRatioDenominatorHigh = 7.0; 
+			pr->vdWCutoffHigh = 20;
+			pr->filterDepth = 2;
+			pr->peaksPerRotation = 2;                         
+		}
+
+	pr->rerank = false;
+	pr->applyAntibodyFilter = true;     
+	pr->applyEnzymeFilter = true;
+	pr->applyResidueContactFilter = true;
+
+#ifdef LIBMOL_FOUND
+	pr->applyHbondFilter = false;
+#endif
+
+	pr->spectrum = NULL;
+	pr->numBands = 0;
+	pr->bands = NULL;
+	pr->numRerank = 2000;      // number of top positions to rerank
+	pr->rerankerPseudoGsolWeight = 1.0;
+	pr->rerankerDispersionWeightLow = -1.1;  
+	pr->rerankerDispersionWeightHigh = -21.0;
+	pr->rerankerF2DockScoreWeight = 100.0;    
+	pr->control = 9876;
+}
 
 int main( int argc, char* argv[] )
 {
-	char *fixedMolFileName, *movingMolFileName, paramFileName[256];
-	// data structure used to pass parameters to DockingMain
-	PARAMS_IN pr;
-
 	// MPI Initialization
 	MPI_Init(&argc, &argv);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	MPI_Comm_size(MPI_COMM_WORLD, &np);
 
-	// Only root process executing...
-	if(!rank){
-		if (argc<2 || argc>3 ) {
+	char *fixedMolFileName, *movingMolFileName, paramFileName[256];
+	
+	PARAMS_IN pr;		// data structure used to pass parameters to DockingMain
+
+	if (argc<2 || argc>3 ) {
+		if (!rank)
 			printf("Usage: F2Dock -score|saveGrid|vdw|effGridFile parameterFile\n");
-			return(1);
-		}
 
-		if ( argc == 2 ) {
-			strcpy(paramFileName, argv[1]);
-		} else if (argc == 3) {
-			strcpy(paramFileName, argv[2]);
-		}
+		MPI_Finalize();
 
+		return(1);
+	}
+
+	if ( argc == 2 ) {
+		strcpy(paramFileName, argv[1]);
+	} else if (argc == 3) {
+		strcpy(paramFileName, argv[2]);
+	}
+
+	if (!rank)
 		srand( time( NULL ) );
 
 
-		getComplexType( &pr, paramFileName );  
+	getComplexType( &pr, paramFileName );  
 
-		// computevdw and vdwSmoothWidth were commented out out since the vdw scores computed were not believeable and did not compare to a python implementation that was using the same libraries.  Actually, computevdw was never defined in the struc may need to do that if vdw score is to be computed in the future.
-		// initialize the structure with default parameters
-		pr.id = NULL;
-		pr.performDocking = 1;
-		pr.numThreads = 4;
-		pr.breakDownScores = 0;
-		pr.numberOfPositions = 20000;
-		pr.gridSize = 256;
-		pr.gridSizeSpecified = false;
-		pr.gridSpacing = 1.2;
-		pr.enforceExactGridSpacing = false;
-		pr.gridSpacingSpecified = false;
-		pr.interpFuncExtentInAngstroms = 0;
-		pr.numFreq = 64;
-		pr.numFreqSpecified = false;
-		pr.smoothSkin = false;
-		pr.singleLayerLigandSkin = false;  // if set to 'true', only the surface atoms of the ligand are considered as skin atoms
-		pr.pseudoAtomRadius = 1.1;  // if set to a non-negative value, this value overrides the receptor pseudo atoms radii read from the F2D file
-		pr.pseudoAtomDistance = 1.7; // distnace of the pseudo atom centers from the vdW surface of the static molecule
-		pr.rotateVolume = true;    // by default, rotate the volume instead of the atoms of molecule B
-		pr.dockVolume = false;     // by default, dock molecules with explicitly specified atoms instead of volumes
+	// computevdw and vdwSmoothWidth were commented out out since the vdw scores computed were not believeable and did not compare to a python implementation that was using the same libraries.  Actually, computevdw was never defined in the struc may need to do that if vdw score is to be computed in the future.
+	setDefaultValues(&pr);
 
-		// initial rotation matrix ( default is < 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 > unless either explicitly set or randomRotate is 'true' )
-		pr.initRot.reset( );
+	//printf("AAAAAAAAAAApr = %p %d\n", &pr, pr.numThreads);
 
-		pr.useSparseFFT = true;    // speed up FFT using the sparsity of input and/or output matrices
-		pr.narrowBand = true;     // if 'true', consider only the solutions within a narrow band in the output grid
-
-		//  pr.gridFile = NULL;
-		pr.numEfficientGridSizes = 0;
-		pr.efficientGridSizes = NULL;
-		pr.minEffGridSize = 0;
-		pr.maxEffGridSize = 0;
-
-		//  pr.interpFuncExtent = 3;
-		pr.numCentersA = 0;
-		pr.numCentersB = 0;
-		pr.numberOfRotations = 1000000;
-
-		pr.distanceCutoff = 5.0;
-		pr.alpha = 1;
-		pr.blobbiness = -2.3;
-		pr.blobbinessSpecified = false;
-		pr.skinSkinWeight = 0.57;
-		pr.coreCoreWeight = 5.0;
-		pr.skinCoreWeight = -0.23;
-		pr.realSCWeight = 1.0;
-		pr.imaginarySCWeight = 0.0;
-
-		pr.elecKernelVoidRad = 0.0;
-		pr.elecKernelDistLow = 6.0;
-		pr.elecKernelDistHigh = 8.0;
-		pr.elecKernelValLow = 4.0;
-		pr.elecKernelValHigh = 80.0;
-
-		pr.elecScale = 0.72;
-		pr.elecRadiusInGrids = 2.9;  // the radius of the sphere inside which a charge is diffused using a Gaussian
-
-		pr.hbondWeight = 0.0;
-		pr.hbondDistanceCutoff = 2.0;  // the distance cutoff ( in angstroms ) for hydrogen bonds
-
-		pr.hydrophobicityWeight = 8.5;
-		pr.hydrophobicityProductWeight = 0.001;
-		pr.hydroRatioTolerance = 10.0;
-		pr.hydroMinRatio = 0.5;  
-		pr.hydroRatioNumeratorLow = 2.0;
-		pr.hydroRatioNumeratorHigh = 100.0;  
-		pr.hydroRatioDenominatorLow = 0.2;
-		pr.hydroRatioDenominatorHigh = 6.0;  
-		pr.twoWayHydrophobicity = true;
-		pr.hydroPhobicPhobicWeight = 0;
-		pr.hydroPhilicPhilicWeight = 0;
-		pr.hydroPhobicPhilicWeight = 0;
-		pr.hydroRadExt = 1.5;  // in Angstroms
-		pr.useInterfacePropensity = true;    // instead of just hydrophobic residues:
-		// S. Jones & J. M. Thornton, Analysis of Protein-Protein Interaction Sites using Surface Patches,
-		// JMB 272, pp. 121-132, 1997
-		pr.perResidueHydrophobicity = true;
-		pr.numTopHydrophobicResidues = 100;  // only the residues with the topmost `numTopHydrophobicResidues' hydrophobicity
-		// values will be considered
-		pr.staticMolHydroDistCutoff = 4.0;   // distance cutoff from the skin atom centers for the atoms of the static
-		// molecule which contribute to hydrophobicity computation
-		// (this is a center-to-surface distance cutoff)
-
-		pr.simpleShapeWeight = 0.000001;    // simplified shape complementarity
-		pr.simpleChargeWeight = 2.0;        // simplified charge complementarity
-		pr.simpleRadExt = 1.5;              // in Angstroms
-
-		pr.scoreScaleUpFactor = 10000;
-
-		pr.bandwidth = 2;
-		pr.gradFactor = 1.1;
-
-		pr.curvatureWeightedStaticMol = true;   // if 'true', construct curvature-weighted receptor skin
-		pr.curvatureWeightedMovingMol = false;   // if 'true', construct curvature-weighted ligand skin
-		pr.curvatureWeightingRadius = 4.5;       // radius (in angstroms) of the influence zone sphere for curvature weighting
-
-		pr.spreadReceptorSkin = false;
-		pr.randomRotate = false;
-
-		pr.staticMoleculePdb = NULL;
-		pr.movingMoleculePdb = NULL;
-		pr.staticMoleculeF2d = NULL;
-		pr.movingMoleculeF2d = NULL;
-
-		pr.staticMoleculePQR = NULL;  
-		pr.movingMoleculePQR = NULL;
-
-		pr.staticMoleculeSCReRaw = NULL;
-		pr.staticMoleculeSCImRaw = NULL;
-		pr.staticMoleculeElecReRaw = NULL;
-
-		pr.movingMoleculeSCReRaw = NULL;
-		pr.movingMoleculeSCImRaw = NULL;
-		pr.movingMoleculeElecReRaw = NULL;
-
-		pr.outputFilename = NULL;
-		pr.numCentersA = 0;
-		pr.numCentersB = 0;
-		pr.typeA = NULL;
-		pr.typeB = NULL;
-		pr.atNamesA = NULL;
-		pr.atNamesB = NULL;
-		pr.resTypesA = NULL;
-		pr.resTypesB = NULL;
-
-		pr.resNumsA = NULL;
-		pr.resNumsB = NULL;
-
-		pr.chargesA = NULL;
-		pr.hydrophobicityA = NULL;
-		pr.radiiA = NULL;
-		pr.chargesB = NULL;
-		pr.hydrophobicityB = NULL;
-		pr.radiiB = NULL;
-
-		pr.hbondTypeA = NULL;
-		pr.hbondTypeB = NULL;
-
-		pr.rotations = NULL;
-		pr.rotGraph = NULL;
-		pr.pruneAngle = 0;
-
-		// static molecule
-		pr.xkAOrig = NULL;
-		pr.ykAOrig = NULL;
-		pr.zkAOrig = NULL;
-
-		// moving molecule
-		pr.xkBOrig = NULL;
-		pr.ykBOrig = NULL;
-		pr.zkBOrig = NULL;
-
-		// RMSD calculations
-		pr.nbRMSDAtoms = 0; // # of atoms used to compute RMSD
-		pr.atNums = NULL;   // indices of atoms in moving molecules
-		pr.xRef = NULL;  // X-coord of atoms in reference position
-		pr.yRef = NULL;  // Y-coord of atoms in reference position
-		pr.zRef = NULL;  // Z-coord of atoms in reference position
-
-		pr.transformationFilename = NULL; // contains 4 x 4 transformation matrices for the moving molecule for postprocessing (e.g., vdW calculation)
-		pr.vdWGridSize = 512;  // grid size for vdW potential computation
-		pr.compQuadVdW = false;      // if set to true, the vdW potential is also computed using the quadratic time algorithm
-		pr.surfaceBasedVdW = false;  // if set to true, only the surface atoms of the moving molecule are used for vdW computation
-
-		pr.applyVdWFilter = true;   // if set to true, on-the-fly filtering based on vdW potential is performed
-		pr.vdWCutoffLow = 0;         // when applyVdWFilter is true and #clashes < clashTolerance / 2, poses with vdW potential > vdWCutoffLow are penalized
-		pr.vdWCutoffHigh = 5;        // when applyVdWFilter is true and #clashes >= clashTolerance / 2, poses with vdW potential > vdWCutoffHigh are penalized  
-		pr.vdWEqmRadScale = 0.3;     // all r_eqm values are multiplied by this factor
-
-		pr.vdWWellWidth = 0;  //  smooth vdW energy well width
-
-		pr.vdWTolerance = 20;           // when pruneAngle is positive and applyVdWFilter is set,
-		// a node is considered good it has a neighbor with
-		// vdWScore <= vdWCutoffLow + vdWTolerance
-
-		pr.applyClashFilter = true;    // if set to true, on-the-fly filtering based on number of atomic clashes is performed
-		pr.eqmDistFrac = 0.5;           // two atoms clash if distance between atom centers < eqmDistFrac * r_eqm_XY
-		pr.clashTolerance = 10;        // maximum number of clashes tolerated
-		pr.forbiddenVolClashTolerance = 0; 
-		pr.applyForbiddenVolumeFilter = false;
-		pr.forbiddenVolumeFileType = -1; 
-		pr.clashWeight = -0.5;         // weight given to each clash when added to total score
-
-		pr.applyMiscFilter = false;     // when set to 'true' various minor filters are applied
-
-		pr.applyPseudoGsolFilter = true;    // if set to true, on-the-fly filtering based on pseudo solvation energy is performed
-		pr.pseudoGsolCutoff = 0;            // when applyPseudoGsolFilter is set to true, all solutions with pseudo solvation energy above pseudoGsolCutoff are discarded
-		pr.pseudoGsolWeight = 0.0;          // after cutoff surviving docking poses have their scores increased (additive) by weighted pseudoGsol value
-		pr.pseudoGsolFilterLowestRank = 1500;
-
-		pr.applyDispersionFilter = false;   // if set to true, on-the-fly filtering based on solute-solvent dispersion energy is performed
-		pr.dispersionCutoff = 0.0;            // when applyDispersionFilter is set to true, all solutions with dispersion energy change below dispersionCutoff are discarded
-		pr.dispersionWeight = 0.0;          // after cutoff surviving docking poses have their scores increased (additive) by weighted disperions energy change
-		pr.dispersionEnergyLimit = 1000.0;  // dispersion energy will be trancated to remain within [ dispersionEnergyLimit, dispersionEnergyLimit ]
-		pr.dispersionMinAtomRadius = 0.1;   // smallest atom radius for dispersion energy calculation
-
-		pr.filterScaleDownFactor = 0.2;     // if a solution is filtered scale down its score by this factor instead of discarding it
-
-		pr.filterDepth = 4;           // for a given rotation, all configurations that are ranked beyond filterDepth
-		// when sorted by decreasing order by score are automatically filtered
-		// ( value -1 means no such automatic filtering will be done )
-
-		pr.peaksPerRotation = 4;  // at most how many solutions per rotation should be retained
-		// initially set to 0; will be set to (pr.numFreq)^3 if the user does not set it
-		pr.clusterTransRad = 1.2;   // radius (in angstroms) of a cluster in translational space;
-		// if a solution is kept, no solution within clusterTransRad of it can be retained
-		pr.clusterTransSize = 1;  // maximum number of solutions retained within a cluster in translational space
-		pr.clusterRotRad = 0;     // radius (in degrees) of a cluster in rotational space;
-		// if a solution is kept, no solution within clusterTransRad and clusterRotRad of it can be retained
-
-		if ( pr.complexType == 'A' )
-		{
-			pr.skinSkinWeight = 0.73;
-			pr.skinCoreWeight = -0.31;
-			pr.coreCoreWeight = 31.0;
-
-			pr.simpleChargeWeight = 0.1;
-
-			pr.clashTolerance = 2;
-			pr.clashWeight = -30; 
-
-			pr.hydroMinRatio = 1.5;  
-			pr.hydroRatioTolerance = 8.0;      
-			pr.hydroRatioNumeratorLow = 1.25;
-			pr.hydroRatioDenominatorLow = 0.45;
-			pr.hydroRatioDenominatorHigh = 2.5;              
-
-			pr.vdWCutoffHigh = 0;
-
-			pr.filterDepth = 3;
-			pr.peaksPerRotation = 3;      
-		}
-		else if ( pr.complexType == 'E' )
-		{
-			pr.curvatureWeightingRadius = 6.0;    
-
-			pr.skinSkinWeight = 0.78;
-			pr.skinCoreWeight = -0.08;
-			pr.coreCoreWeight = 5.0;
-
-			pr.elecScale = 0.15;
-			pr.elecKernelVoidRad = 3.0;
-			pr.elecKernelDistLow = 6.0;
-			pr.elecKernelDistHigh = 8.0;
-			pr.elecKernelValLow = 1.0;
-			pr.elecKernelValHigh = 80.0;
-
-			pr.simpleChargeWeight = 5.5;
-
-			pr.clashTolerance = 9;
-
-			pr.hydrophobicityWeight = 9.0;
-			pr.hydroMinRatio = 1.22;  
-			pr.hydroRatioTolerance = 8.0;      
-			pr.hydroRatioNumeratorLow = 2.0;
-			pr.hydroRatioDenominatorLow = 1.0;
-			pr.hydroRatioDenominatorHigh = 7.0; 
-
-			pr.vdWCutoffHigh = 20;
-
-			pr.filterDepth = 2;
-			pr.peaksPerRotation = 2;                         
-		}
-
-		pr.rerank = false;
-		pr.applyAntibodyFilter = true;     
-		pr.applyEnzymeFilter = true;
-		pr.applyResidueContactFilter = true;
-
-#ifdef LIBMOL_FOUND
-		pr.applyHbondFilter = false;
-#endif
-
-		pr.spectrum = NULL;
-		pr.numBands = 0;
-		pr.bands = NULL;
-
-		pr.numRerank = 2000;      // number of top positions to rerank
-		pr.rerankerPseudoGsolWeight = 1.0;
-		pr.rerankerDispersionWeightLow = -1.1;  
-		pr.rerankerDispersionWeightHigh = -21.0;
-		pr.rerankerF2DockScoreWeight = 100.0;    
-
-
-		pr.control = 9876;
-
-		//printf("AAAAAAAAAAApr = %p %d\n", &pr, pr.numThreads);
-
-		// overwrite defaults in pr with values from the parameter file
-		if (! setParamFromFile( &pr, paramFileName) ) 
-			return 1;
-
-		//  pr.coreCoreWeight *= ( pr.numCentersB / 3000.0 );
+	// overwrite defaults in pr with values from the parameter file
+	if (! setParamFromFile( &pr, paramFileName) ) 
+		return 1;
+	/*
+	   MPI_Barrier(MPI_COMM_WORLD);
+	   printf ("\n\n\n%d - %d - %d\n", rank, pr.numberOfRotations, pr.numThreads);
+	   MPI_Barrier(MPI_COMM_WORLD);
+	   exit(0);
+	 */
+	//  pr.coreCoreWeight *= ( pr.numCentersB / 3000.0 );
 
 #ifdef WITH_ALL_RMSD
-		pr.numThreads = 1;
+	pr.numThreads = 1;
 #endif
-		//printf("BNUMTHREAD = %p, %d\n", &pr, pr.numThreads);
-	}
+	//printf("BNUMTHREAD = %p, %d\n", &pr, pr.numThreads);
+
 	// do the docking
 	if ( argc == 2 ) 
 		dock( &pr );

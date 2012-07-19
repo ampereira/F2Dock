@@ -1,6 +1,6 @@
 # INPUT PARAMETERS:
 #
-# 	 numThreads = 2
+# 	 numThreads = 4
 # 	 breakDownScores = 1
 # 	 numberOfPositions = 200
 # 	 gridSize = 480
@@ -135,7 +135,7 @@
 #	 COLNAME rmsd float 
 #
 #
-# computation time = 30.506513 sec
+# computation time = 27.186717 sec
 # 
 # # center of the 2nd protein:
 # 
@@ -216,5 +216,5 @@
 # max_iv_cc = 0.000000 ( 0.000000 ), min_iv_cc = -0.000000 ( -0.000000 )
 
 
-# total time = 30.544050 sec
+# total time = 27.264289 sec
 # 
