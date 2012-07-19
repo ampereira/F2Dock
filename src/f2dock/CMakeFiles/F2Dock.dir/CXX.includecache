@@ -6,22 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/h1/apereira/F2Dock/src/f2dock/Docking.cpp
-Docking.h
-/h1/apereira/F2Dock/src/f2dock/Docking.h
-TopValues.h
-/h1/apereira/F2Dock/src/f2dock/TopValues.h
-time.h
--
-sys/types.h
--
-sys/timeb.h
--
-sys/time.h
--
-mpi.h
--
-
 /h1/apereira/F2Dock/src/f2dock/F2Dock.cpp
 stdio.h
 -

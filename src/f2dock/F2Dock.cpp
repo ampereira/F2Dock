@@ -127,16 +127,48 @@ bool readRotations(char *rotationFile, PARAMS_IN *p)
 	return true;
 }
 
-bool readRotations2(char *rotationFile, PARAMS_IN *p)
+bool readRotationsMPI(char *rotationFile, PARAMS_IN *p)
 {
-	// number of rotations (0 value included)
+	// number of rotations (value 0 included)
 	int numberOfRotations = p->numberOfRotations;
 	int nmax = countLines(rotationFile);
 
 	if(nmax < numberOfRotations)
 		numberOfRotations = nmax;
 
-	float *rotations = new float[ ( numberOfRotations + 1 ) * 9 ];
+	int *sendcount, *displs, chunk, excess;
+
+	sendcount = new int [np];	// amount of rotations of each process (0 index not included)
+	displs    = new int [np];	// begin index of the process rotations
+
+	chunk = (numberOfRotations) / np;
+	excess = (numberOfRotations) - chunk * np;
+
+	// Calculates the sendcount and displacements arrays for the rotations
+	// that each process uses
+	for(int j = 0; j < np; ++j){
+		if(excess){
+			sendcount[j] = chunk + 1;
+			--excess;
+		}else{
+			sendcount[j] = chunk;
+		}
+
+		if(j == 0)
+			displs[j] = 0;
+		else
+			displs[j] = displs[j - 1] + sendcount[j - 1];
+	}
+// Debug stuff
+/*
+MPI_Barrier(MPI_COMM_WORLD);
+	printf("\n\n\n\nrank %d - %d - %d\n\n\n\n", rank, sendcount[rank], displs[rank]);
+MPI_Barrier(MPI_COMM_WORLD);
+exit(0);
+*/
+	float *rotations = new float[ ( sendcount[rank] ) * 9 ];
+	float rot_aux[9];
+	bool eof = false;
 
 	FILE* fpRot = fopen( rotationFile, "r" );
 	if (  fpRot == NULL )
@@ -145,18 +177,42 @@ bool readRotations2(char *rotationFile, PARAMS_IN *p)
 		return false;
 	}
 
+	printf("RANK %d\n\n", rank);
+
 	int i=0, off;
-	while ( i <= numberOfRotations ) {
+	while ( (i < displs[rank] + sendcount[rank]) && !eof) {
 		off = i*9;
 
+			if(!rank)
+				sleep(5);
+			else{
+				printf("\n\ni=%d\ndispls=%d\n\n", i, displs[rank]);
+			}
 		if (fscanf( fpRot, "%f %f %f %f %f %f %f %f %f\n",
-					&rotations[off  ], &rotations[off+1], &rotations[off+2], \
-					&rotations[off+3], &rotations[off+4], &rotations[off+5], \
-					&rotations[off+6], &rotations[off+7], &rotations[off+8] ) == 9 )
-			i++;
-		else
-			break;
+					&rot_aux[0], &rot_aux[1], &rot_aux[2],
+					&rot_aux[3], &rot_aux[4], &rot_aux[5],
+					&rot_aux[6], &rot_aux[7], &rot_aux[8] ) == 9 ) {
+
+			if (i >= displs[rank]) {
+				rotations[off  ] = rot_aux[0];
+				rotations[off+1] = rot_aux[1];
+				rotations[off+2] = rot_aux[2];
+				rotations[off+3] = rot_aux[3];
+				rotations[off+4] = rot_aux[4];
+				rotations[off+5] = rot_aux[5];
+				rotations[off+6] = rot_aux[6];
+				rotations[off+7] = rot_aux[7];
+				rotations[off+8] = rot_aux[8];
+
+				printf("rank[%d] = %f - %d\n", rank, rotations[off], np);
+			}
+			++i;
+		} else {
+			eof = true;
+		}
 	}
+	MPI_Barrier(MPI_COMM_WORLD);
+	exit(0);
 
 	fclose( fpRot );
 	p->rotations = rotations;
@@ -1420,9 +1476,6 @@ bool setParamFromFile(PARAMS_IN *p, char *paramFile)
 				}
 				p->scoreScaleUpFactor = dval;
 
-			} else if (strcasecmp(key, "rotFile")==0) {
-				readRotations(val, p);
-
 			} else if (strcasecmp(key, "numRot")==0) {
 				ival = atoi(val);
 				if ( ival < 0 )
@@ -1431,6 +1484,10 @@ bool setParamFromFile(PARAMS_IN *p, char *paramFile)
 					return false;
 				}
 				nbrot = ival;
+
+					p->numberOfRotations = ival;
+			} else if (strcasecmp(key, "rotFile")==0) {
+							readRotationsMPI(val, p);
 
 			} else if (strcasecmp(key, "outFile")==0) {
 				p->outputFilename = strdup(val);
@@ -1883,12 +1940,6 @@ bool setParamFromFile(PARAMS_IN *p, char *paramFile)
 	//     printf( "Error: elecWeight must be zero when rotateVolume is set to \'true\'!\n" );
 	//     return false;
 	//    }
-
-	// if user specified #rotations and
-	if ( nbrot != -1 && nbrot < p->numberOfRotations )
-	{
-		p->numberOfRotations = nbrot;
-	}
 
 	if ( p->numThreads > p->numberOfRotations )
 	{

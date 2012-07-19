@@ -8,8 +8,9 @@ movingMoleculeQUAD /h1/apereira/F2Dock/tests/1A2K_L_U.quad
 rmsdAtoms /h1/apereira/F2Dock/tests/1A2K_rmsd_backbone_unbound_10.0.txt
 outFile /h1/apereira/F2Dock/tests/1A2K_out.txt
 
-rotFile /h1/apereira/F2Dock/deg15.mtx
 numRot 10
+rotFile /h1/apereira/F2Dock/deg15.mtx
+
 effGridFile /h1/apereira/F2Dock/fftw-rank.txt
 
 complexType G
