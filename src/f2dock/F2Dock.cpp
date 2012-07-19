@@ -793,7 +793,7 @@ bool setParamFromFile(PARAMS_IN *p, char *paramFile)
 	char s[ 2000 ], line[ 2000 ];  // buffer to read lines
 	char *key, *val;
 	char sep[] = " ";
-	FILE *fp;
+	MPI_File *fp;
 	int nbrot=-1; // variable used to overwrite total number of rotations in file
 	// if the param file provides numRot =
 	int ival;
@@ -806,9 +806,10 @@ bool setParamFromFile(PARAMS_IN *p, char *paramFile)
 
 	if ( paramFile[ 0 ] )
 	{
-		fp = fopen( paramFile, "r" );
+		// Opens file on all processes
+		int rc = MPI_File_open(MPI_COMM_WORLD, paramFile, MPI_MODE_RDONLY, MPI_INFO_NULL, fp);
 
-		if (  fp == NULL )
+		if ( rc )
 		{
 			printf( "\n\nError: Failed to open parameter file %s!\n\n",
 					paramFile );
@@ -1791,7 +1792,7 @@ bool setParamFromFile(PARAMS_IN *p, char *paramFile)
 			    }
 
 		}
-		fclose( fp );
+		MPI_File_close( fp );
 	}
 
 	if (p->rotations == NULL) { // no user specified rotation file
@@ -1989,6 +1990,8 @@ bool getComplexType( PARAMS_IN *p, char *paramFile )
 int main( int argc, char* argv[] )
 {
 	char *fixedMolFileName, *movingMolFileName, paramFileName[256];
+	// data structure used to pass parameters to DockingMain
+	PARAMS_IN pr;
 
 	// MPI Initialization
 	MPI_Init(&argc, &argv);
@@ -2010,8 +2013,6 @@ int main( int argc, char* argv[] )
 
 		srand( time( NULL ) );
 
-		// data structure used to pass parameters to DockingMain
-		PARAMS_IN pr;
 
 		getComplexType( &pr, paramFileName );  
 

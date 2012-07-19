@@ -40,6 +40,7 @@ using CCVOpenGLMath::Vector;
 #define 	M_PI   3.14159265358979323846
 #endif
 
+#include <mpi.h>
 // MPI global variables
 extern int rank;
 extern int np;
@@ -5883,1069 +5884,801 @@ void initHBondFilter( PARAMS_IN *pr )
 
 int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 {
-	if(!rank){
-	int interpFuncExtent;
-	double scale;
-	if ( !computeGridParameters( pr, &interpFuncExtent, &scale ) ) return -1;
-
-	int numFreq = pr->numFreq;
-	double numFreq3 = numFreq * numFreq * numFreq;
-
-	if ( pr->numberOfPositions == -1 ) pr->numberOfPositions = numFreq3;
-
-	if ( scoreUntransformed )
-	{
-		for ( int i = 0; i < 9; i++ )
-			pr->rotations[ i ] = ( i % 4 ) ? 0 : 1;
-
-		pr->numberOfRotations = 1;
-		pr->numThreads = 1;
-
-		pr->numberOfPositions = numFreq3;
-	}
-
-	//#ifdef DEBUG
-	printf("\n\ndata in PR in dockingMain\n");
-	printf("performDocking: %d\n", pr->performDocking);
-	printf("numThreads: %d\n", pr->numThreads);
-	printf("breakDownScores: %d\n", pr->breakDownScores);
-	printf("numberOfPositions: %d\n", pr->numberOfPositions);
-	printf("gridSize: %d\n", pr->gridSize);
-	printf("numFreq: %d\n", pr->numFreq);
-	//  printf("interpFuncExtent: %d\n", pr->interpFuncExtent);
-	printf("numCentersA: %i\n", pr->numCentersA);
-	printf("numCentersB: %i\n", pr->numCentersB);
-	printf("numberOfRotations: %d\n", pr->numberOfRotations);
-
-	printf("distanceCutoff: %lf\n", pr->distanceCutoff);
-	printf("alpha: %lf\n", pr->alpha);
-	printf("blobbiness: %lf\n", pr->blobbiness);
-	printf("skinSkinWeight: %lf\n", pr->skinSkinWeight);
-	printf("coreCoreWeight: %lf\n", pr->coreCoreWeight);
-	printf("skinCoreWeight: %lf\n", pr->skinCoreWeight);
-	printf("realSCWeight: %lf\n", pr->realSCWeight);
-	printf("imaginarySCWeight: %lf\n", pr->imaginarySCWeight);
-	printf("elecScale: %lf\n", pr->elecScale);
-	printf("scoreScaleUpFactor: %lf\n", pr->scoreScaleUpFactor);
-
-	printf("bandwidth: %lf\n", pr->bandwidth);
-	printf("gradFactor: %lf\n", pr->gradFactor);
-
-	printf("outputFilename: %s\n", pr->outputFilename);
-	printf("staticMoleculePdb: %s\n", pr->staticMoleculePdb);
-	printf("staticMoleculeF2d: %s\n", pr->staticMoleculeF2d);
-	printf("movingMoleculePdb: %s\n", pr->movingMoleculePdb);
-	printf("movingMoleculeF2d: %s\n", pr->movingMoleculeF2d);
-	printf("typeA: %s\n", pr->typeA);
-	printf("typeB: %s\n", pr->typeB);
-
-	printf("chargesA: %p %f %f\n", pr->chargesA, pr->chargesA[0],
-			pr->chargesA[pr->numCentersA-1]);
-	printf("radiiA: %p %f %f\n", pr->radiiA, pr->radiiA[0],
-			pr->radiiA[pr->numCentersA-1]);
-	printf("chargesB: %p %f %f\n", pr->chargesB, pr->chargesB[0],
-			pr->chargesB[pr->numCentersB-1]);
-	printf("radiiB: %p %f %f\n", pr->radiiB, pr->radiiB[0],
-			pr->radiiB[pr->numCentersB-1]);
-	printf("rotations: %p\n", pr->rotations);
-
-	printf("xkAOrig: %p\n", pr->xkAOrig);
-	printf("xkAOrig: %f %f\n", pr->xkAOrig[0], pr->xkAOrig[pr->numCentersA-1]);
-	printf("ykAOrig: %p\n", pr->ykAOrig);
-	printf("xkAOrig: %f %f\n", pr->ykAOrig[0], pr->ykAOrig[pr->numCentersA-1]);
-	printf("zkAOrig: %p\n", pr->zkAOrig);
-	printf("xkAOrig: %f %f\n", pr->zkAOrig[0], pr->zkAOrig[pr->numCentersA-1]);
-	printf("atName: %s\n", pr->atNamesA[pr->numCentersA-1]);
-	printf("resType: %s\n", pr->resTypesA[pr->numCentersA-1]);
-	printf("resNum: %d\n", pr->resNumsA[pr->numCentersA-1]);
-
-	printf("xkBOrig: %p\n", pr->xkBOrig);
-	printf("xkBOrig: %f %f\n", pr->xkBOrig[0], pr->xkBOrig[pr->numCentersB-1]);
-	printf("ykBOrig: %p\n", pr->ykBOrig);
-	printf("xkBOrig: %f %f\n", pr->ykBOrig[0], pr->ykBOrig[pr->numCentersB-1]);
-	printf("zkBOrig: %p\n", pr->zkBOrig);
-	printf("xkBOrig: %f %f\n", pr->zkBOrig[0], pr->zkBOrig[pr->numCentersB-1]);
-	printf("atName: %s\n", pr->atNamesB[pr->numCentersB-1]);
-	printf("resType: %s\n", pr->resTypesB[pr->numCentersB-1]);
-	printf("resNum: %d\n", pr->resNumsB[pr->numCentersB-1]);
-
-	printf("nbRMSDAtoms: %d\n", pr->nbRMSDAtoms);
-	if (pr->nbRMSDAtoms>0) {
-		printf("atNums: %d %d\n", pr->atNums[0], pr->atNums[pr->nbRMSDAtoms-1]);
-		printf("xRef: %f %f\n", pr->xRef[0], pr->xRef[pr->nbRMSDAtoms-1]);
-		printf("yRef: %f %f\n", pr->yRef[0], pr->yRef[pr->nbRMSDAtoms-1]);
-		printf("zRef: %f %f\n", pr->zRef[0], pr->zRef[pr->nbRMSDAtoms-1]);
-	}
-	//  printf("computevdw: %d\n", pr->computevdw);
-	//  printf("vdwSmoothWidth: %lf\n", pr->vdwSmoothWidth);
-
-	printf("control %d\n", pr->control);
-	printf("numFreq %d\n", numFreq);
-	//#endif
-
-	int numThreads = pr->numThreads;
-	char *outputFilename = pr->outputFilename;
-	double blobbiness = pr->blobbiness;
-	bool smoothSkin = (bool)pr->smoothSkin;
-	bool rotateVolume = (bool) pr->rotateVolume;
-	bool dockVolume = (bool) pr->dockVolume;
-	bool singleLayerLigandSkin = ( bool ) pr->singleLayerLigandSkin;
-	double distanceCutoff = pr->distanceCutoff;
-	bool performDocking = (bool)pr->performDocking;
-	bool breakDownScores = (bool)pr->breakDownScores;
-	int numberOfPositions = pr->numberOfPositions;
-	int gridSize = pr->gridSize;
-	double gridSpacing = pr->gridSpacing;
-	//  int numFreq = pr->numFreq;
-	//  int interpFuncExtent = pr->interpFuncExtent;
-
-	bool useSparseFFT = ( bool ) pr->useSparseFFT;
-	bool narrowBand = ( bool ) pr->narrowBand;
-
-	double alpha = pr->alpha;
-
-	float* rotations = pr->rotations;
-	int numberOfRotations = pr->numberOfRotations;
-
-	double skinSkinWeight = pr->skinSkinWeight;
-	double coreCoreWeight = pr->coreCoreWeight;
-	double skinCoreWeight = pr->skinCoreWeight;
-	double realSCWeight = pr->realSCWeight;
-	double imaginarySCWeight = pr->imaginarySCWeight;
-
-	double elecScale = pr->elecScale;
-	double elecRadiusInGrids = pr->elecRadiusInGrids;
-
-	double hydrophobicityWeight = pr->hydrophobicityWeight;
-	double hydroPhobicPhobicWeight = pr->hydroPhobicPhobicWeight;
-	double hydroPhobicPhilicWeight = pr->hydroPhobicPhilicWeight;
-	double hydroPhilicPhilicWeight = pr->hydroPhilicPhilicWeight;
-
-	double hydroRadExt = pr->hydroRadExt;
-
-	bool twoWayHydrophobicity = pr->twoWayHydrophobicity;
-
-	double staticMolHydroDistCutoff = pr->staticMolHydroDistCutoff;
-
-	double simpleShapeWeight = pr->simpleShapeWeight;
-	double simpleChargeWeight = pr->simpleChargeWeight;
-
-	double simpleRadExt = pr->simpleRadExt;
-
-	double hbondWeight = pr->hbondWeight;
-	double hbondDistanceCutoff = pr->hbondDistanceCutoff;
-
-	double clashWeight = pr->clashWeight;
-
-	double pseudoGsolWeight = pr->pseudoGsolWeight;
-
-	double dispersionWeight = pr->dispersionWeight;
-
-	double bandwidth = pr->bandwidth;
-	double gradFactor = pr->gradFactor;
-
-	bool curvatureWeightedStaticMol = pr->curvatureWeightedStaticMol;
-	bool curvatureWeightedMovingMol = pr->curvatureWeightedMovingMol;
-	double curvatureWeightingRadius = pr->curvatureWeightingRadius;
-	bool spreadReceptorSkin = pr->spreadReceptorSkin;
-	bool randomRotate = pr->randomRotate;
-	Matrix randRot = pr->initRot;
-
-	double clusterTransRad = pr->clusterTransRad;
-	int clusterTransSize = pr->clusterTransSize;
-	double clusterRotRad = pr->clusterRotRad;
-	int peaksPerRotation = pr->peaksPerRotation;
-
-	char *outputFileName = outputFilename;
-
-	double real_magnitude = sqrt( skinSkinWeight );
-	double imag_magnitude = sqrt( coreCoreWeight );
-
-	double hydrophobicity_real_magnitude = sqrt( hydroPhobicPhobicWeight );
-	double hydrophobicity_imag_magnitude = sqrt( hydroPhilicPhilicWeight );
-
-	// results
-	TopValues *localTopValues[ numThreads ];
-	TopValues *globalTopValues = 0;
-
-	TopValues *funnel = 0;
-	int *peakList;
-
-	double mainStartTime = getTime();
-
-	for ( int i = 0; i < numThreads; i++ )
-		localTopValues[ i ] = 0;
-
-	//  double numFreq3 = numFreq*numFreq*numFreq;
-	FFTW_complex* centerFrequenciesA = (FFTW_complex*)FFTW_malloc( sizeof(FFTW_complex)*numFreq3 ) ;
-
-	FFTW_complex* centerElecFrequenciesA = 0;
-	FFTW_complex* smallElectrostaticsKernel = 0;
-
-	if ( elecScale != 0 )
-	{
-		centerElecFrequenciesA = (FFTW_complex*)FFTW_malloc( sizeof(FFTW_complex)*numFreq3 );
-		smallElectrostaticsKernel = (FFTW_complex*)FFTW_malloc( sizeof(FFTW_complex)*numFreq3 );
-	}
-
-	FFTW_complex* centerHbondFrequenciesA = 0;
-
-	if ( hbondWeight != 0 )
-		centerHbondFrequenciesA = (FFTW_complex*)FFTW_malloc( sizeof(FFTW_complex)*numFreq3 );
-
-	FFTW_complex* centerHydrophobicityFrequenciesA = 0;
-	FFTW_complex* centerHydrophobicityTwoFrequenciesA = 0;
-
-	if ( ( hydrophobicityWeight != 0 ) || ( hydroPhobicPhobicWeight != 0 ) || ( hydroPhilicPhilicWeight != 0 ) || ( hydroPhobicPhilicWeight != 0 ) )
-	{
-		centerHydrophobicityFrequenciesA = (FFTW_complex*)FFTW_malloc( sizeof(FFTW_complex)*numFreq3 );
-		if ( twoWayHydrophobicity )
-			centerHydrophobicityTwoFrequenciesA = (FFTW_complex*)FFTW_malloc( sizeof(FFTW_complex)*numFreq3 );
-	}
-
-	FFTW_complex* centerSimpleComplementarityFrequenciesA = 0;
-
-	if ( ( simpleShapeWeight > 0 ) || ( simpleChargeWeight > 0 ) )
-		centerSimpleComplementarityFrequenciesA = (FFTW_complex*)FFTW_malloc( sizeof(FFTW_complex)*numFreq3 );
-
-	FFTW_complex* ourMoreFrequenciesA;
-
-	FFTW_complex* centerFrequenciesB[ numThreads ];
-	FFTW_complex* centerFrequenciesProduct[ numThreads ];
-	FFTW_complex* sparseProfile[ numThreads ];
-
-	FFTW_complex* sparseShapeProfile[ numThreads ];
-
-	FFTW_complex* centerElecFrequenciesB[ numThreads ];
-	FFTW_complex* centerFrequenciesElecProduct[ numThreads ];
-	FFTW_complex* sparseElecProfile[ numThreads ];
-
-	FFTW_complex* sparseHbondProfile[ numThreads ];
-	FFTW_complex* sparseHydrophobicityProfile[ numThreads ];
-	FFTW_complex* sparseHydrophobicityTwoProfile[ numThreads ];
-	FFTW_complex* sparseSimpleComplementarityProfile[ numThreads ];
-
-	FFTW_complex* freqHat[ numThreads ];
-
-	FFTW_complex* ourMoreFrequencies[ numThreads ];
-	FFTW_complex* ourMoreFrequenciesOut[ numThreads ];
-
-	FFTW_complex* elecGridB[ numThreads ];
-
-	FFTW_plan freqPlan[ numThreads ];
-	sparse3DFFT_plan sparseFreqPlanBackward;
-	FFTW_plan elecFreqPlan[ numThreads ];
-
-	FFTW_plan freqHatPlan[ numThreads ];
-
-	FFTW_plan moreFreqPlan[ numThreads ];
-	sparse3DFFT_plan sparseFreqPlanForward;
-	FFTW_plan moreFreqPlanA;
-
-	FFTW_plan moreElecFreqPlan[ numThreads ];
-	FFTW_plan moreElecFreqPlanA;
-
-	double *sortedPeaks[ numThreads ];
-
-	// static molecule
-	double *xkAOrig = pr->xkAOrig;
-	double *ykAOrig = pr->ykAOrig;
-	double *zkAOrig =pr->zkAOrig;
-	int numCentersA = pr->numCentersA;
-	char *typeA = pr->typeA;
-	char *hbondTypeA = pr->hbondTypeA;
-	float *chargesA = pr->chargesA;
-	float *hydrophobicityA = pr->hydrophobicityA;
-	float *radiiA = pr->radiiA;
-	int _numCentersA = 0;
-
-	while ( typeA[ _numCentersA ] == 'I' ) 
-		_numCentersA++;
-
-	// moving molecule
-	double *xkBOrig = pr->xkBOrig;
-	double *ykBOrig = pr->ykBOrig;
-	double *zkBOrig = pr->zkBOrig;
-	int numCentersB = pr->numCentersB;
-	double *xkB[ numThreads ], *ykB[ numThreads ], *zkB[ numThreads ];
-	float *rkB[ numThreads ];
-	char *typeB = pr->typeB;
-	char *hbondTypeB = pr->hbondTypeB;
-	float *chargesB = pr->chargesB;
-	float *hydrophobicityB = pr->hydrophobicityB;
-	float *radiiB = pr->radiiB;
-
-	NONZERO_GRIDCELLS *gridBCells = 0;
-	int numNonzeroGridBCells = 0;
-
-	NONZERO_GRIDCELLS *gridBCells_01 = 0;
-	int numNonzeroGridBCells_01 = 0;
-
-	NONZERO_GRIDCELLS *gridBCells_10 = 0;
-	int numNonzeroGridBCells_10 = 0;
-
-	NONZERO_GRIDCELLS *gridBCells_11 = 0;
-	int numNonzeroGridBCells_11 = 0;
-
-	NONZERO_GRIDCELLS *elecGridBCells = 0;
-	int numNonzeroElecGridBCells = 0;
-
-	NONZERO_GRIDCELLS *hbondGridBCells = 0;
-	int numNonzeroHbondGridBCells = 0;
-
-	NONZERO_GRIDCELLS *hydrophobicityGridBCells = 0;
-	int numNonzeroHydrophobicityGridBCells = 0;
-
-	NONZERO_GRIDCELLS *hydrophobicityTwoGridBCells = 0;
-	int numNonzeroHydrophobicityTwoGridBCells = 0;
-
-	NONZERO_GRIDCELLS *simpleComplementarityGridBCells = 0;
-	int numNonzeroSimpleComplementarityGridBCells = 0;
-
-	fastLJ *ljFilter;
-
-	if ( pr->applyVdWFilter )
-	{
-		initLJFilter( pr, &ljFilter );
-		pr->ljFilter = ljFilter;
-	}
-
-	clashFilter *cFilter;
-	clashFilter* fFilter;
-
-	if ( pr->applyClashFilter )
-	{
-		initClashFilter( pr, &cFilter );
-		pr->cFilter = cFilter;
-	}
-
-	if(pr->applyForbiddenVolumeFilter) 
-	{
-		initForbiddenVolumeFilter( pr, &fFilter );
-		std::cout<<"Forbidden volume filter enabled.\n";	
-		pr->fFilter = fFilter;
-	}
-
-	if ( pr->applyPseudoGsolFilter ) initPseudoGsolFilter( pr );
-
-	if ( pr->applyDispersionFilter ) initDispersionFilter( pr );
-
-#ifdef LIBMOL_FOUND
-	if ( pr->applyHbondFilter ) initHBondFilter( pr );
-#else
-	printf("LibMol was not found. Could not apply hygrogen bond filter\n");
-#endif
-
-	//#ifdef DEBUG
-	printf("\n\nLocal variable in main\n");
-	printf("numThreads: %d\n", numThreads);
-	printf("performDocking: %d\n", performDocking);
-	printf("blobbiness: %lf\n", blobbiness);
-	printf("distanceCutoff: %lf\n", distanceCutoff);
-	printf("outputFilename: %s\n", outputFilename);
-	printf("breakDownScores: %d\n", breakDownScores);
-	printf("numberOfPositions: %d\n", numberOfPositions);
-	printf("gridSize: %d\n", gridSize);
-	printf("gridSpacing: %lf\n", gridSpacing);
-	printf("numFreq: %d\n", numFreq);
-	printf("interpFuncExtent: %d\n", interpFuncExtent);
-
-	printf("bandwidth: %lf\n", bandwidth);
-	printf("gradFactor: %lf\n", gradFactor);
-
-	printf("numberOfRotations: %d\n",numberOfRotations );
-	printf("skinSkinWeight: %f\n", skinSkinWeight);
-	printf("coreCoreWeight: %f\n", coreCoreWeight);
-	printf("skinCoreWeight: %f\n", skinCoreWeight);
-	printf("realSCWeight: %f\n", realSCWeight);
-	printf("imaginarySCWeight: %f\n", imaginarySCWeight);
-	printf("elecScale: %f\n",elecScale );
-	printf("hbondWeight: %f\n",hbondWeight );
-	printf("hydrophobicityWeight = %f\n", hydrophobicityWeight );
-	printf("hydroPhobicPhobicWeight: %f\n", hydroPhobicPhobicWeight);
-	printf("hydroPhobicPhilicWeight: %f\n", hydroPhobicPhilicWeight);
-	printf("hydroPhilicPhilicWeight: %f\n", hydroPhilicPhilicWeight);
-	printf("simpleShapeWeight: %f\n", simpleShapeWeight);
-	printf("simpleChargeWeight: %f\n", simpleChargeWeight);
-	printf("Molecule A\n");
-	printf("   numCenters:%d", numCentersA);
-	printf("   coords  0: %lf %lf %lf\n", xkAOrig[0], ykAOrig[0], zkAOrig[0]);
-	printf("   coords -1: %lf %lf %lf\n", xkAOrig[numCentersA-1],
-			ykAOrig[numCentersA-1], zkAOrig[numCentersA-1]);
-	printf("   types: %s\n", typeA);
-	printf("   charges: %f %f\n", chargesA[0], chargesA[numCentersA-1]);
-	printf("   radii: %f %f\n", radiiA[0], radiiA[numCentersA-1]);
-
-	printf("Molecule B\n");
-	printf("   numCenters:%d", numCentersB);
-	printf("   coords  0: %lf %lf %lf\n", xkBOrig[0], ykBOrig[0], zkBOrig[0]);
-	printf("   coords -1: %lf %lf %lf\n", xkBOrig[numCentersB-1],
-			ykBOrig[numCentersB-1], zkBOrig[numCentersB-1]);
-	printf("   types: %s\n", typeB);
-	printf("   charges: %f %f\n", chargesB[0], chargesB[numCentersB-1]);
-	printf("   radii: %f %f\n", radiiB[0], radiiB[numCentersB-1]);
-	//#endif
-
-
-	double *xkA = NULL, *ykA = NULL, *zkA = NULL;
-	float *rkA = NULL;
-
-	if ( numCentersA > 0 )
-	{
-		xkA = new double[ numCentersA ];
-		ykA = new double[ numCentersA ];
-		zkA = new double[ numCentersA ];
-		rkA = new float[ numCentersA ];
-	}
-
-	for ( int i = 0; i < numThreads; i++ )
-	{
-		if ( numCentersB > 0  )
-		{
-			xkB[ i ] = new double[ numCentersB ];
-			ykB[ i ] = new double[ numCentersB ];
-			zkB[ i ] = new double[ numCentersB ];
-			rkB[ i ] = new float[ numCentersB ];
-		}
-		else
-		{
-			xkB[ i ] = ykB[ i ] = zkB[ i ] = NULL;
-			rkB[ i ] = NULL;
-		}
-	}
-
-
-	FFTW_complex *fkA = 0, 					  *fkB = 0;
-	FFTW_complex *fkAElec = 0, 				  *fkBElec = 0;
-	FFTW_complex *fkAHbond = 0, 				  *fkBHbond = 0;
-	FFTW_complex *fkAHydrophobicity = 0, 		  *fkBHydrophobicity = 0;
-	FFTW_complex *fkAHydrophobicityTwo = 0, 	  *fkBHydrophobicityTwo = 0;
+	// Variables declarations
+	int numThreads, clusterTransSize, *peakList, numFreq, numberOfPositions, gridSize, numCentersB, peaksPerRotation;
+	int *validOutputMap;
+	PARAMS *prT;
+	pthread_t *p;
+	double clusterTransRad, clusterRotRad, scale, numFreq3, gridSpacing, functionScaleFactor, elecScale;
+	double hbondWeight, hydrophobicityWeight, hydroPhobicPhobicWeight, hydroPhobicPhilicWeight, hydroPhilicPhilicWeight;
+	double simpleShapeWeight, simpleChargeWeight, **xkB, **ykB, **zkB, mainStartTime, **sortedPeaks;
+	TopValues **localTopValues, *globalTopValues, *funnel;
+	bool breakDownScores, rotateVolume, useSparseFFT, twoWayHydrophobicity, smoothSkin;
+	float* rotations, translate_A[ 3 ], translate_B[ 3 ];
+	Matrix randRot;
+
+	FFTW_complex *fkA = 0, 					    *fkB = 0;
+	FFTW_complex *fkAElec = 0, 				    *fkBElec = 0;
+	FFTW_complex *fkAHbond = 0, 				*fkBHbond = 0;
+	FFTW_complex *fkAHydrophobicity = 0, 		*fkBHydrophobicity = 0;
+	FFTW_complex *fkAHydrophobicityTwo = 0, 	*fkBHydrophobicityTwo = 0;
 	FFTW_complex *fkASimpleComplementarity = 0, *fkBSimpleComplementarity = 0;
-
-	FFTW_complex* gridA = 0;
-
-	gridA = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
-
-	globalTopValues = new TopValues( numberOfPositions, numFreq );
-	if ( clusterRotRad > 0 )
-	{
-		funnel = new TopValues( 2 * numThreads, numFreq );
-		peakList = new int[ 2 * numberOfPositions ];
-	}
-
-	SmoothingFunction* smoothingFunction[ numThreads ];
-
-	double n = ( int ) ( alpha * numFreq );
-	int alphaM = ( int ) n;
-
-	int *validOutputMap = ( int * ) FFTW_malloc( sizeof( int ) * numFreq3 );
-
-	for ( int i = 0; i < numThreads; i++ )
-	{
-		centerFrequenciesB[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
-		centerFrequenciesProduct[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
-		sparseProfile[ i ] = ( FFTW_complex* ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
-		sparseShapeProfile[ i ] = ( FFTW_complex* ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
-
-		freqHat[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * gridSize * 4 );
-
-		ourMoreFrequencies[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * alphaM * alphaM * alphaM );
-
-		if ( !useSparseFFT ) freqPlan[ i ] = FFTW_plan_dft_3d( numFreq, numFreq, numFreq,
-				centerFrequenciesProduct[ i ], sparseProfile[ i ],
-				FFTW_BACKWARD, OPT_FFTW_SEARCH_TYPE );
-
-		freqHatPlan[ i ] = FFTW_plan_dft_1d( gridSize * 4, freqHat[ i ], freqHat[ i ], FFTW_FORWARD, OPT_FFTW_SEARCH_TYPE );
-
-		if ( rotateVolume )
-			ourMoreFrequenciesOut[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * alphaM * alphaM * alphaM );
-		else
-			ourMoreFrequenciesOut[ i ] = ourMoreFrequencies[ i ];
-
-		if ( !useSparseFFT ) moreFreqPlan[ i ] = FFTW_plan_dft_3d( alphaM, alphaM, alphaM,
-				ourMoreFrequencies[ i ], ourMoreFrequenciesOut[ i ],
-				FFTW_FORWARD, OPT_FFTW_SEARCH_TYPE );
-
-		if ( elecScale != 0 )
-		{
-			centerElecFrequenciesB[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
-			centerFrequenciesElecProduct[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
-			sparseElecProfile[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
-
-			elecFreqPlan[ i ] = FFTW_plan_dft_c2r_3d( numFreq, numFreq, numFreq,
-					centerFrequenciesElecProduct[ i ],
-					( FFTW_DATA_TYPE * ) sparseElecProfile[ i ],
-					OPT_FFTW_SEARCH_TYPE );
-
-			if ( rotateVolume )
-				elecGridB[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * alphaM * alphaM * alphaM );
-			else elecGridB[ i ] = centerElecFrequenciesB[ i ];
-
-			moreElecFreqPlan[ i ] = FFTW_plan_dft_r2c_3d( alphaM, alphaM, alphaM,
-					( FFTW_DATA_TYPE * ) elecGridB[ i ], centerElecFrequenciesB[ i ],
-					OPT_FFTW_SEARCH_TYPE );
-		}
-		else
-			centerElecFrequenciesB[ i ] = centerFrequenciesElecProduct[ i ] = sparseElecProfile[ i ] = elecGridB[ i ] = NULL;
-
-		if ( hbondWeight != 0 )
-			sparseHbondProfile[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
-		else
-			sparseHbondProfile[ i ] = NULL;
-
-		if ( ( hydrophobicityWeight != 0 ) || ( hydroPhobicPhobicWeight != 0 ) || ( hydroPhilicPhilicWeight != 0 ) || ( hydroPhobicPhilicWeight != 0 ) )
-		{
-			sparseHydrophobicityProfile[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3);
-
-			if ( twoWayHydrophobicity )
-				sparseHydrophobicityTwoProfile[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
-			else
-				sparseHydrophobicityTwoProfile[ i ] = NULL;
-		}
-		else
-			sparseHydrophobicityProfile[ i ] = sparseHydrophobicityTwoProfile[ i ] = NULL;
-
-
-		if ( ( simpleShapeWeight > 0 ) || ( simpleChargeWeight > 0 ) )
-			sparseSimpleComplementarityProfile[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
-		else
-			sparseSimpleComplementarityProfile[ i ] = NULL;
-
-		localTopValues[ i ] = new TopValues( numberOfPositions, numFreq );
-
-		if ( smoothSkin ) smoothingFunction[ i ] = new Gaussian( alpha, interpFuncExtent, (int)(alpha*numFreq), gridSize );
-		else smoothingFunction[ i ] = NULL;
-
-		if ( ( clusterTransRad > 0 ) || ( peaksPerRotation < numFreq3 ) || ( ( clusterRotRad > 0 ) && ( i == 0 ) ) )
-		{
-			sortedPeaks[ i ] = ( double * ) malloc( sizeof( double ) * numFreq3 );
-			for ( int j = 0; j < numFreq3; j++ )
-				sortedPeaks[ i ][ j ] = 0;
-		}
-		else sortedPeaks[ i ] = NULL;
-	}
-
-
-	if ( !useSparseFFT ) sparseFreqPlanForward = sparseFreqPlanBackward = NULL;
-
-	moreFreqPlanA = FFTW_plan_dft_3d( alphaM, alphaM, alphaM,
-			ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ],
-			FFTW_FORWARD, OPT_FFTW_SEARCH_TYPE );
-
-	if ( elecScale != 0 ) moreElecFreqPlanA = FFTW_plan_dft_r2c_3d( alphaM, alphaM, alphaM,
-			( FFTW_DATA_TYPE * ) elecGridB[ 0 ],
-			centerElecFrequenciesB[ 0 ],
-			OPT_FFTW_SEARCH_TYPE );
-
 	FFTW_complex *fkA_01 = 0, *fkA_10 = 0, *fkA_11 = 0;
 	FFTW_complex *fkB_01 = 0, *fkB_10 = 0, *fkB_11 = 0;
-
+	FFTW_complex *centerFrequenciesA, *centerElecFrequenciesA, *gridA = 0, *centerHbondFrequenciesA = 0;
+	FFTW_complex *centerHydrophobicityFrequenciesA = 0, *centerHydrophobicityTwoFrequenciesA = 0;
+	FFTW_complex *centerSimpleComplementarityFrequenciesA = 0, **centerFrequenciesB, **centerFrequenciesProduct;
+	FFTW_complex **sparseProfile, **sparseShapeProfile, **freqHat, **ourMoreFrequencies, **ourMoreFrequenciesOut;
+	FFTW_complex **elecGridB, **centerElecFrequenciesB, **centerFrequenciesElecProduct, **sparseElecProfile;
+	FFTW_complex **sparseHbondProfile, **sparseHydrophobicityProfile, **sparseHydrophobicityTwoProfile, **sparseSimpleComplementarityProfile;
 	FFTW_complex *centerFrequenciesA_01 = 0, *centerFrequenciesA_10 = 0, *centerFrequenciesA_11 = 0;
+	FFTW_complex **sparseProfile_01, **sparseProfile_10, **sparseProfile_11;
 
-	FFTW_complex* sparseProfile_01[ numThreads ];
-	FFTW_complex* sparseProfile_10[ numThreads ];
-	FFTW_complex* sparseProfile_11[ numThreads ];
+	FFTW_plan moreFreqPlanA, *freqPlan, *freqHatPlan, *moreFreqPlan, moreElecFreqPlanA, *elecFreqPlan, *moreElecFreqPlan;
 
-	if ( breakDownScores )
-	{
-		centerFrequenciesA_01 = ( FFTW_complex* ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
-		centerFrequenciesA_10 = ( FFTW_complex* ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
-		centerFrequenciesA_11 = ( FFTW_complex* ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
+	SmoothingFunction **smoothingFunction;
+
+	fastLJ *ljFilter;
+	clashFilter *cFilter;
+
+	sparse3DFFT_plan sparseFreqPlanBackward, sparseFreqPlanForward;
+
+	FILE* fpOpt;
+
+	TopValues *globalTopValuesT;
+
+	NONZERO_GRIDCELLS *gridBCells, *gridBCells_01, *gridBCells_10, *gridBCells_11, *elecGridBCells;
+	NONZERO_GRIDCELLS *hbondGridBCells, *hydrophobicityGridBCells, *hydrophobicityTwoGridBCells, *simpleComplementarityGridBCells;
+
+	// Only root process executes this portion of the code
+	if(!rank){
+		int interpFuncExtent;
+		if ( !computeGridParameters( pr, &interpFuncExtent, &scale ) ) return -1;
+
+		numFreq = pr->numFreq;
+		numFreq3 = numFreq * numFreq * numFreq;
+
+		if ( pr->numberOfPositions == -1 ) pr->numberOfPositions = numFreq3;
+
+		if ( scoreUntransformed )
+		{
+			for ( int i = 0; i < 9; i++ )
+				pr->rotations[ i ] = ( i % 4 ) ? 0 : 1;
+
+			pr->numberOfRotations = 1;
+			pr->numThreads = 1;
+
+			pr->numberOfPositions = numFreq3;
+		}
+
+		//#ifdef DEBUG
+		printf("\n\ndata in PR in dockingMain\n");
+		printf("performDocking: %d\n", pr->performDocking);
+		printf("numThreads: %d\n", pr->numThreads);
+		printf("breakDownScores: %d\n", pr->breakDownScores);
+		printf("numberOfPositions: %d\n", pr->numberOfPositions);
+		printf("gridSize: %d\n", pr->gridSize);
+		printf("numFreq: %d\n", pr->numFreq);
+		//  printf("interpFuncExtent: %d\n", pr->interpFuncExtent);
+		printf("numCentersA: %i\n", pr->numCentersA);
+		printf("numCentersB: %i\n", pr->numCentersB);
+		printf("numberOfRotations: %d\n", pr->numberOfRotations);
+
+		printf("distanceCutoff: %lf\n", pr->distanceCutoff);
+		printf("alpha: %lf\n", pr->alpha);
+		printf("blobbiness: %lf\n", pr->blobbiness);
+		printf("skinSkinWeight: %lf\n", pr->skinSkinWeight);
+		printf("coreCoreWeight: %lf\n", pr->coreCoreWeight);
+		printf("skinCoreWeight: %lf\n", pr->skinCoreWeight);
+		printf("realSCWeight: %lf\n", pr->realSCWeight);
+		printf("imaginarySCWeight: %lf\n", pr->imaginarySCWeight);
+		printf("elecScale: %lf\n", pr->elecScale);
+		printf("scoreScaleUpFactor: %lf\n", pr->scoreScaleUpFactor);
+
+		printf("bandwidth: %lf\n", pr->bandwidth);
+		printf("gradFactor: %lf\n", pr->gradFactor);
+
+		printf("outputFilename: %s\n", pr->outputFilename);
+		printf("staticMoleculePdb: %s\n", pr->staticMoleculePdb);
+		printf("staticMoleculeF2d: %s\n", pr->staticMoleculeF2d);
+		printf("movingMoleculePdb: %s\n", pr->movingMoleculePdb);
+		printf("movingMoleculeF2d: %s\n", pr->movingMoleculeF2d);
+		printf("typeA: %s\n", pr->typeA);
+		printf("typeB: %s\n", pr->typeB);
+
+		printf("chargesA: %p %f %f\n", pr->chargesA, pr->chargesA[0],
+				pr->chargesA[pr->numCentersA-1]);
+		printf("radiiA: %p %f %f\n", pr->radiiA, pr->radiiA[0],
+				pr->radiiA[pr->numCentersA-1]);
+		printf("chargesB: %p %f %f\n", pr->chargesB, pr->chargesB[0],
+				pr->chargesB[pr->numCentersB-1]);
+		printf("radiiB: %p %f %f\n", pr->radiiB, pr->radiiB[0],
+				pr->radiiB[pr->numCentersB-1]);
+		printf("rotations: %p\n", pr->rotations);
+
+		printf("xkAOrig: %p\n", pr->xkAOrig);
+		printf("xkAOrig: %f %f\n", pr->xkAOrig[0], pr->xkAOrig[pr->numCentersA-1]);
+		printf("ykAOrig: %p\n", pr->ykAOrig);
+		printf("xkAOrig: %f %f\n", pr->ykAOrig[0], pr->ykAOrig[pr->numCentersA-1]);
+		printf("zkAOrig: %p\n", pr->zkAOrig);
+		printf("xkAOrig: %f %f\n", pr->zkAOrig[0], pr->zkAOrig[pr->numCentersA-1]);
+		printf("atName: %s\n", pr->atNamesA[pr->numCentersA-1]);
+		printf("resType: %s\n", pr->resTypesA[pr->numCentersA-1]);
+		printf("resNum: %d\n", pr->resNumsA[pr->numCentersA-1]);
+
+		printf("xkBOrig: %p\n", pr->xkBOrig);
+		printf("xkBOrig: %f %f\n", pr->xkBOrig[0], pr->xkBOrig[pr->numCentersB-1]);
+		printf("ykBOrig: %p\n", pr->ykBOrig);
+		printf("xkBOrig: %f %f\n", pr->ykBOrig[0], pr->ykBOrig[pr->numCentersB-1]);
+		printf("zkBOrig: %p\n", pr->zkBOrig);
+		printf("xkBOrig: %f %f\n", pr->zkBOrig[0], pr->zkBOrig[pr->numCentersB-1]);
+		printf("atName: %s\n", pr->atNamesB[pr->numCentersB-1]);
+		printf("resType: %s\n", pr->resTypesB[pr->numCentersB-1]);
+		printf("resNum: %d\n", pr->resNumsB[pr->numCentersB-1]);
+
+		printf("nbRMSDAtoms: %d\n", pr->nbRMSDAtoms);
+		if (pr->nbRMSDAtoms>0) {
+			printf("atNums: %d %d\n", pr->atNums[0], pr->atNums[pr->nbRMSDAtoms-1]);
+			printf("xRef: %f %f\n", pr->xRef[0], pr->xRef[pr->nbRMSDAtoms-1]);
+			printf("yRef: %f %f\n", pr->yRef[0], pr->yRef[pr->nbRMSDAtoms-1]);
+			printf("zRef: %f %f\n", pr->zRef[0], pr->zRef[pr->nbRMSDAtoms-1]);
+		}
+		//  printf("computevdw: %d\n", pr->computevdw);
+		//  printf("vdwSmoothWidth: %lf\n", pr->vdwSmoothWidth);
+
+		printf("control %d\n", pr->control);
+		printf("numFreq %d\n", numFreq);
+		//#endif
+
+		numThreads = pr->numThreads;
+		char *outputFilename = pr->outputFilename;
+		double blobbiness = pr->blobbiness;
+		smoothSkin = (bool)pr->smoothSkin;
+		rotateVolume = (bool) pr->rotateVolume;
+		bool dockVolume = (bool) pr->dockVolume;
+		bool singleLayerLigandSkin = ( bool ) pr->singleLayerLigandSkin;
+		double distanceCutoff = pr->distanceCutoff;
+		bool performDocking = (bool)pr->performDocking;
+		breakDownScores = (bool)pr->breakDownScores;
+		numberOfPositions = pr->numberOfPositions;
+		gridSize = pr->gridSize;
+		gridSpacing = pr->gridSpacing;
+		//  int numFreq = pr->numFreq;
+		//  int interpFuncExtent = pr->interpFuncExtent;
+
+		useSparseFFT = ( bool ) pr->useSparseFFT;
+		bool narrowBand = ( bool ) pr->narrowBand;
+
+		double alpha = pr->alpha;
+
+		rotations = pr->rotations;
+		int numberOfRotations = pr->numberOfRotations;
+
+		double skinSkinWeight = pr->skinSkinWeight;
+		double coreCoreWeight = pr->coreCoreWeight;
+		double skinCoreWeight = pr->skinCoreWeight;
+		double realSCWeight = pr->realSCWeight;
+		double imaginarySCWeight = pr->imaginarySCWeight;
+
+		double elecScale = pr->elecScale;
+		double elecRadiusInGrids = pr->elecRadiusInGrids;
+
+		double hydrophobicityWeight = pr->hydrophobicityWeight;
+		double hydroPhobicPhobicWeight = pr->hydroPhobicPhobicWeight;
+		double hydroPhobicPhilicWeight = pr->hydroPhobicPhilicWeight;
+		double hydroPhilicPhilicWeight = pr->hydroPhilicPhilicWeight;
+
+		double hydroRadExt = pr->hydroRadExt;
+
+		twoWayHydrophobicity = pr->twoWayHydrophobicity;
+
+		double staticMolHydroDistCutoff = pr->staticMolHydroDistCutoff;
+
+		simpleShapeWeight = pr->simpleShapeWeight;
+		simpleChargeWeight = pr->simpleChargeWeight;
+
+		double simpleRadExt = pr->simpleRadExt;
+
+		hbondWeight = pr->hbondWeight;
+		double hbondDistanceCutoff = pr->hbondDistanceCutoff;
+
+		double clashWeight = pr->clashWeight;
+
+		double pseudoGsolWeight = pr->pseudoGsolWeight;
+
+		double dispersionWeight = pr->dispersionWeight;
+
+		double bandwidth = pr->bandwidth;
+		double gradFactor = pr->gradFactor;
+
+		bool curvatureWeightedStaticMol = pr->curvatureWeightedStaticMol;
+		bool curvatureWeightedMovingMol = pr->curvatureWeightedMovingMol;
+		double curvatureWeightingRadius = pr->curvatureWeightingRadius;
+		bool spreadReceptorSkin = pr->spreadReceptorSkin;
+		bool randomRotate = pr->randomRotate;
+		randRot = pr->initRot;
+
+		clusterTransRad = pr->clusterTransRad;
+		clusterTransSize = pr->clusterTransSize;
+		clusterRotRad = pr->clusterRotRad;
+		peaksPerRotation = pr->peaksPerRotation;
+
+		char *outputFileName = outputFilename;
+
+		double real_magnitude = sqrt( skinSkinWeight );
+		double imag_magnitude = sqrt( coreCoreWeight );
+
+		double hydrophobicity_real_magnitude = sqrt( hydroPhobicPhobicWeight );
+		double hydrophobicity_imag_magnitude = sqrt( hydroPhilicPhilicWeight );
+
+		// results
+		localTopValues = new TopValues* [ numThreads ];
+		globalTopValues = 0;
+		funnel = 0;
+
+
+		mainStartTime = getTime();
 
 		for ( int i = 0; i < numThreads; i++ )
-		{
-			sparseProfile_01[ i ] = ( FFTW_complex* ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
-			sparseProfile_10[ i ] = ( FFTW_complex* ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
-			sparseProfile_11[ i ] = ( FFTW_complex* ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
-		}
-	}
-	else
-	{
-		centerFrequenciesA_01 = centerFrequenciesA_10 = centerFrequenciesA_11 = NULL;
+			localTopValues[ i ] = 0;
 
-		for ( int i = 0; i < numThreads; i++ )
-			sparseProfile_01[ i ] = sparseProfile_10[ i ] = sparseProfile_11[ i ] = NULL;
-	}
+		//  double numFreq3 = numFreq*numFreq*numFreq;
+		centerFrequenciesA = (FFTW_complex*)FFTW_malloc( sizeof(FFTW_complex)*numFreq3 ) ;
 
-	// report peak
-	// FPRINTF CUIDADO COM MPI
-	FILE* fpOpt = fopen( outputFilename, "w");
-	printInputParamters( pr, fpOpt );
-
-	// read molecules
-	if ( breakDownScores )
-	{
-		if ( !dockVolume )
-		{
-			if ( !build_fks( typeA, numCentersA, xkAOrig, ykAOrig, zkAOrig, radiiA, chargesA, hbondTypeA, hydrophobicityA,
-						&fkA, &fkA_01, &fkA_10, &fkA_11,
-						elecScale, &fkAElec, hbondWeight, &fkAHbond,
-						hydrophobicityWeight, hydroPhobicPhobicWeight, hydroPhobicPhilicWeight, hydroPhilicPhilicWeight,
-						staticMolHydroDistCutoff, &fkAHydrophobicity, twoWayHydrophobicity, &fkAHydrophobicityTwo,
-						simpleShapeWeight, simpleChargeWeight, &fkASimpleComplementarity,
-						real_magnitude, imag_magnitude,
-						true, singleLayerLigandSkin, curvatureWeightedStaticMol, curvatureWeightingRadius,
-						bandwidth, gradFactor, pr ) ) 
-				return -1;
-
-			if ( !build_fks( typeB, numCentersB, xkBOrig, ykBOrig, zkBOrig, radiiB, chargesB, hbondTypeB, hydrophobicityB,
-						&fkB, &fkB_01, &fkB_10, &fkB_11,
-						elecScale, &fkBElec, hbondWeight, &fkBHbond,
-						hydrophobicityWeight, hydroPhobicPhobicWeight, hydroPhobicPhilicWeight, hydroPhilicPhilicWeight,
-						staticMolHydroDistCutoff, &fkBHydrophobicity, twoWayHydrophobicity, &fkBHydrophobicityTwo,
-						simpleShapeWeight, simpleChargeWeight, &fkBSimpleComplementarity,
-						real_magnitude, imag_magnitude,
-						false, singleLayerLigandSkin, curvatureWeightedMovingMol, curvatureWeightingRadius,
-						bandwidth, gradFactor, pr ) ) 
-				return -1;
-		}
-	}
-	else
-	{
-		if ( !dockVolume )
-		{
-			if ( !build_fks( typeA, numCentersA, xkAOrig, ykAOrig, zkAOrig, radiiA, chargesA, hbondTypeA, hydrophobicityA,
-						&fkA, elecScale, &fkAElec, hbondWeight, &fkAHbond,
-						hydrophobicityWeight, hydroPhobicPhobicWeight, hydroPhobicPhilicWeight, hydroPhilicPhilicWeight,
-						staticMolHydroDistCutoff, &fkAHydrophobicity, twoWayHydrophobicity, &fkAHydrophobicityTwo,
-						simpleShapeWeight, simpleChargeWeight, &fkASimpleComplementarity,
-						real_magnitude, imag_magnitude,
-						true, singleLayerLigandSkin, curvatureWeightedStaticMol, curvatureWeightingRadius,
-						bandwidth, gradFactor, pr ) ) 
-				return -1;
-
-			if ( !build_fks( typeB, numCentersB, xkBOrig, ykBOrig, zkBOrig, radiiB, chargesB, hbondTypeB, hydrophobicityB,
-						&fkB, elecScale, &fkBElec, hbondWeight, &fkBHbond,
-						hydrophobicityWeight, hydroPhobicPhobicWeight, hydroPhobicPhilicWeight, hydroPhilicPhilicWeight,
-						staticMolHydroDistCutoff, &fkBHydrophobicity, twoWayHydrophobicity, &fkBHydrophobicityTwo,
-						simpleShapeWeight, simpleChargeWeight, &fkBSimpleComplementarity,
-						real_magnitude, imag_magnitude,
-						false, singleLayerLigandSkin, curvatureWeightedMovingMol, curvatureWeightingRadius,
-						bandwidth, gradFactor, pr ) ) 
-				return -1;
-		}
-	}
-
-
-	float translate_A[ 3 ];
-	float translate_B[ 3 ];
-
-	/*
-	 *	A partir daqui parece fazer coisas
-	 */
-
-	if ( elecScale != 0 )
-	{
-		// get electrostatics kernel using the right scale and grid sizes
-		// get elec kernel FFT defined by distance weighted dielectric.
-		// this function does not return Fourier coefficients, but FFT of the function sampled on the grid. This is in
-		// accordance with the fastsum paper by nfft folks.
-		if ( !computeElecKernel( smallElectrostaticsKernel, numFreq, scale,
-								pr->elecKernelVoidRad,
-								pr->elecKernelDistLow, pr->elecKernelValLow,
-								pr->elecKernelDistHigh, pr->elecKernelValHigh ) ) 
-			return -1;
-	}
-
-	INSPHERE_DATA isd;
-	sparse3DFFT_nonzero_func sparsityFuncForward = inSphere;
-	void *sparsityFuncForwardData = &isd;
-
-	isd.cx = isd.cy = isd.cz = ( alphaM - 1 ) / 2.0;
-
-	VALID_OUTPUT_DATA voutd;
-	sparse3DFFT_nonzero_func sparsityFuncBackward = outputValid;
-	void *sparsityFuncBackwardData = &voutd;
-
-	voutd.n = numFreq;
-	voutd.validOutputMap = validOutputMap;
-
-	if ( dockVolume )
-	{
-		double skinSkinWeightSqrt = sqrt( pr->skinSkinWeight );
-		double coreCoreWeightSqrt = sqrt( pr->coreCoreWeight );
-
-		double xCenter, yCenter, zCenter;
-
-		if ( !readShapeCompGrid( sparseProfile[ 0 ], &xCenter, &yCenter, &zCenter, pr->movingMoleculeSCReRaw, pr->movingMoleculeSCImRaw ) ) 
-			return -1;
-
-		for ( int i = 0; i < numFreq * numFreq * numFreq; i++ )
-		{
-			centerFrequenciesB[ 0 ][ i ][ 0 ] = sparseProfile[ 0 ][ i ][ 0 ] * skinSkinWeightSqrt;
-			centerFrequenciesB[ 0 ][ i ][ 1 ] = sparseProfile[ 0 ][ i ][ 1 ] * coreCoreWeightSqrt;
-		}
-
-		translate_B[ 0 ] = -xCenter;
-		translate_B[ 1 ] = -yCenter;
-		translate_B[ 2 ] = -zCenter;
-
-		if ( breakDownScores ) memcpy( sparseProfile_01[ 0 ], sparseProfile[ 0 ], numFreq * numFreq * numFreq * sizeof( FFTW_complex ) );
-
-		if ( !readShapeCompGrid( sparseProfile[ 0 ], &xCenter, &yCenter, &zCenter, pr->staticMoleculeSCReRaw, pr->staticMoleculeSCImRaw ) ) 
-			return -1;
-
-		for ( int i = 0; i < numFreq * numFreq * numFreq; i++ )
-		{
-			gridA[ i ][ 0 ] = ourMoreFrequencies[ 0 ][ i ][ 0 ] = sparseProfile[ 0 ][ i ][ 0 ] * skinSkinWeightSqrt;
-			gridA[ i ][ 1 ] = ourMoreFrequencies[ 0 ][ i ][ 1 ] = sparseProfile[ 0 ][ i ][ 1 ] * coreCoreWeightSqrt;
-		}
-
-		translate_A[ 0 ] = -xCenter;
-		translate_A[ 1 ] = -yCenter;
-		translate_A[ 2 ] = -zCenter;
-
-		if ( !getCenterFrequencies(  numCentersA, xkA, ykA, zkA, rkA, typeA, fkA, blobbiness, alpha, numFreq, interpFuncExtent,
-					centerFrequenciesA, smoothSkin, smoothingFunction[ 0 ], ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ],
-					moreFreqPlanA, NULL, true, spreadReceptorSkin ) ) 
-			return -1;
-
-		if ( breakDownScores )
-		{
-			for ( int i = 0; i < numFreq * numFreq * numFreq; i++ )
-			{
-				ourMoreFrequencies[ 0 ][ i ][ 0 ] = 0;
-				ourMoreFrequencies[ 0 ][ i ][ 1 ] = sparseProfile[ 0 ][ i ][ 1 ];
-			}
-
-			if ( !getCenterFrequencies( numCentersA, xkA, ykA, zkA, rkA, typeA, fkA_01, blobbiness, alpha, numFreq, interpFuncExtent,
-						centerFrequenciesA_01, smoothSkin, smoothingFunction[ 0 ], ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], moreFreqPlanA, NULL, true, spreadReceptorSkin ) ) 
-				return -1;
-
-			for ( int i = 0; i < numFreq * numFreq * numFreq; i++ )
-			{
-				ourMoreFrequencies[ 0 ][ i ][ 0 ] = sparseProfile[ 0 ][ i ][ 0 ];
-				ourMoreFrequencies[ 0 ][ i ][ 1 ] = 0;
-			}
-
-			if ( !getCenterFrequencies( numCentersA, xkA, ykA, zkA, rkA, typeA, fkA_10, blobbiness, alpha, numFreq, interpFuncExtent,
-						centerFrequenciesA_10, smoothSkin, smoothingFunction[ 0 ], ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], moreFreqPlanA, NULL, true, spreadReceptorSkin ) ) 
-				return -1;
-
-
-			for ( int i = 0; i < numFreq * numFreq * numFreq; i++ )
-			{
-				ourMoreFrequencies[ 0 ][ i ][ 0 ] = sparseProfile[ 0 ][ i ][ 0 ];
-				ourMoreFrequencies[ 0 ][ i ][ 1 ] = sparseProfile[ 0 ][ i ][ 1 ];
-			}
-
-			if ( !getCenterFrequencies( numCentersA, xkA, ykA, zkA, rkA, typeA, fkA_11, blobbiness, alpha, numFreq, interpFuncExtent,
-						centerFrequenciesA_11, smoothSkin, smoothingFunction[ 0 ], ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], moreFreqPlanA, NULL, true, spreadReceptorSkin ) ) 
-				return -1;
-		}
+		centerElecFrequenciesA = 0;
+		FFTW_complex* smallElectrostaticsKernel = 0;
 
 		if ( elecScale != 0 )
 		{
-			if ( !readElecGrid( ( FFTW_DATA_TYPE * ) elecGridB[ 0 ], &xCenter, &yCenter, &zCenter, pr->staticMoleculeElecReRaw ) ) 
-				return -1;
-
-			if ( !getCenterElecFrequencies( numCentersA, xkA, ykA, zkA, rkA, typeA, fkAElec, blobbiness, alpha, numFreq, elecRadiusInGrids,
-						centerElecFrequenciesB[ 0 ], ( FFTW_DATA_TYPE * ) elecGridB[ 0 ], moreElecFreqPlanA, true, false ) ) 
-				return -1;
-
-			memcpy( centerElecFrequenciesA, centerElecFrequenciesB[ 0 ], numFreq * numFreq * numFreq * sizeof( FFTW_complex ) );
+			centerElecFrequenciesA = (FFTW_complex*)FFTW_malloc( sizeof(FFTW_complex)*numFreq3 );
+			smallElectrostaticsKernel = (FFTW_complex*)FFTW_malloc( sizeof(FFTW_complex)*numFreq3 );
 		}
 
-		numNonzeroGridBCells = collectNonzeroGridCells( &gridBCells, centerFrequenciesB[ 0 ], numFreq );
-
-		double minRadB, maxRadB;
-
-		findMovingMolMinMaxRadius( gridBCells, numNonzeroGridBCells, numFreq, &minRadB, &maxRadB );
-
-		createValidOutputMap( sparseProfile[ 0 ], numFreq, ( int ) minRadB, ( int ) maxRadB, narrowBand, validOutputMap );
-
-		if ( useSparseFFT )
-		{
-			isd.r2 = ( ceil( maxRadB ) + 2 ) * ( ceil( maxRadB ) + 2 );
-
-			sparseFreqPlanForward = sparse3DFFT_create_plan( alphaM, alphaM, alphaM, FFTW_FORWARD, OPT_FFTW_SEARCH_TYPE,
-					SPARSE3DFFT_SPARSEINPUT,
-					sparsityFuncForward, sparsityFuncForwardData, ourMoreFrequencies[ 0 ], ourMoreFrequenciesOut[ 0 ] );
-
-			sparseFreqPlanBackward = sparse3DFFT_create_plan( alphaM, alphaM, alphaM, FFTW_BACKWARD, OPT_FFTW_SEARCH_TYPE,
-					SPARSE3DFFT_SPARSEOUTPUT,
-					sparsityFuncBackward, sparsityFuncBackwardData, ourMoreFrequencies[ 0 ], ourMoreFrequenciesOut[ 0 ] );
-		}
-
-		flipGrid( gridBCells, numNonzeroGridBCells );
-
-		if ( breakDownScores )
-		{
-			for ( int i = 0; i < numFreq * numFreq * numFreq; i++ )
-			{
-				centerFrequenciesB[ 0 ][ i ][ 0 ] = 0;
-				centerFrequenciesB[ 0 ][ i ][ 1 ] = sparseProfile_01[ 0 ][ i ][ 1 ];
-			}
-
-			numNonzeroGridBCells_01 = collectNonzeroGridCells( &gridBCells_01, centerFrequenciesB[ 0 ], numFreq );
-
-			flipGrid( gridBCells_01, numNonzeroGridBCells_01 );
-
-			for ( int i = 0; i < numFreq * numFreq * numFreq; i++ )
-			{
-				centerFrequenciesB[ 0 ][ i ][ 0 ] = sparseProfile_01[ 0 ][ i ][ 0 ];
-				centerFrequenciesB[ 0 ][ i ][ 1 ] = 0;
-			}
-
-			numNonzeroGridBCells_10 = collectNonzeroGridCells( &gridBCells_10, centerFrequenciesB[ 0 ], numFreq );
-
-			flipGrid( gridBCells_10, numNonzeroGridBCells_10 );
-
-			for ( int i = 0; i < numFreq * numFreq * numFreq; i++ )
-			{
-				centerFrequenciesB[ 0 ][ i ][ 0 ] = sparseProfile_01[ 0 ][ i ][ 0 ];
-				centerFrequenciesB[ 0 ][ i ][ 1 ] = sparseProfile_01[ 0 ][ i ][ 1 ];
-			}
-
-			numNonzeroGridBCells_11 = collectNonzeroGridCells( &gridBCells_11, centerFrequenciesB[ 0 ], numFreq );
-
-			flipGrid( gridBCells_11, numNonzeroGridBCells_11 );
-		}
-
-		if ( randomRotate )
-		{
-			rotateGrid( centerFrequenciesB[ 0 ], numFreq, gridBCells, numNonzeroGridBCells, randRot, true, false );
-			free( gridBCells );
-			numNonzeroGridBCells = collectNonzeroGridCells( &gridBCells, centerFrequenciesB[ 0 ], numFreq );
-
-			if ( breakDownScores )
-			{
-				rotateGrid( centerFrequenciesB[ 0 ], numFreq, gridBCells_01, numNonzeroGridBCells_01, randRot, true, false );
-				free( gridBCells_01 );
-				numNonzeroGridBCells_01 = collectNonzeroGridCells( &gridBCells_01, centerFrequenciesB[ 0 ], numFreq );
-
-				rotateGrid( centerFrequenciesB[ 0 ], numFreq, gridBCells_10, numNonzeroGridBCells_10, randRot, true, false );
-				free( gridBCells_10 );
-				numNonzeroGridBCells_10 = collectNonzeroGridCells( &gridBCells_10, centerFrequenciesB[ 0 ], numFreq );
-
-				rotateGrid( centerFrequenciesB[ 0 ], numFreq, gridBCells_11, numNonzeroGridBCells_11, randRot, true, false );
-				free( gridBCells_11 );
-				numNonzeroGridBCells_11 = collectNonzeroGridCells( &gridBCells_11, centerFrequenciesB[ 0 ], numFreq );
-			}
-		}
-
-		printf( "\nnumNonzeroGridBCells = %d\n\n", numNonzeroGridBCells );
-
-		if ( elecScale != 0 )
-		{
-			if ( !readElecGrid( ( FFTW_DATA_TYPE * ) centerElecFrequenciesB[ 0 ], &xCenter, &yCenter, &zCenter, pr->movingMoleculeElecReRaw ) ) 
-				return -1;
-
-			numNonzeroElecGridBCells = collectNonzeroElecGridCells( &elecGridBCells, ( FFTW_DATA_TYPE * ) centerElecFrequenciesB[ 0 ], numFreq );
-
-			flipGrid( elecGridBCells, numNonzeroElecGridBCells );
-
-			if ( randomRotate )
-			{
-				rotateElecGrid( ( FFTW_DATA_TYPE * ) centerElecFrequenciesB[ 0 ], numFreq, elecGridBCells, numNonzeroElecGridBCells, randRot, true, false );
-				free( elecGridBCells );
-				numNonzeroElecGridBCells = collectNonzeroElecGridCells( &elecGridBCells, ( FFTW_DATA_TYPE * ) centerElecFrequenciesB[ 0 ], numFreq );
-			}
-
-			printf( "numNonzeroElecGridBCells = %d\n\n", numNonzeroElecGridBCells );
-		}
-	}
-	else
-	{
-		double xTrans = 0, yTrans = 0, zTrans = 0;
-
-		// center A
-		if( !center( xkAOrig, ykAOrig, zkAOrig, numCentersA, &xTrans, &yTrans, &zTrans ) ) 
-			return -1;
-
-		translate_A[ 0 ] = xTrans;
-		translate_A[ 1 ] = yTrans;
-		translate_A[ 2 ] = zTrans;
-
-		// transform A
-		if ( !transformAndNormalize( xkAOrig, ykAOrig, zkAOrig, radiiA, xkA, ykA, zkA, rkA, numCentersA,
-					1, 0, 0, 0, 1, 0, 0, 0, 1, 1, scale ) ) 
-			return -1;
-
-		gridding( numCentersA, xkA, ykA, zkA, rkA, typeA, fkA, blobbiness, numFreq, interpFuncExtent,
-				smoothSkin, smoothingFunction[ 0 ], gridA /*sparseProfile[ 0 ]*/, spreadReceptorSkin );
-
-		memcpy( ourMoreFrequencies[ 0 ], gridA /*sparseProfile[ 0 ]*/, numFreq * numFreq * numFreq * sizeof( FFTW_complex ) );
-
-		// get frequencies of A.
-		if ( !getCenterFrequencies( numCentersA, xkA, ykA, zkA, rkA, typeA, fkA, blobbiness, alpha, numFreq, interpFuncExtent,
-					centerFrequenciesA, smoothSkin, smoothingFunction[ 0 ], ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], moreFreqPlanA, NULL, true, spreadReceptorSkin ) ) 
-			return -1;
-
-		if ( breakDownScores )
-		{
-			memcpy( ourMoreFrequencies[ 0 ], sparseProfile[ 0 ], numFreq * numFreq * numFreq * sizeof( FFTW_complex ) );
-
-			if ( !getCenterFrequencies( numCentersA, xkA, ykA, zkA, rkA, typeA, fkA_01, blobbiness, alpha, numFreq, interpFuncExtent,
-						centerFrequenciesA_01, smoothSkin, smoothingFunction[ 0 ], ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], moreFreqPlanA, NULL, false, spreadReceptorSkin ) ) 
-				return -1;
-
-			memcpy( ourMoreFrequencies[ 0 ], sparseProfile[ 0 ], numFreq * numFreq * numFreq * sizeof( FFTW_complex ) );
-
-			if ( !getCenterFrequencies( numCentersA, xkA, ykA, zkA, rkA, typeA, fkA_10, blobbiness, alpha, numFreq, interpFuncExtent,
-						centerFrequenciesA_10, smoothSkin, smoothingFunction[ 0 ], ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], moreFreqPlanA, NULL, false, spreadReceptorSkin ) ) 
-				return -1;
-
-			memcpy( ourMoreFrequencies[ 0 ], sparseProfile[ 0 ], numFreq * numFreq * numFreq * sizeof( FFTW_complex ) );
-
-			if ( !getCenterFrequencies( numCentersA, xkA, ykA, zkA, rkA, typeA, fkA_11, blobbiness, alpha, numFreq, interpFuncExtent,
-						centerFrequenciesA_11, smoothSkin, smoothingFunction[ 0 ], ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], moreFreqPlanA, NULL, false, spreadReceptorSkin ) ) 
-				return -1;
-		}
-
-		if ( elecScale != 0 )
-		{
-			if ( !getCenterElecFrequencies( numCentersA, xkA, ykA, zkA, rkA, typeA, fkAElec, blobbiness, alpha, numFreq, elecRadiusInGrids,
-						centerElecFrequenciesB[ 0 ], ( FFTW_DATA_TYPE * ) elecGridB[ 0 ], moreElecFreqPlanA, false, false ) ) 
-				return -1;
-
-			memcpy( centerElecFrequenciesA, centerElecFrequenciesB[ 0 ], numFreq * numFreq * numFreq * sizeof( FFTW_complex ) );
-		}
+		FFTW_complex* centerHbondFrequenciesA = 0;
 
 		if ( hbondWeight != 0 )
-		{
-			if ( !getCenterHbondFrequencies( numCentersA, xkA, ykA, zkA, rkA, hbondDistanceCutoff * scale * ( numFreq - 1 ), fkAHbond, blobbiness, alpha, numFreq,
-						ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], moreFreqPlanA, NULL, false, false ) ) 
-				return -1;
+			centerHbondFrequenciesA = (FFTW_complex*)FFTW_malloc( sizeof(FFTW_complex)*numFreq3 );
 
-			memcpy( centerHbondFrequenciesA, ourMoreFrequencies[ 0 ], numFreq * numFreq * numFreq * sizeof( FFTW_complex ) );
-		}
 
 		if ( ( hydrophobicityWeight != 0 ) || ( hydroPhobicPhobicWeight != 0 ) || ( hydroPhilicPhilicWeight != 0 ) || ( hydroPhobicPhilicWeight != 0 ) )
 		{
-			if ( !getCenterHydrophobicityFrequencies( numCentersA, xkA, ykA, zkA, rkA, fkAHydrophobicity, blobbiness, alpha, numFreq,
-						( hydrophobicityWeight == 0 ) ? hydroRadExt : 0.0, ( bool ) ( hydrophobicityWeight == 0 ),
-						ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], moreFreqPlanA, NULL, false ) ) 
-				return -1;
-
-			memcpy( centerHydrophobicityFrequenciesA, ourMoreFrequencies[ 0 ], numFreq * numFreq * numFreq * sizeof( FFTW_complex ) );
-
+			centerHydrophobicityFrequenciesA = (FFTW_complex*)FFTW_malloc( sizeof(FFTW_complex)*numFreq3 );
 			if ( twoWayHydrophobicity )
-			{
-				if ( !getCenterHydrophobicityFrequencies( numCentersA, xkA, ykA, zkA, rkA, fkAHydrophobicityTwo, blobbiness, alpha, numFreq,
-							hydroRadExt, false, ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ],
-							ourMoreFrequencies[ 0 ], moreFreqPlanA, NULL, false ) ) 
-					return -1;
+				centerHydrophobicityTwoFrequenciesA = (FFTW_complex*)FFTW_malloc( sizeof(FFTW_complex)*numFreq3 );
+		}
 
-				memcpy( centerHydrophobicityTwoFrequenciesA, ourMoreFrequencies[ 0 ], numFreq * numFreq * numFreq * sizeof( FFTW_complex ) );
+
+		if ( ( simpleShapeWeight > 0 ) || ( simpleChargeWeight > 0 ) )
+			centerSimpleComplementarityFrequenciesA = (FFTW_complex*)FFTW_malloc( sizeof(FFTW_complex)*numFreq3 );
+
+		FFTW_complex* ourMoreFrequenciesA;
+
+		centerFrequenciesB = new FFTW_complex* [ numThreads ];
+		centerFrequenciesProduct = new FFTW_complex* [ numThreads ];
+		sparseProfile = new FFTW_complex* [ numThreads ];
+		sparseShapeProfile = new FFTW_complex* [ numThreads ];
+
+		centerElecFrequenciesB = new FFTW_complex* [ numThreads ];
+		centerFrequenciesElecProduct = new FFTW_complex* [ numThreads ];
+		sparseElecProfile = new FFTW_complex* [ numThreads ];
+
+		sparseHbondProfile = new FFTW_complex* [ numThreads ];
+		sparseHydrophobicityProfile = new FFTW_complex* [ numThreads ];
+		sparseHydrophobicityTwoProfile = new FFTW_complex* [ numThreads ];
+		sparseSimpleComplementarityProfile = new FFTW_complex* [ numThreads ];
+
+		freqHat = new FFTW_complex* [ numThreads ];
+
+		ourMoreFrequencies = new FFTW_complex* [ numThreads ];
+		ourMoreFrequenciesOut = new FFTW_complex* [ numThreads ];
+
+		elecGridB = new FFTW_complex* [ numThreads ];
+
+		freqPlan = new FFTW_plan [ numThreads ];
+
+		elecFreqPlan = new FFTW_plan [ numThreads ];
+
+		freqHatPlan = new FFTW_plan [ numThreads ];
+
+		moreFreqPlan = new FFTW_plan [ numThreads ];
+
+		moreElecFreqPlan = new FFTW_plan [ numThreads ];
+
+		sortedPeaks = new double* [ numThreads ];
+
+		// static molecule
+		double *xkAOrig = pr->xkAOrig;
+		double *ykAOrig = pr->ykAOrig;
+		double *zkAOrig =pr->zkAOrig;
+		int numCentersA = pr->numCentersA;
+		char *typeA = pr->typeA;
+		char *hbondTypeA = pr->hbondTypeA;
+		float *chargesA = pr->chargesA;
+		float *hydrophobicityA = pr->hydrophobicityA;
+		float *radiiA = pr->radiiA;
+		int _numCentersA = 0;
+
+		while ( typeA[ _numCentersA ] == 'I' ) 
+			_numCentersA++;
+
+		// moving molecule
+		double *xkBOrig = pr->xkBOrig;
+		double *ykBOrig = pr->ykBOrig;
+		double *zkBOrig = pr->zkBOrig;
+		numCentersB = pr->numCentersB;
+		xkB = new double* [ numThreads ]; 
+		ykB = new double* [ numThreads ]; 
+		zkB = new double* [ numThreads ];
+		float *rkB[ numThreads ];
+		char *typeB = pr->typeB;
+		char *hbondTypeB = pr->hbondTypeB;
+		float *chargesB = pr->chargesB;
+		float *hydrophobicityB = pr->hydrophobicityB;
+		float *radiiB = pr->radiiB;
+
+		NONZERO_GRIDCELLS *gridBCells = 0;
+		int numNonzeroGridBCells = 0;
+
+		NONZERO_GRIDCELLS *gridBCells_01 = 0;
+		int numNonzeroGridBCells_01 = 0;
+
+		NONZERO_GRIDCELLS *gridBCells_10 = 0;
+		int numNonzeroGridBCells_10 = 0;
+
+		NONZERO_GRIDCELLS *gridBCells_11 = 0;
+		int numNonzeroGridBCells_11 = 0;
+
+		NONZERO_GRIDCELLS *elecGridBCells = 0;
+		int numNonzeroElecGridBCells = 0;
+
+		NONZERO_GRIDCELLS *hbondGridBCells = 0;
+		int numNonzeroHbondGridBCells = 0;
+
+		NONZERO_GRIDCELLS *hydrophobicityGridBCells = 0;
+		int numNonzeroHydrophobicityGridBCells = 0;
+
+		NONZERO_GRIDCELLS *hydrophobicityTwoGridBCells = 0;
+		int numNonzeroHydrophobicityTwoGridBCells = 0;
+
+		NONZERO_GRIDCELLS *simpleComplementarityGridBCells = 0;
+		int numNonzeroSimpleComplementarityGridBCells = 0;
+
+
+		if ( pr->applyVdWFilter )
+		{
+			initLJFilter( pr, &ljFilter );
+			pr->ljFilter = ljFilter;
+		}
+
+		clashFilter* fFilter;
+
+		if ( pr->applyClashFilter )
+		{
+			initClashFilter( pr, &cFilter );
+			pr->cFilter = cFilter;
+		}
+
+		if(pr->applyForbiddenVolumeFilter) 
+		{
+			initForbiddenVolumeFilter( pr, &fFilter );
+			std::cout<<"Forbidden volume filter enabled.\n";	
+			pr->fFilter = fFilter;
+		}
+
+		if ( pr->applyPseudoGsolFilter ) initPseudoGsolFilter( pr );
+
+		if ( pr->applyDispersionFilter ) initDispersionFilter( pr );
+
+#ifdef LIBMOL_FOUND
+		if ( pr->applyHbondFilter ) initHBondFilter( pr );
+#else
+		printf("LibMol was not found. Could not apply hygrogen bond filter\n");
+#endif
+
+		//#ifdef DEBUG
+		printf("\n\nLocal variable in main\n");
+		printf("numThreads: %d\n", numThreads);
+		printf("performDocking: %d\n", performDocking);
+		printf("blobbiness: %lf\n", blobbiness);
+		printf("distanceCutoff: %lf\n", distanceCutoff);
+		printf("outputFilename: %s\n", outputFilename);
+		printf("breakDownScores: %d\n", breakDownScores);
+		printf("numberOfPositions: %d\n", numberOfPositions);
+		printf("gridSize: %d\n", gridSize);
+		printf("gridSpacing: %lf\n", gridSpacing);
+		printf("numFreq: %d\n", numFreq);
+		printf("interpFuncExtent: %d\n", interpFuncExtent);
+
+		printf("bandwidth: %lf\n", bandwidth);
+		printf("gradFactor: %lf\n", gradFactor);
+
+		printf("numberOfRotations: %d\n",numberOfRotations );
+		printf("skinSkinWeight: %f\n", skinSkinWeight);
+		printf("coreCoreWeight: %f\n", coreCoreWeight);
+		printf("skinCoreWeight: %f\n", skinCoreWeight);
+		printf("realSCWeight: %f\n", realSCWeight);
+		printf("imaginarySCWeight: %f\n", imaginarySCWeight);
+		printf("elecScale: %f\n",elecScale );
+		printf("hbondWeight: %f\n",hbondWeight );
+		printf("hydrophobicityWeight = %f\n", hydrophobicityWeight );
+		printf("hydroPhobicPhobicWeight: %f\n", hydroPhobicPhobicWeight);
+		printf("hydroPhobicPhilicWeight: %f\n", hydroPhobicPhilicWeight);
+		printf("hydroPhilicPhilicWeight: %f\n", hydroPhilicPhilicWeight);
+		printf("simpleShapeWeight: %f\n", simpleShapeWeight);
+		printf("simpleChargeWeight: %f\n", simpleChargeWeight);
+		printf("Molecule A\n");
+		printf("   numCenters:%d", numCentersA);
+		printf("   coords  0: %lf %lf %lf\n", xkAOrig[0], ykAOrig[0], zkAOrig[0]);
+		printf("   coords -1: %lf %lf %lf\n", xkAOrig[numCentersA-1],
+				ykAOrig[numCentersA-1], zkAOrig[numCentersA-1]);
+		printf("   types: %s\n", typeA);
+		printf("   charges: %f %f\n", chargesA[0], chargesA[numCentersA-1]);
+		printf("   radii: %f %f\n", radiiA[0], radiiA[numCentersA-1]);
+
+		printf("Molecule B\n");
+		printf("   numCenters:%d", numCentersB);
+		printf("   coords  0: %lf %lf %lf\n", xkBOrig[0], ykBOrig[0], zkBOrig[0]);
+		printf("   coords -1: %lf %lf %lf\n", xkBOrig[numCentersB-1],
+				ykBOrig[numCentersB-1], zkBOrig[numCentersB-1]);
+		printf("   types: %s\n", typeB);
+		printf("   charges: %f %f\n", chargesB[0], chargesB[numCentersB-1]);
+		printf("   radii: %f %f\n", radiiB[0], radiiB[numCentersB-1]);
+		//#endif
+
+
+		double *xkA = NULL, *ykA = NULL, *zkA = NULL;
+		float *rkA = NULL;
+
+		if ( numCentersA > 0 )
+		{
+			xkA = new double[ numCentersA ];
+			ykA = new double[ numCentersA ];
+			zkA = new double[ numCentersA ];
+			rkA = new float[ numCentersA ];
+		}
+
+		for ( int i = 0; i < numThreads; i++ )
+		{
+			if ( numCentersB > 0  )
+			{
+				xkB[ i ] = new double[ numCentersB ];
+				ykB[ i ] = new double[ numCentersB ];
+				zkB[ i ] = new double[ numCentersB ];
+				rkB[ i ] = new float[ numCentersB ];
+			}
+			else
+			{
+				xkB[ i ] = ykB[ i ] = zkB[ i ] = NULL;
+				rkB[ i ] = NULL;
 			}
 		}
 
-		if ( ( simpleShapeWeight > 0 ) || ( simpleChargeWeight > 0 ) )
-		{
-			if ( !getCenterSimpleComplementarityFrequencies( numCentersA, xkA, ykA, zkA, rkA, fkASimpleComplementarity, blobbiness, alpha, numFreq, simpleRadExt,
-						ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], moreFreqPlanA, NULL, false ) ) 
-				return -1;
 
-			memcpy( centerSimpleComplementarityFrequenciesA, ourMoreFrequencies[ 0 ], numFreq * numFreq * numFreq * sizeof( FFTW_complex ) );
+
+		gridA = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
+
+		globalTopValues = new TopValues( numberOfPositions, numFreq );
+		if ( clusterRotRad > 0 )
+		{
+			funnel = new TopValues( 2 * numThreads, numFreq );
+			peakList = new int[ 2 * numberOfPositions ];
 		}
 
-		// center B
-		if ( !center( xkBOrig, ykBOrig, zkBOrig, numCentersB, &xTrans, &yTrans, &zTrans ) ) 
-			return -1;
+		smoothingFunction = new SmoothingFunction* [ numThreads ];
 
-		translate_B[ 0 ] = xTrans;
-		translate_B[ 1 ] = yTrans;
-		translate_B[ 2 ] = zTrans;
+		double n = ( int ) ( alpha * numFreq );
+		int alphaM = ( int ) n;
 
-		if ( randomRotate )
+		validOutputMap = ( int * ) FFTW_malloc( sizeof( int ) * numFreq3 );
+
+		for ( int i = 0; i < numThreads; i++ )
 		{
-			if ( !rotateAboutOrigin( xkBOrig, ykBOrig, zkBOrig, numCentersB, randRot ) ) 
+			centerFrequenciesB[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
+			centerFrequenciesProduct[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
+			sparseProfile[ i ] = ( FFTW_complex* ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
+			sparseShapeProfile[ i ] = ( FFTW_complex* ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
+
+			freqHat[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * gridSize * 4 );
+
+			ourMoreFrequencies[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * alphaM * alphaM * alphaM );
+
+			if ( !useSparseFFT ) freqPlan[ i ] = FFTW_plan_dft_3d( numFreq, numFreq, numFreq,
+					centerFrequenciesProduct[ i ], sparseProfile[ i ],
+					FFTW_BACKWARD, OPT_FFTW_SEARCH_TYPE );
+
+			freqHatPlan[ i ] = FFTW_plan_dft_1d( gridSize * 4, freqHat[ i ], freqHat[ i ], FFTW_FORWARD, OPT_FFTW_SEARCH_TYPE );
+
+			if ( rotateVolume )
+				ourMoreFrequenciesOut[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * alphaM * alphaM * alphaM );
+			else
+				ourMoreFrequenciesOut[ i ] = ourMoreFrequencies[ i ];
+
+			if ( !useSparseFFT ) moreFreqPlan[ i ] = FFTW_plan_dft_3d( alphaM, alphaM, alphaM,
+					ourMoreFrequencies[ i ], ourMoreFrequenciesOut[ i ],
+					FFTW_FORWARD, OPT_FFTW_SEARCH_TYPE );
+
+			if ( elecScale != 0 )
+			{
+				centerElecFrequenciesB[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
+				centerFrequenciesElecProduct[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
+				sparseElecProfile[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
+
+				elecFreqPlan[ i ] = FFTW_plan_dft_c2r_3d( numFreq, numFreq, numFreq,
+						centerFrequenciesElecProduct[ i ],
+						( FFTW_DATA_TYPE * ) sparseElecProfile[ i ],
+						OPT_FFTW_SEARCH_TYPE );
+
+				if ( rotateVolume )
+					elecGridB[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * alphaM * alphaM * alphaM );
+				else elecGridB[ i ] = centerElecFrequenciesB[ i ];
+
+				moreElecFreqPlan[ i ] = FFTW_plan_dft_r2c_3d( alphaM, alphaM, alphaM,
+						( FFTW_DATA_TYPE * ) elecGridB[ i ], centerElecFrequenciesB[ i ],
+						OPT_FFTW_SEARCH_TYPE );
+			}
+			else
+				centerElecFrequenciesB[ i ] = centerFrequenciesElecProduct[ i ] = sparseElecProfile[ i ] = elecGridB[ i ] = NULL;
+
+			if ( hbondWeight != 0 )
+				sparseHbondProfile[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
+			else
+				sparseHbondProfile[ i ] = NULL;
+
+			if ( ( hydrophobicityWeight != 0 ) || ( hydroPhobicPhobicWeight != 0 ) || ( hydroPhilicPhilicWeight != 0 ) || ( hydroPhobicPhilicWeight != 0 ) )
+			{
+				sparseHydrophobicityProfile[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3);
+
+				if ( twoWayHydrophobicity )
+					sparseHydrophobicityTwoProfile[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
+				else
+					sparseHydrophobicityTwoProfile[ i ] = NULL;
+			}
+			else
+				sparseHydrophobicityProfile[ i ] = sparseHydrophobicityTwoProfile[ i ] = NULL;
+
+
+			if ( ( simpleShapeWeight > 0 ) || ( simpleChargeWeight > 0 ) )
+				sparseSimpleComplementarityProfile[ i ] = ( FFTW_complex * ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
+			else
+				sparseSimpleComplementarityProfile[ i ] = NULL;
+
+			localTopValues[ i ] = new TopValues( numberOfPositions, numFreq );
+
+			if ( smoothSkin ) smoothingFunction[ i ] = new Gaussian( alpha, interpFuncExtent, (int)(alpha*numFreq), gridSize );
+			else smoothingFunction[ i ] = NULL;
+
+			if ( ( clusterTransRad > 0 ) || ( peaksPerRotation < numFreq3 ) || ( ( clusterRotRad > 0 ) && ( i == 0 ) ) )
+			{
+				sortedPeaks[ i ] = ( double * ) malloc( sizeof( double ) * numFreq3 );
+				for ( int j = 0; j < numFreq3; j++ )
+					sortedPeaks[ i ][ j ] = 0;
+			}
+			else sortedPeaks[ i ] = NULL;
+		}
+
+
+		if ( !useSparseFFT ) sparseFreqPlanForward = sparseFreqPlanBackward = NULL;
+
+		moreFreqPlanA = FFTW_plan_dft_3d( alphaM, alphaM, alphaM,
+				ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ],
+				FFTW_FORWARD, OPT_FFTW_SEARCH_TYPE );
+
+		if ( elecScale != 0 ) moreElecFreqPlanA = FFTW_plan_dft_r2c_3d( alphaM, alphaM, alphaM,
+				( FFTW_DATA_TYPE * ) elecGridB[ 0 ],
+				centerElecFrequenciesB[ 0 ],
+				OPT_FFTW_SEARCH_TYPE );
+
+
+		sparseProfile_01 = new FFTW_complex* [ numThreads ];
+		sparseProfile_10 = new FFTW_complex* [ numThreads ];
+		sparseProfile_11 = new FFTW_complex* [ numThreads ];
+
+		if ( breakDownScores )
+		{
+			centerFrequenciesA_01 = ( FFTW_complex* ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
+			centerFrequenciesA_10 = ( FFTW_complex* ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
+			centerFrequenciesA_11 = ( FFTW_complex* ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
+
+			for ( int i = 0; i < numThreads; i++ )
+			{
+				sparseProfile_01[ i ] = ( FFTW_complex* ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
+				sparseProfile_10[ i ] = ( FFTW_complex* ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
+				sparseProfile_11[ i ] = ( FFTW_complex* ) FFTW_malloc( sizeof( FFTW_complex ) * numFreq3 );
+			}
+		}
+		else
+		{
+			centerFrequenciesA_01 = centerFrequenciesA_10 = centerFrequenciesA_11 = NULL;
+
+			for ( int i = 0; i < numThreads; i++ )
+				sparseProfile_01[ i ] = sparseProfile_10[ i ] = sparseProfile_11[ i ] = NULL;
+		}
+
+		// report peak
+		// FPRINTF CUIDADO COM MPI
+		fpOpt = fopen( outputFilename, "w");
+		printInputParamters( pr, fpOpt );
+
+		// read molecules
+		if ( breakDownScores )
+		{
+			if ( !dockVolume )
+			{
+				if ( !build_fks( typeA, numCentersA, xkAOrig, ykAOrig, zkAOrig, radiiA, chargesA, hbondTypeA, hydrophobicityA,
+							&fkA, &fkA_01, &fkA_10, &fkA_11,
+							elecScale, &fkAElec, hbondWeight, &fkAHbond,
+							hydrophobicityWeight, hydroPhobicPhobicWeight, hydroPhobicPhilicWeight, hydroPhilicPhilicWeight,
+							staticMolHydroDistCutoff, &fkAHydrophobicity, twoWayHydrophobicity, &fkAHydrophobicityTwo,
+							simpleShapeWeight, simpleChargeWeight, &fkASimpleComplementarity,
+							real_magnitude, imag_magnitude,
+							true, singleLayerLigandSkin, curvatureWeightedStaticMol, curvatureWeightingRadius,
+							bandwidth, gradFactor, pr ) ) 
+					return -1;
+
+				if ( !build_fks( typeB, numCentersB, xkBOrig, ykBOrig, zkBOrig, radiiB, chargesB, hbondTypeB, hydrophobicityB,
+							&fkB, &fkB_01, &fkB_10, &fkB_11,
+							elecScale, &fkBElec, hbondWeight, &fkBHbond,
+							hydrophobicityWeight, hydroPhobicPhobicWeight, hydroPhobicPhilicWeight, hydroPhilicPhilicWeight,
+							staticMolHydroDistCutoff, &fkBHydrophobicity, twoWayHydrophobicity, &fkBHydrophobicityTwo,
+							simpleShapeWeight, simpleChargeWeight, &fkBSimpleComplementarity,
+							real_magnitude, imag_magnitude,
+							false, singleLayerLigandSkin, curvatureWeightedMovingMol, curvatureWeightingRadius,
+							bandwidth, gradFactor, pr ) ) 
+					return -1;
+			}
+		}
+		else
+		{
+			if ( !dockVolume )
+			{
+				if ( !build_fks( typeA, numCentersA, xkAOrig, ykAOrig, zkAOrig, radiiA, chargesA, hbondTypeA, hydrophobicityA,
+							&fkA, elecScale, &fkAElec, hbondWeight, &fkAHbond,
+							hydrophobicityWeight, hydroPhobicPhobicWeight, hydroPhobicPhilicWeight, hydroPhilicPhilicWeight,
+							staticMolHydroDistCutoff, &fkAHydrophobicity, twoWayHydrophobicity, &fkAHydrophobicityTwo,
+							simpleShapeWeight, simpleChargeWeight, &fkASimpleComplementarity,
+							real_magnitude, imag_magnitude,
+							true, singleLayerLigandSkin, curvatureWeightedStaticMol, curvatureWeightingRadius,
+							bandwidth, gradFactor, pr ) ) 
+					return -1;
+
+				if ( !build_fks( typeB, numCentersB, xkBOrig, ykBOrig, zkBOrig, radiiB, chargesB, hbondTypeB, hydrophobicityB,
+							&fkB, elecScale, &fkBElec, hbondWeight, &fkBHbond,
+							hydrophobicityWeight, hydroPhobicPhobicWeight, hydroPhobicPhilicWeight, hydroPhilicPhilicWeight,
+							staticMolHydroDistCutoff, &fkBHydrophobicity, twoWayHydrophobicity, &fkBHydrophobicityTwo,
+							simpleShapeWeight, simpleChargeWeight, &fkBSimpleComplementarity,
+							real_magnitude, imag_magnitude,
+							false, singleLayerLigandSkin, curvatureWeightedMovingMol, curvatureWeightingRadius,
+							bandwidth, gradFactor, pr ) ) 
+					return -1;
+			}
+		}
+
+
+
+		/*
+		 *	A partir daqui parece fazer coisas
+		 */
+
+		if ( elecScale != 0 )
+		{
+			// get electrostatics kernel using the right scale and grid sizes
+			// get elec kernel FFT defined by distance weighted dielectric.
+			// this function does not return Fourier coefficients, but FFT of the function sampled on the grid. This is in
+			// accordance with the fastsum paper by nfft folks.
+			if ( !computeElecKernel( smallElectrostaticsKernel, numFreq, scale,
+						pr->elecKernelVoidRad,
+						pr->elecKernelDistLow, pr->elecKernelValLow,
+						pr->elecKernelDistHigh, pr->elecKernelValHigh ) ) 
 				return -1;
 		}
 
-		if ( !transformAndNormalize( xkBOrig, ykBOrig, zkBOrig, radiiB, xkB[ 0 ], ykB[ 0 ], zkB[ 0 ], rkB[ 0 ], numCentersB,
-					1, 0, 0, 0, 1, 0, 0, 0, 1, 2, scale ) ) 
-			return -1;
+		INSPHERE_DATA isd;
+		sparse3DFFT_nonzero_func sparsityFuncForward = inSphere;
+		void *sparsityFuncForwardData = &isd;
 
-		gridding( numCentersB, xkB[ 0 ], ykB[ 0 ], zkB[ 0 ], rkB[ 0 ], typeB, fkB, blobbiness, numFreq, interpFuncExtent,
-				smoothSkin, smoothingFunction[ 0 ], ourMoreFrequencies[ 0 ], false );
+		isd.cx = isd.cy = isd.cz = ( alphaM - 1 ) / 2.0;
 
-		numNonzeroGridBCells = collectNonzeroGridCells( &gridBCells, ourMoreFrequencies[ 0 ], numFreq );
+		VALID_OUTPUT_DATA voutd;
+		sparse3DFFT_nonzero_func sparsityFuncBackward = outputValid;
+		void *sparsityFuncBackwardData = &voutd;
 
-		if ( rotateVolume )
+		voutd.n = numFreq;
+		voutd.validOutputMap = validOutputMap;
+
+		if ( dockVolume )
 		{
+			double skinSkinWeightSqrt = sqrt( pr->skinSkinWeight );
+			double coreCoreWeightSqrt = sqrt( pr->coreCoreWeight );
+
+			double xCenter, yCenter, zCenter;
+
+			if ( !readShapeCompGrid( sparseProfile[ 0 ], &xCenter, &yCenter, &zCenter, pr->movingMoleculeSCReRaw, pr->movingMoleculeSCImRaw ) ) 
+				return -1;
+
+			for ( int i = 0; i < numFreq * numFreq * numFreq; i++ )
+			{
+				centerFrequenciesB[ 0 ][ i ][ 0 ] = sparseProfile[ 0 ][ i ][ 0 ] * skinSkinWeightSqrt;
+				centerFrequenciesB[ 0 ][ i ][ 1 ] = sparseProfile[ 0 ][ i ][ 1 ] * coreCoreWeightSqrt;
+			}
+
+			translate_B[ 0 ] = -xCenter;
+			translate_B[ 1 ] = -yCenter;
+			translate_B[ 2 ] = -zCenter;
+
+			if ( breakDownScores ) memcpy( sparseProfile_01[ 0 ], sparseProfile[ 0 ], numFreq * numFreq * numFreq * sizeof( FFTW_complex ) );
+
+			if ( !readShapeCompGrid( sparseProfile[ 0 ], &xCenter, &yCenter, &zCenter, pr->staticMoleculeSCReRaw, pr->staticMoleculeSCImRaw ) ) 
+				return -1;
+
+			for ( int i = 0; i < numFreq * numFreq * numFreq; i++ )
+			{
+				gridA[ i ][ 0 ] = ourMoreFrequencies[ 0 ][ i ][ 0 ] = sparseProfile[ 0 ][ i ][ 0 ] * skinSkinWeightSqrt;
+				gridA[ i ][ 1 ] = ourMoreFrequencies[ 0 ][ i ][ 1 ] = sparseProfile[ 0 ][ i ][ 1 ] * coreCoreWeightSqrt;
+			}
+
+			translate_A[ 0 ] = -xCenter;
+			translate_A[ 1 ] = -yCenter;
+			translate_A[ 2 ] = -zCenter;
+
+			if ( !getCenterFrequencies(  numCentersA, xkA, ykA, zkA, rkA, typeA, fkA, blobbiness, alpha, numFreq, interpFuncExtent,
+						centerFrequenciesA, smoothSkin, smoothingFunction[ 0 ], ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ],
+						moreFreqPlanA, NULL, true, spreadReceptorSkin ) ) 
+				return -1;
+
 			if ( breakDownScores )
 			{
-				gridding( numCentersB, xkB[ 0 ], ykB[ 0 ], zkB[ 0 ], rkB[ 0 ], typeB, fkB_01, blobbiness, numFreq, interpFuncExtent,
-						smoothSkin, smoothingFunction[ 0 ], centerFrequenciesB[ 0 ], false );
+				for ( int i = 0; i < numFreq * numFreq * numFreq; i++ )
+				{
+					ourMoreFrequencies[ 0 ][ i ][ 0 ] = 0;
+					ourMoreFrequencies[ 0 ][ i ][ 1 ] = sparseProfile[ 0 ][ i ][ 1 ];
+				}
 
-				numNonzeroGridBCells_01 = collectNonzeroGridCells( &gridBCells_01, centerFrequenciesB[ 0 ], numFreq );
+				if ( !getCenterFrequencies( numCentersA, xkA, ykA, zkA, rkA, typeA, fkA_01, blobbiness, alpha, numFreq, interpFuncExtent,
+							centerFrequenciesA_01, smoothSkin, smoothingFunction[ 0 ], ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], moreFreqPlanA, NULL, true, spreadReceptorSkin ) ) 
+					return -1;
 
-				gridding( numCentersB, xkB[ 0 ], ykB[ 0 ], zkB[ 0 ], rkB[ 0 ], typeB, fkB_10, blobbiness, numFreq, interpFuncExtent,
-						smoothSkin, smoothingFunction[ 0 ], centerFrequenciesB[ 0 ], false );
+				for ( int i = 0; i < numFreq * numFreq * numFreq; i++ )
+				{
+					ourMoreFrequencies[ 0 ][ i ][ 0 ] = sparseProfile[ 0 ][ i ][ 0 ];
+					ourMoreFrequencies[ 0 ][ i ][ 1 ] = 0;
+				}
 
-				numNonzeroGridBCells_10 = collectNonzeroGridCells( &gridBCells_10, centerFrequenciesB[ 0 ], numFreq );
+				if ( !getCenterFrequencies( numCentersA, xkA, ykA, zkA, rkA, typeA, fkA_10, blobbiness, alpha, numFreq, interpFuncExtent,
+							centerFrequenciesA_10, smoothSkin, smoothingFunction[ 0 ], ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], moreFreqPlanA, NULL, true, spreadReceptorSkin ) ) 
+					return -1;
 
-				gridding( numCentersB, xkB[ 0 ], ykB[ 0 ], zkB[ 0 ], rkB[ 0 ], typeB, fkB_11, blobbiness, numFreq, interpFuncExtent,
-						smoothSkin, smoothingFunction[ 0 ], centerFrequenciesB[ 0 ], false );
 
-				numNonzeroGridBCells_11 = collectNonzeroGridCells( &gridBCells_11, centerFrequenciesB[ 0 ], numFreq );
+				for ( int i = 0; i < numFreq * numFreq * numFreq; i++ )
+				{
+					ourMoreFrequencies[ 0 ][ i ][ 0 ] = sparseProfile[ 0 ][ i ][ 0 ];
+					ourMoreFrequencies[ 0 ][ i ][ 1 ] = sparseProfile[ 0 ][ i ][ 1 ];
+				}
+
+				if ( !getCenterFrequencies( numCentersA, xkA, ykA, zkA, rkA, typeA, fkA_11, blobbiness, alpha, numFreq, interpFuncExtent,
+							centerFrequenciesA_11, smoothSkin, smoothingFunction[ 0 ], ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], moreFreqPlanA, NULL, true, spreadReceptorSkin ) ) 
+					return -1;
 			}
 
 			if ( elecScale != 0 )
 			{
-				griddingElec( numCentersB, xkB[ 0 ], ykB[ 0 ], zkB[ 0 ], rkB[ 0 ], typeB, fkBElec,
-						blobbiness, numFreq, elecRadiusInGrids, ( FFTW_DATA_TYPE * ) elecGridB[ 0 ], false, true );
+				if ( !readElecGrid( ( FFTW_DATA_TYPE * ) elecGridB[ 0 ], &xCenter, &yCenter, &zCenter, pr->staticMoleculeElecReRaw ) ) 
+					return -1;
 
-				numNonzeroElecGridBCells = collectNonzeroElecGridCells( &elecGridBCells, ( FFTW_DATA_TYPE * ) elecGridB[ 0 ], numFreq );
+				if ( !getCenterElecFrequencies( numCentersA, xkA, ykA, zkA, rkA, typeA, fkAElec, blobbiness, alpha, numFreq, elecRadiusInGrids,
+							centerElecFrequenciesB[ 0 ], ( FFTW_DATA_TYPE * ) elecGridB[ 0 ], moreElecFreqPlanA, true, false ) ) 
+					return -1;
 
-				printf( "numNonzeroElecGridBCells = %d\n\n", numNonzeroElecGridBCells );
+				memcpy( centerElecFrequenciesA, centerElecFrequenciesB[ 0 ], numFreq * numFreq * numFreq * sizeof( FFTW_complex ) );
 			}
 
+			numNonzeroGridBCells = collectNonzeroGridCells( &gridBCells, centerFrequenciesB[ 0 ], numFreq );
 
-			if ( hbondWeight != 0 )
-			{
-				griddingHbond( numCentersB, xkB[ 0 ], ykB[ 0 ], zkB[ 0 ], rkB[ 0 ], hbondDistanceCutoff * scale * ( numFreq - 1 ), fkBHbond,
-						blobbiness, numFreq, ourMoreFrequencies[ 0 ], true );
+			double minRadB, maxRadB;
 
-				numNonzeroHbondGridBCells = collectNonzeroHbondGridCells( &hbondGridBCells, ourMoreFrequencies[ 0 ], numFreq );
+			findMovingMolMinMaxRadius( gridBCells, numNonzeroGridBCells, numFreq, &minRadB, &maxRadB );
 
-				printf( "numNonzeroHbondGridBCells = %d\n\n", numNonzeroHbondGridBCells );
-			}
+			createValidOutputMap( sparseProfile[ 0 ], numFreq, ( int ) minRadB, ( int ) maxRadB, narrowBand, validOutputMap );
 
-
-			if ( ( hydrophobicityWeight != 0 ) || ( hydroPhobicPhobicWeight != 0 ) || ( hydroPhilicPhilicWeight != 0 ) || ( hydroPhobicPhilicWeight != 0 ) )
-			{
-				griddingHydrophobicity( numCentersB, xkB[ 0 ], ykB[ 0 ], zkB[ 0 ], rkB[ 0 ], fkBHydrophobicity,
-						blobbiness, numFreq, ourMoreFrequencies[ 0 ], hydroRadExt, ( bool ) ( hydrophobicityWeight == 0 ) );
-
-				numNonzeroHydrophobicityGridBCells = collectNonzeroHydrophobicityGridCells( &hydrophobicityGridBCells, ourMoreFrequencies[ 0 ], numFreq );
-
-				printf( "numNonzeroHydrophobicityGridBCells = %d\n\n", numNonzeroHydrophobicityGridBCells );
-
-				if ( twoWayHydrophobicity )
-				{
-					griddingHydrophobicity( numCentersB, xkB[ 0 ], ykB[ 0 ], zkB[ 0 ], rkB[ 0 ], fkBHydrophobicityTwo,
-							blobbiness, numFreq, ourMoreFrequencies[ 0 ], 0, false );
-
-					numNonzeroHydrophobicityTwoGridBCells = collectNonzeroHydrophobicityGridCells( &hydrophobicityTwoGridBCells, ourMoreFrequencies[ 0 ], numFreq );
-
-					printf( "numNonzeroHydrophobicityTwoGridBCells = %d\n\n", numNonzeroHydrophobicityTwoGridBCells );
-				}
-			}
-
-
-			if ( ( simpleShapeWeight > 0 ) || ( simpleChargeWeight > 0 ) )
-			{
-				griddingSimpleComplementarity( numCentersB, xkB[ 0 ], ykB[ 0 ], zkB[ 0 ], rkB[ 0 ], fkBSimpleComplementarity,
-						blobbiness, numFreq, ourMoreFrequencies[ 0 ], simpleRadExt );
-
-				numNonzeroSimpleComplementarityGridBCells = collectNonzeroSimpleComplementarityGridCells( &simpleComplementarityGridBCells, ourMoreFrequencies[ 0 ], numFreq );
-
-				printf( "numNonzeroSimpleComplementarityGridBCells = %d\n\n", numNonzeroSimpleComplementarityGridBCells );
-			}
-		}
-
-
-		double minRadB, maxRadB;
-
-		findMovingMolMinMaxRadius( numCentersB, xkBOrig, zkBOrig, zkBOrig, radiiB, typeB, numFreq, scale, &minRadB, &maxRadB );
-
-		createValidOutputMap( gridA /*sparseProfile[ 0 ]*/, numFreq, ( int ) minRadB, ( int ) maxRadB, narrowBand, validOutputMap );
-
-		if ( rotateVolume || useSparseFFT )
-		{
 			if ( useSparseFFT )
 			{
 				isd.r2 = ( ceil( maxRadB ) + 2 ) * ( ceil( maxRadB ) + 2 );
@@ -6959,174 +6692,454 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 						sparsityFuncBackward, sparsityFuncBackwardData, ourMoreFrequencies[ 0 ], ourMoreFrequenciesOut[ 0 ] );
 			}
 
+			flipGrid( gridBCells, numNonzeroGridBCells );
+
+			if ( breakDownScores )
+			{
+				for ( int i = 0; i < numFreq * numFreq * numFreq; i++ )
+				{
+					centerFrequenciesB[ 0 ][ i ][ 0 ] = 0;
+					centerFrequenciesB[ 0 ][ i ][ 1 ] = sparseProfile_01[ 0 ][ i ][ 1 ];
+				}
+
+				numNonzeroGridBCells_01 = collectNonzeroGridCells( &gridBCells_01, centerFrequenciesB[ 0 ], numFreq );
+
+				flipGrid( gridBCells_01, numNonzeroGridBCells_01 );
+
+				for ( int i = 0; i < numFreq * numFreq * numFreq; i++ )
+				{
+					centerFrequenciesB[ 0 ][ i ][ 0 ] = sparseProfile_01[ 0 ][ i ][ 0 ];
+					centerFrequenciesB[ 0 ][ i ][ 1 ] = 0;
+				}
+
+				numNonzeroGridBCells_10 = collectNonzeroGridCells( &gridBCells_10, centerFrequenciesB[ 0 ], numFreq );
+
+				flipGrid( gridBCells_10, numNonzeroGridBCells_10 );
+
+				for ( int i = 0; i < numFreq * numFreq * numFreq; i++ )
+				{
+					centerFrequenciesB[ 0 ][ i ][ 0 ] = sparseProfile_01[ 0 ][ i ][ 0 ];
+					centerFrequenciesB[ 0 ][ i ][ 1 ] = sparseProfile_01[ 0 ][ i ][ 1 ];
+				}
+
+				numNonzeroGridBCells_11 = collectNonzeroGridCells( &gridBCells_11, centerFrequenciesB[ 0 ], numFreq );
+
+				flipGrid( gridBCells_11, numNonzeroGridBCells_11 );
+			}
+
+			if ( randomRotate )
+			{
+				rotateGrid( centerFrequenciesB[ 0 ], numFreq, gridBCells, numNonzeroGridBCells, randRot, true, false );
+				free( gridBCells );
+				numNonzeroGridBCells = collectNonzeroGridCells( &gridBCells, centerFrequenciesB[ 0 ], numFreq );
+
+				if ( breakDownScores )
+				{
+					rotateGrid( centerFrequenciesB[ 0 ], numFreq, gridBCells_01, numNonzeroGridBCells_01, randRot, true, false );
+					free( gridBCells_01 );
+					numNonzeroGridBCells_01 = collectNonzeroGridCells( &gridBCells_01, centerFrequenciesB[ 0 ], numFreq );
+
+					rotateGrid( centerFrequenciesB[ 0 ], numFreq, gridBCells_10, numNonzeroGridBCells_10, randRot, true, false );
+					free( gridBCells_10 );
+					numNonzeroGridBCells_10 = collectNonzeroGridCells( &gridBCells_10, centerFrequenciesB[ 0 ], numFreq );
+
+					rotateGrid( centerFrequenciesB[ 0 ], numFreq, gridBCells_11, numNonzeroGridBCells_11, randRot, true, false );
+					free( gridBCells_11 );
+					numNonzeroGridBCells_11 = collectNonzeroGridCells( &gridBCells_11, centerFrequenciesB[ 0 ], numFreq );
+				}
+			}
+
 			printf( "\nnumNonzeroGridBCells = %d\n\n", numNonzeroGridBCells );
+
+			if ( elecScale != 0 )
+			{
+				if ( !readElecGrid( ( FFTW_DATA_TYPE * ) centerElecFrequenciesB[ 0 ], &xCenter, &yCenter, &zCenter, pr->movingMoleculeElecReRaw ) ) 
+					return -1;
+
+				numNonzeroElecGridBCells = collectNonzeroElecGridCells( &elecGridBCells, ( FFTW_DATA_TYPE * ) centerElecFrequenciesB[ 0 ], numFreq );
+
+				flipGrid( elecGridBCells, numNonzeroElecGridBCells );
+
+				if ( randomRotate )
+				{
+					rotateElecGrid( ( FFTW_DATA_TYPE * ) centerElecFrequenciesB[ 0 ], numFreq, elecGridBCells, numNonzeroElecGridBCells, randRot, true, false );
+					free( elecGridBCells );
+					numNonzeroElecGridBCells = collectNonzeroElecGridCells( &elecGridBCells, ( FFTW_DATA_TYPE * ) centerElecFrequenciesB[ 0 ], numFreq );
+				}
+
+				printf( "numNonzeroElecGridBCells = %d\n\n", numNonzeroElecGridBCells );
+			}
 		}
-	}
-
-
-
-	PARAMS prT[ numThreads ];
-	pthread_t p[ numThreads ];
-
-	/*
-	 *	Faz realmente coisas
-	 */
-
-	 // MPI from here?
-
-	initRotationServer( numberOfRotations, numThreads );
-
-	double functionScaleFactor = pow( numFreq * alpha, 6 ) / pr->scoreScaleUpFactor;
-
-
-	for ( int i = 0; i < numThreads; i++ )
-	{
-		prT[ i ].threadID = i + 1;
-		prT[ i ].confID = 0;
-		prT[ i ].rotations = rotations;
-		prT[ i ].numberOfRotations = numberOfRotations;
-		prT[ i ].numberOfPositions = numberOfPositions;
-		prT[ i ].xkBOrig = xkBOrig;
-		prT[ i ].ykBOrig = ykBOrig;
-		prT[ i ].zkBOrig = zkBOrig;
-		prT[ i ].radiiB = radiiB;
-		prT[ i ].xkB = xkB[ i ];
-		prT[ i ].ykB = ykB[ i ];
-		prT[ i ].zkB = zkB[ i ];
-		prT[ i ].rkB = rkB[ i ];
-		prT[ i ].numCentersB = numCentersB;
-		prT[ i ].gridSize = gridSize;
-		prT[ i ].numFreq = numFreq;
-		prT[ i ].interpFuncExtent = interpFuncExtent;
-		prT[ i ].alpha = alpha;
-		prT[ i ].blobbiness = blobbiness;
-		prT[ i ].skinSkinWeight = skinSkinWeight;
-		prT[ i ].coreCoreWeight = coreCoreWeight;
-		prT[ i ].skinCoreWeight = skinCoreWeight;
-		prT[ i ].realSCWeight = realSCWeight;
-		prT[ i ].imaginarySCWeight = imaginarySCWeight;
-		prT[ i ].elecScale = elecScale;
-		prT[ i ].elecRadiusInGrids = elecRadiusInGrids;
-		prT[ i ].hbondWeight = hbondWeight;
-		prT[ i ].hbondDistanceCutoff = hbondDistanceCutoff;
-		prT[ i ].hydrophobicityWeight = hydrophobicityWeight;
-		prT[ i ].hydroPhobicPhobicWeight = hydroPhobicPhobicWeight;
-		prT[ i ].hydroPhobicPhilicWeight = hydroPhobicPhilicWeight;
-		prT[ i ].hydroPhilicPhilicWeight = hydroPhilicPhilicWeight;
-		prT[ i ].simpleShapeWeight = simpleShapeWeight;
-		prT[ i ].simpleChargeWeight = simpleChargeWeight;
-		prT[ i ].scaleA = scale;
-		prT[ i ].translate_A = translate_A;
-		prT[ i ].scaleB = scale;
-		prT[ i ].translate_B = translate_B;
-		prT[ i ].centerFrequenciesA = centerFrequenciesA;
-		prT[ i ].centerElecFrequenciesA = centerElecFrequenciesA;
-		prT[ i ].centerHbondFrequenciesA = centerHbondFrequenciesA;
-		prT[ i ].centerHydrophobicityFrequenciesA = centerHydrophobicityFrequenciesA;
-		prT[ i ].centerHydrophobicityTwoFrequenciesA = centerHydrophobicityTwoFrequenciesA;
-		prT[ i ].centerSimpleComplementarityFrequenciesA = centerSimpleComplementarityFrequenciesA;
-
-		prT[ i ].gridA = gridA;
-		prT[ i ].gridB = ourMoreFrequencies[ i ];
-
-		prT[ i ].centerFrequenciesB = centerFrequenciesB[ i ];
-		prT[ i ].centerElecFrequenciesB = centerElecFrequenciesB[ i ];
-
-		prT[ i ].rotateVolume = rotateVolume;
-		prT[ i ].numNonzeroGridBCells = numNonzeroGridBCells;
-		prT[ i ].gridBCells = gridBCells;
-
-		prT[ i ].numNonzeroGridBCells_01 = numNonzeroGridBCells_01;
-		prT[ i ].gridBCells_01 = gridBCells_01;
-		prT[ i ].numNonzeroGridBCells_10 = numNonzeroGridBCells_10;
-		prT[ i ].gridBCells_10 = gridBCells_10;
-		prT[ i ].numNonzeroGridBCells_11 = numNonzeroGridBCells_11;
-		prT[ i ].gridBCells_11 = gridBCells_11;
-
-		prT[ i ].elecGridB = elecGridB[ i ];
-		prT[ i ].numNonzeroElecGridBCells = numNonzeroElecGridBCells;
-		prT[ i ].elecGridBCells = elecGridBCells;
-
-		prT[ i ].numNonzeroHbondGridBCells = numNonzeroHbondGridBCells;
-		prT[ i ].hbondGridBCells = hbondGridBCells;
-
-		prT[ i ].numNonzeroHydrophobicityGridBCells = numNonzeroHydrophobicityGridBCells;
-		prT[ i ].hydrophobicityGridBCells = hydrophobicityGridBCells;
-
-		prT[ i ].numNonzeroHydrophobicityTwoGridBCells = numNonzeroHydrophobicityTwoGridBCells;
-		prT[ i ].hydrophobicityTwoGridBCells = hydrophobicityTwoGridBCells;
-
-		prT[ i ].numNonzeroSimpleComplementarityGridBCells = numNonzeroSimpleComplementarityGridBCells;
-		prT[ i ].simpleComplementarityGridBCells = simpleComplementarityGridBCells;
-
-		prT[ i ].validOutputMap = validOutputMap;
-
-		//            prT[ i ].cFilter = cFilter;
-
-		prT[ i ].centerFrequenciesProduct = centerFrequenciesProduct[ i ];
-		prT[ i ].centerFrequenciesElecProduct = centerFrequenciesElecProduct[ i ];
-		prT[ i ].sparseProfile = sparseProfile[ i ];
-		prT[ i ].sparseShapeProfile = sparseShapeProfile[ i ];
-		prT[ i ].sparseElecProfile = sparseElecProfile[ i ];
-		prT[ i ].sparseHbondProfile = sparseHbondProfile[ i ];
-		prT[ i ].sparseHydrophobicityProfile = sparseHydrophobicityProfile[ i ];
-		prT[ i ].sparseHydrophobicityTwoProfile = sparseHydrophobicityTwoProfile[ i ];
-		prT[ i ].sparseSimpleComplementarityProfile = sparseSimpleComplementarityProfile[ i ];
-		prT[ i ].freqHat = freqHat[ i ];
-		prT[ i ].freqPlan = freqPlan[ i ];
-		prT[ i ].sparseFreqPlanBackward = sparseFreqPlanBackward;
-		prT[ i ].elecFreqPlan = elecFreqPlan[ i ];
-
-		prT[ i ].freqHatPlan = freqHatPlan[ i ];
-
-		prT[ i ].ourMoreFrequencies = ourMoreFrequencies[ i ];
-		prT[ i ].ourMoreFrequenciesOut = ourMoreFrequenciesOut[ i ];
-
-		prT[ i ].moreFreqPlan = moreFreqPlan[ i ];
-		prT[ i ].sparseFreqPlanForward = sparseFreqPlanForward;
-		prT[ i ].moreElecFreqPlan = moreElecFreqPlan[ i ];
-		prT[ i ].fkB = fkB;
-		prT[ i ].fkBElec = fkBElec;
-		prT[ i ].fkBHbond = fkBHbond;
-		prT[ i ].fkBHydrophobicity = fkBHydrophobicity;
-		prT[ i ].fkBHydrophobicityTwo = fkBHydrophobicityTwo;
-		prT[ i ].fkBSimpleComplementarity = fkBSimpleComplementarity;
-		prT[ i ].smallElectrostaticsKernel = smallElectrostaticsKernel;
-		prT[ i ].smoothSkin = smoothSkin;
-		prT[ i ].smoothingFunction = smoothingFunction[ i ];
-		prT[ i ].localTopValues = localTopValues[ i ];
-		prT[ i ].sortedPeaks = sortedPeaks[ i ];
-		
-		if ( clusterTransRad > 0 ) 
-			prT[ i ].clustPG = new PG( 10.0, - numFreq * gridSpacing, 5.0 );
-		else 
-			prT[ i ].clustPG = NULL;
-		
-		double _gridFactor = ( double ) gridSize / ( double ) localTopValues[ i ]->getGridSize();
-		
-		prT[ i ].functionScaleFactor = functionScaleFactor; //pow( numFreq * alpha, 6 ) / pr->scoreScaleUpFactor;
-		prT[ i ].gridFactor = _gridFactor;
-		prT[ i ].pri = pr;
-		prT[ i ].randRot = randRot;
-		prT[ i ].breakDownScores = breakDownScores;
-
-		if ( breakDownScores )
+		else
 		{
-			prT[ i ].centerFrequenciesA_01 = centerFrequenciesA_01;
-			prT[ i ].centerFrequenciesA_10 = centerFrequenciesA_10;
-			prT[ i ].centerFrequenciesA_11 = centerFrequenciesA_11;
+			double xTrans = 0, yTrans = 0, zTrans = 0;
 
-			prT[ i ].fkB_01 = fkB_01;
-			prT[ i ].fkB_10 = fkB_10;
-			prT[ i ].fkB_11 = fkB_11;
+			// center A
+			if( !center( xkAOrig, ykAOrig, zkAOrig, numCentersA, &xTrans, &yTrans, &zTrans ) ) 
+				return -1;
 
-			prT[ i ].sparseProfile_01 = sparseProfile_01[ i ];
-			prT[ i ].sparseProfile_10 = sparseProfile_10[ i ];
-			prT[ i ].sparseProfile_11 = sparseProfile_11[ i ];
+			translate_A[ 0 ] = xTrans;
+			translate_A[ 1 ] = yTrans;
+			translate_A[ 2 ] = zTrans;
+
+			// transform A
+			if ( !transformAndNormalize( xkAOrig, ykAOrig, zkAOrig, radiiA, xkA, ykA, zkA, rkA, numCentersA,
+						1, 0, 0, 0, 1, 0, 0, 0, 1, 1, scale ) ) 
+				return -1;
+
+			gridding( numCentersA, xkA, ykA, zkA, rkA, typeA, fkA, blobbiness, numFreq, interpFuncExtent,
+					smoothSkin, smoothingFunction[ 0 ], gridA /*sparseProfile[ 0 ]*/, spreadReceptorSkin );
+
+			memcpy( ourMoreFrequencies[ 0 ], gridA /*sparseProfile[ 0 ]*/, numFreq * numFreq * numFreq * sizeof( FFTW_complex ) );
+
+			// get frequencies of A.
+			if ( !getCenterFrequencies( numCentersA, xkA, ykA, zkA, rkA, typeA, fkA, blobbiness, alpha, numFreq, interpFuncExtent,
+						centerFrequenciesA, smoothSkin, smoothingFunction[ 0 ], ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], moreFreqPlanA, NULL, true, spreadReceptorSkin ) ) 
+				return -1;
+
+			if ( breakDownScores )
+			{
+				memcpy( ourMoreFrequencies[ 0 ], sparseProfile[ 0 ], numFreq * numFreq * numFreq * sizeof( FFTW_complex ) );
+
+				if ( !getCenterFrequencies( numCentersA, xkA, ykA, zkA, rkA, typeA, fkA_01, blobbiness, alpha, numFreq, interpFuncExtent,
+							centerFrequenciesA_01, smoothSkin, smoothingFunction[ 0 ], ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], moreFreqPlanA, NULL, false, spreadReceptorSkin ) ) 
+					return -1;
+
+				memcpy( ourMoreFrequencies[ 0 ], sparseProfile[ 0 ], numFreq * numFreq * numFreq * sizeof( FFTW_complex ) );
+
+				if ( !getCenterFrequencies( numCentersA, xkA, ykA, zkA, rkA, typeA, fkA_10, blobbiness, alpha, numFreq, interpFuncExtent,
+							centerFrequenciesA_10, smoothSkin, smoothingFunction[ 0 ], ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], moreFreqPlanA, NULL, false, spreadReceptorSkin ) ) 
+					return -1;
+
+				memcpy( ourMoreFrequencies[ 0 ], sparseProfile[ 0 ], numFreq * numFreq * numFreq * sizeof( FFTW_complex ) );
+
+				if ( !getCenterFrequencies( numCentersA, xkA, ykA, zkA, rkA, typeA, fkA_11, blobbiness, alpha, numFreq, interpFuncExtent,
+							centerFrequenciesA_11, smoothSkin, smoothingFunction[ 0 ], ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], moreFreqPlanA, NULL, false, spreadReceptorSkin ) ) 
+					return -1;
+			}
+
+			if ( elecScale != 0 )
+			{
+				if ( !getCenterElecFrequencies( numCentersA, xkA, ykA, zkA, rkA, typeA, fkAElec, blobbiness, alpha, numFreq, elecRadiusInGrids,
+							centerElecFrequenciesB[ 0 ], ( FFTW_DATA_TYPE * ) elecGridB[ 0 ], moreElecFreqPlanA, false, false ) ) 
+					return -1;
+
+				memcpy( centerElecFrequenciesA, centerElecFrequenciesB[ 0 ], numFreq * numFreq * numFreq * sizeof( FFTW_complex ) );
+			}
+
+			if ( hbondWeight != 0 )
+			{
+				if ( !getCenterHbondFrequencies( numCentersA, xkA, ykA, zkA, rkA, hbondDistanceCutoff * scale * ( numFreq - 1 ), fkAHbond, blobbiness, alpha, numFreq,
+							ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], moreFreqPlanA, NULL, false, false ) ) 
+					return -1;
+
+				memcpy( centerHbondFrequenciesA, ourMoreFrequencies[ 0 ], numFreq * numFreq * numFreq * sizeof( FFTW_complex ) );
+			}
+
+			if ( ( hydrophobicityWeight != 0 ) || ( hydroPhobicPhobicWeight != 0 ) || ( hydroPhilicPhilicWeight != 0 ) || ( hydroPhobicPhilicWeight != 0 ) )
+			{
+				if ( !getCenterHydrophobicityFrequencies( numCentersA, xkA, ykA, zkA, rkA, fkAHydrophobicity, blobbiness, alpha, numFreq,
+							( hydrophobicityWeight == 0 ) ? hydroRadExt : 0.0, ( bool ) ( hydrophobicityWeight == 0 ),
+							ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], moreFreqPlanA, NULL, false ) ) 
+					return -1;
+
+				memcpy( centerHydrophobicityFrequenciesA, ourMoreFrequencies[ 0 ], numFreq * numFreq * numFreq * sizeof( FFTW_complex ) );
+
+				if ( twoWayHydrophobicity )
+				{
+					if ( !getCenterHydrophobicityFrequencies( numCentersA, xkA, ykA, zkA, rkA, fkAHydrophobicityTwo, blobbiness, alpha, numFreq,
+								hydroRadExt, false, ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ],
+								ourMoreFrequencies[ 0 ], moreFreqPlanA, NULL, false ) ) 
+						return -1;
+
+					memcpy( centerHydrophobicityTwoFrequenciesA, ourMoreFrequencies[ 0 ], numFreq * numFreq * numFreq * sizeof( FFTW_complex ) );
+				}
+			}
+
+			if ( ( simpleShapeWeight > 0 ) || ( simpleChargeWeight > 0 ) )
+			{
+				if ( !getCenterSimpleComplementarityFrequencies( numCentersA, xkA, ykA, zkA, rkA, fkASimpleComplementarity, blobbiness, alpha, numFreq, simpleRadExt,
+							ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], ourMoreFrequencies[ 0 ], moreFreqPlanA, NULL, false ) ) 
+					return -1;
+
+				memcpy( centerSimpleComplementarityFrequenciesA, ourMoreFrequencies[ 0 ], numFreq * numFreq * numFreq * sizeof( FFTW_complex ) );
+			}
+
+			// center B
+			if ( !center( xkBOrig, ykBOrig, zkBOrig, numCentersB, &xTrans, &yTrans, &zTrans ) ) 
+				return -1;
+
+			translate_B[ 0 ] = xTrans;
+			translate_B[ 1 ] = yTrans;
+			translate_B[ 2 ] = zTrans;
+
+			if ( randomRotate )
+			{
+				if ( !rotateAboutOrigin( xkBOrig, ykBOrig, zkBOrig, numCentersB, randRot ) ) 
+					return -1;
+			}
+
+			if ( !transformAndNormalize( xkBOrig, ykBOrig, zkBOrig, radiiB, xkB[ 0 ], ykB[ 0 ], zkB[ 0 ], rkB[ 0 ], numCentersB,
+						1, 0, 0, 0, 1, 0, 0, 0, 1, 2, scale ) ) 
+				return -1;
+
+			gridding( numCentersB, xkB[ 0 ], ykB[ 0 ], zkB[ 0 ], rkB[ 0 ], typeB, fkB, blobbiness, numFreq, interpFuncExtent,
+					smoothSkin, smoothingFunction[ 0 ], ourMoreFrequencies[ 0 ], false );
+
+			numNonzeroGridBCells = collectNonzeroGridCells( &gridBCells, ourMoreFrequencies[ 0 ], numFreq );
+
+			if ( rotateVolume )
+			{
+				if ( breakDownScores )
+				{
+					gridding( numCentersB, xkB[ 0 ], ykB[ 0 ], zkB[ 0 ], rkB[ 0 ], typeB, fkB_01, blobbiness, numFreq, interpFuncExtent,
+							smoothSkin, smoothingFunction[ 0 ], centerFrequenciesB[ 0 ], false );
+
+					numNonzeroGridBCells_01 = collectNonzeroGridCells( &gridBCells_01, centerFrequenciesB[ 0 ], numFreq );
+
+					gridding( numCentersB, xkB[ 0 ], ykB[ 0 ], zkB[ 0 ], rkB[ 0 ], typeB, fkB_10, blobbiness, numFreq, interpFuncExtent,
+							smoothSkin, smoothingFunction[ 0 ], centerFrequenciesB[ 0 ], false );
+
+					numNonzeroGridBCells_10 = collectNonzeroGridCells( &gridBCells_10, centerFrequenciesB[ 0 ], numFreq );
+
+					gridding( numCentersB, xkB[ 0 ], ykB[ 0 ], zkB[ 0 ], rkB[ 0 ], typeB, fkB_11, blobbiness, numFreq, interpFuncExtent,
+							smoothSkin, smoothingFunction[ 0 ], centerFrequenciesB[ 0 ], false );
+
+					numNonzeroGridBCells_11 = collectNonzeroGridCells( &gridBCells_11, centerFrequenciesB[ 0 ], numFreq );
+				}
+
+				if ( elecScale != 0 )
+				{
+					griddingElec( numCentersB, xkB[ 0 ], ykB[ 0 ], zkB[ 0 ], rkB[ 0 ], typeB, fkBElec,
+							blobbiness, numFreq, elecRadiusInGrids, ( FFTW_DATA_TYPE * ) elecGridB[ 0 ], false, true );
+
+					numNonzeroElecGridBCells = collectNonzeroElecGridCells( &elecGridBCells, ( FFTW_DATA_TYPE * ) elecGridB[ 0 ], numFreq );
+
+					printf( "numNonzeroElecGridBCells = %d\n\n", numNonzeroElecGridBCells );
+				}
+
+
+				if ( hbondWeight != 0 )
+				{
+					griddingHbond( numCentersB, xkB[ 0 ], ykB[ 0 ], zkB[ 0 ], rkB[ 0 ], hbondDistanceCutoff * scale * ( numFreq - 1 ), fkBHbond,
+							blobbiness, numFreq, ourMoreFrequencies[ 0 ], true );
+
+					numNonzeroHbondGridBCells = collectNonzeroHbondGridCells( &hbondGridBCells, ourMoreFrequencies[ 0 ], numFreq );
+
+					printf( "numNonzeroHbondGridBCells = %d\n\n", numNonzeroHbondGridBCells );
+				}
+
+
+				if ( ( hydrophobicityWeight != 0 ) || ( hydroPhobicPhobicWeight != 0 ) || ( hydroPhilicPhilicWeight != 0 ) || ( hydroPhobicPhilicWeight != 0 ) )
+				{
+					griddingHydrophobicity( numCentersB, xkB[ 0 ], ykB[ 0 ], zkB[ 0 ], rkB[ 0 ], fkBHydrophobicity,
+							blobbiness, numFreq, ourMoreFrequencies[ 0 ], hydroRadExt, ( bool ) ( hydrophobicityWeight == 0 ) );
+
+					numNonzeroHydrophobicityGridBCells = collectNonzeroHydrophobicityGridCells( &hydrophobicityGridBCells, ourMoreFrequencies[ 0 ], numFreq );
+
+					printf( "numNonzeroHydrophobicityGridBCells = %d\n\n", numNonzeroHydrophobicityGridBCells );
+
+					if ( twoWayHydrophobicity )
+					{
+						griddingHydrophobicity( numCentersB, xkB[ 0 ], ykB[ 0 ], zkB[ 0 ], rkB[ 0 ], fkBHydrophobicityTwo,
+								blobbiness, numFreq, ourMoreFrequencies[ 0 ], 0, false );
+
+						numNonzeroHydrophobicityTwoGridBCells = collectNonzeroHydrophobicityGridCells( &hydrophobicityTwoGridBCells, ourMoreFrequencies[ 0 ], numFreq );
+
+						printf( "numNonzeroHydrophobicityTwoGridBCells = %d\n\n", numNonzeroHydrophobicityTwoGridBCells );
+					}
+				}
+
+
+				if ( ( simpleShapeWeight > 0 ) || ( simpleChargeWeight > 0 ) )
+				{
+					griddingSimpleComplementarity( numCentersB, xkB[ 0 ], ykB[ 0 ], zkB[ 0 ], rkB[ 0 ], fkBSimpleComplementarity,
+							blobbiness, numFreq, ourMoreFrequencies[ 0 ], simpleRadExt );
+
+					numNonzeroSimpleComplementarityGridBCells = collectNonzeroSimpleComplementarityGridCells( &simpleComplementarityGridBCells, ourMoreFrequencies[ 0 ], numFreq );
+
+					printf( "numNonzeroSimpleComplementarityGridBCells = %d\n\n", numNonzeroSimpleComplementarityGridBCells );
+				}
+			}
+
+
+			double minRadB, maxRadB;
+
+			findMovingMolMinMaxRadius( numCentersB, xkBOrig, zkBOrig, zkBOrig, radiiB, typeB, numFreq, scale, &minRadB, &maxRadB );
+
+			createValidOutputMap( gridA /*sparseProfile[ 0 ]*/, numFreq, ( int ) minRadB, ( int ) maxRadB, narrowBand, validOutputMap );
+
+			if ( rotateVolume || useSparseFFT )
+			{
+				if ( useSparseFFT )
+				{
+					isd.r2 = ( ceil( maxRadB ) + 2 ) * ( ceil( maxRadB ) + 2 );
+
+					sparseFreqPlanForward = sparse3DFFT_create_plan( alphaM, alphaM, alphaM, FFTW_FORWARD, OPT_FFTW_SEARCH_TYPE,
+							SPARSE3DFFT_SPARSEINPUT,
+							sparsityFuncForward, sparsityFuncForwardData, ourMoreFrequencies[ 0 ], ourMoreFrequenciesOut[ 0 ] );
+
+					sparseFreqPlanBackward = sparse3DFFT_create_plan( alphaM, alphaM, alphaM, FFTW_BACKWARD, OPT_FFTW_SEARCH_TYPE,
+							SPARSE3DFFT_SPARSEOUTPUT,
+							sparsityFuncBackward, sparsityFuncBackwardData, ourMoreFrequencies[ 0 ], ourMoreFrequenciesOut[ 0 ] );
+				}
+
+				printf( "\nnumNonzeroGridBCells = %d\n\n", numNonzeroGridBCells );
+			}
 		}
 
+
+
+		prT = new PARAMS [ numThreads ];
+		p = new pthread_t [ numThreads ];
+
+		initRotationServer( numberOfRotations, numThreads );
+
+		functionScaleFactor = pow( numFreq * alpha, 6 ) / pr->scoreScaleUpFactor;
+
+
+		for ( int i = 0; i < numThreads; i++ )
+		{
+			prT[ i ].threadID = i + 1;
+			prT[ i ].confID = 0;
+			prT[ i ].rotations = rotations;
+			prT[ i ].numberOfRotations = numberOfRotations;
+			prT[ i ].numberOfPositions = numberOfPositions;
+			prT[ i ].xkBOrig = xkBOrig;
+			prT[ i ].ykBOrig = ykBOrig;
+			prT[ i ].zkBOrig = zkBOrig;
+			prT[ i ].radiiB = radiiB;
+			prT[ i ].xkB = xkB[ i ];
+			prT[ i ].ykB = ykB[ i ];
+			prT[ i ].zkB = zkB[ i ];
+			prT[ i ].rkB = rkB[ i ];
+			prT[ i ].numCentersB = numCentersB;
+			prT[ i ].gridSize = gridSize;
+			prT[ i ].numFreq = numFreq;
+			prT[ i ].interpFuncExtent = interpFuncExtent;
+			prT[ i ].alpha = alpha;
+			prT[ i ].blobbiness = blobbiness;
+			prT[ i ].skinSkinWeight = skinSkinWeight;
+			prT[ i ].coreCoreWeight = coreCoreWeight;
+			prT[ i ].skinCoreWeight = skinCoreWeight;
+			prT[ i ].realSCWeight = realSCWeight;
+			prT[ i ].imaginarySCWeight = imaginarySCWeight;
+			prT[ i ].elecScale = elecScale;
+			prT[ i ].elecRadiusInGrids = elecRadiusInGrids;
+			prT[ i ].hbondWeight = hbondWeight;
+			prT[ i ].hbondDistanceCutoff = hbondDistanceCutoff;
+			prT[ i ].hydrophobicityWeight = hydrophobicityWeight;
+			prT[ i ].hydroPhobicPhobicWeight = hydroPhobicPhobicWeight;
+			prT[ i ].hydroPhobicPhilicWeight = hydroPhobicPhilicWeight;
+			prT[ i ].hydroPhilicPhilicWeight = hydroPhilicPhilicWeight;
+			prT[ i ].simpleShapeWeight = simpleShapeWeight;
+			prT[ i ].simpleChargeWeight = simpleChargeWeight;
+			prT[ i ].scaleA = scale;
+			prT[ i ].translate_A = translate_A;
+			prT[ i ].scaleB = scale;
+			prT[ i ].translate_B = translate_B;
+			prT[ i ].centerFrequenciesA = centerFrequenciesA;
+			prT[ i ].centerElecFrequenciesA = centerElecFrequenciesA;
+			prT[ i ].centerHbondFrequenciesA = centerHbondFrequenciesA;
+			prT[ i ].centerHydrophobicityFrequenciesA = centerHydrophobicityFrequenciesA;
+			prT[ i ].centerHydrophobicityTwoFrequenciesA = centerHydrophobicityTwoFrequenciesA;
+			prT[ i ].centerSimpleComplementarityFrequenciesA = centerSimpleComplementarityFrequenciesA;
+			prT[ i ].gridA = gridA;
+			prT[ i ].gridB = ourMoreFrequencies[ i ];
+			prT[ i ].centerFrequenciesB = centerFrequenciesB[ i ];
+			prT[ i ].centerElecFrequenciesB = centerElecFrequenciesB[ i ];
+			prT[ i ].rotateVolume = rotateVolume;
+			prT[ i ].numNonzeroGridBCells = numNonzeroGridBCells;
+			prT[ i ].gridBCells = gridBCells;
+			prT[ i ].numNonzeroGridBCells_01 = numNonzeroGridBCells_01;
+			prT[ i ].gridBCells_01 = gridBCells_01;
+			prT[ i ].numNonzeroGridBCells_10 = numNonzeroGridBCells_10;
+			prT[ i ].gridBCells_10 = gridBCells_10;
+			prT[ i ].numNonzeroGridBCells_11 = numNonzeroGridBCells_11;
+			prT[ i ].gridBCells_11 = gridBCells_11;
+			prT[ i ].elecGridB = elecGridB[ i ];
+			prT[ i ].numNonzeroElecGridBCells = numNonzeroElecGridBCells;
+			prT[ i ].elecGridBCells = elecGridBCells;
+			prT[ i ].numNonzeroHbondGridBCells = numNonzeroHbondGridBCells;
+			prT[ i ].hbondGridBCells = hbondGridBCells;
+			prT[ i ].numNonzeroHydrophobicityGridBCells = numNonzeroHydrophobicityGridBCells;
+			prT[ i ].hydrophobicityGridBCells = hydrophobicityGridBCells;
+			prT[ i ].numNonzeroHydrophobicityTwoGridBCells = numNonzeroHydrophobicityTwoGridBCells;
+			prT[ i ].hydrophobicityTwoGridBCells = hydrophobicityTwoGridBCells;
+			prT[ i ].numNonzeroSimpleComplementarityGridBCells = numNonzeroSimpleComplementarityGridBCells;
+			prT[ i ].simpleComplementarityGridBCells = simpleComplementarityGridBCells;
+			prT[ i ].validOutputMap = validOutputMap;
+			//            prT[ i ].cFilter = cFilter;
+			prT[ i ].centerFrequenciesProduct = centerFrequenciesProduct[ i ];
+			prT[ i ].centerFrequenciesElecProduct = centerFrequenciesElecProduct[ i ];
+			prT[ i ].sparseProfile = sparseProfile[ i ];
+			prT[ i ].sparseShapeProfile = sparseShapeProfile[ i ];
+			prT[ i ].sparseElecProfile = sparseElecProfile[ i ];
+			prT[ i ].sparseHbondProfile = sparseHbondProfile[ i ];
+			prT[ i ].sparseHydrophobicityProfile = sparseHydrophobicityProfile[ i ];
+			prT[ i ].sparseHydrophobicityTwoProfile = sparseHydrophobicityTwoProfile[ i ];
+			prT[ i ].sparseSimpleComplementarityProfile = sparseSimpleComplementarityProfile[ i ];
+			prT[ i ].freqHat = freqHat[ i ];
+			prT[ i ].freqPlan = freqPlan[ i ];
+			prT[ i ].sparseFreqPlanBackward = sparseFreqPlanBackward;
+			prT[ i ].elecFreqPlan = elecFreqPlan[ i ];
+			prT[ i ].freqHatPlan = freqHatPlan[ i ];
+			prT[ i ].ourMoreFrequencies = ourMoreFrequencies[ i ];
+			prT[ i ].ourMoreFrequenciesOut = ourMoreFrequenciesOut[ i ];
+			prT[ i ].moreFreqPlan = moreFreqPlan[ i ];
+			prT[ i ].sparseFreqPlanForward = sparseFreqPlanForward;
+			prT[ i ].moreElecFreqPlan = moreElecFreqPlan[ i ];
+			prT[ i ].fkB = fkB;
+			prT[ i ].fkBElec = fkBElec;
+			prT[ i ].fkBHbond = fkBHbond;
+			prT[ i ].fkBHydrophobicity = fkBHydrophobicity;
+			prT[ i ].fkBHydrophobicityTwo = fkBHydrophobicityTwo;
+			prT[ i ].fkBSimpleComplementarity = fkBSimpleComplementarity;
+			prT[ i ].smallElectrostaticsKernel = smallElectrostaticsKernel;
+			prT[ i ].smoothSkin = smoothSkin;
+			prT[ i ].smoothingFunction = smoothingFunction[ i ];
+			prT[ i ].localTopValues = localTopValues[ i ];
+			prT[ i ].sortedPeaks = sortedPeaks[ i ];
+
+			if ( clusterTransRad > 0 ) 
+				prT[ i ].clustPG = new PG( 10.0, - numFreq * gridSpacing, 5.0 );
+			else 
+				prT[ i ].clustPG = NULL;
+
+			double _gridFactor = ( double ) gridSize / ( double ) localTopValues[ i ]->getGridSize();
+
+			prT[ i ].functionScaleFactor = functionScaleFactor; //pow( numFreq * alpha, 6 ) / pr->scoreScaleUpFactor;
+			prT[ i ].gridFactor = _gridFactor;
+			prT[ i ].pri = pr;
+			prT[ i ].randRot = randRot;
+			prT[ i ].breakDownScores = breakDownScores;
+
+			if ( breakDownScores )
+			{
+				prT[ i ].centerFrequenciesA_01 = centerFrequenciesA_01;
+				prT[ i ].centerFrequenciesA_10 = centerFrequenciesA_10;
+				prT[ i ].centerFrequenciesA_11 = centerFrequenciesA_11;
+
+				prT[ i ].fkB_01 = fkB_01;
+				prT[ i ].fkB_10 = fkB_10;
+				prT[ i ].fkB_11 = fkB_11;
+
+				prT[ i ].sparseProfile_01 = sparseProfile_01[ i ];
+				prT[ i ].sparseProfile_10 = sparseProfile_10[ i ];
+				prT[ i ].sparseProfile_11 = sparseProfile_11[ i ];
+			}
+
+		}
+	} else {
+		// Initializations needed by all the processes
+		prT = new PARAMS [ numThreads ];
+		p = new pthread_t [ numThreads ];
 	}
-	}
+	// End of root only region
+
+	// TODO: Bcast of the inputs p and prT
+
+	//MPI_Bcast(prT, numThreads, );
 
 	for ( int i = 0; i < numThreads; i++ )
 		pthread_create( &p[ i ], NULL, startApplyRotationsThread, ( void * ) &prT[ i ] );
@@ -7135,13 +7148,15 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 	for ( int i = 0; i < numThreads; i++ )
 		pthread_join( p[ i ], NULL );
 
-	if ( clusterTransRad > 0 )
+
+
+	if ( clusterTransRad > 0 && !rank)
 	{
 		for ( int i = 0; i < numThreads; i++ )
 			delete prT[ i ].clustPG;
 	}
 
-	if ( !scoreUntransformed )
+	if ( !scoreUntransformed && !rank)
 	{
 		if ( clusterRotRad > 0  )
 		{
@@ -7269,88 +7284,95 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 		}
 		else
 		{
-			TopValues *globalTopValuesT = new TopValues( numThreads * numberOfPositions, numFreq );
+			// Only root process executes
+			if(!rank){
+				globalTopValuesT = new TopValues( numThreads * numberOfPositions, numFreq );
 
-			for ( int i = 0; i < numThreads; i++ )
-			{
-				printf("# \n# PROCESSING THREAD = %d\n# \n", i + 1 );
-				fflush( stdout );
-
-				int n = localTopValues[ i ]->getCurrentNumberOfPositions( );
-				ValuePosition3D sol;
-
-				while ( n-- )
+				for ( int i = 0; i < numThreads; i++ )
 				{
-					localTopValues[ i ]->extractMin( sol );
+					printf("# \n# PROCESSING THREAD = %d\n# \n", i + 1 );
+					fflush( stdout );
 
-					sol.m_Value = - sol.m_Value;
+					int n = localTopValues[ i ]->getCurrentNumberOfPositions( );
+					ValuePosition3D sol;
 
-					globalTopValuesT->updateTopValues( sol );
+					while ( n-- )
+					{
+						localTopValues[ i ]->extractMin( sol );
+
+						sol.m_Value = - sol.m_Value;
+
+						globalTopValuesT->updateTopValues( sol );
+					}
 				}
 			}
-
+			// TODO: MPI Parallelization
+			// needs memory allocation of all the input and output data types
 			filterPoses( &prT[ 0 ], globalTopValuesT, globalTopValues, numFreq, scale, translate_A, translate_B,
 					rotations, functionScaleFactor, randRot );
 
-			if ( clusterTransRad > 0 )
-			{
-				double *hash3d = ( double * ) malloc( sizeof( double ) * numFreq3 );
-
-				for ( int c = 0; c < numFreq3; c++ )
-					hash3d[ c ] = 0;
-
-				int n = globalTopValuesT->getCurrentNumberOfPositions( );
-				ValuePosition3D sol;
-
-				while ( n-- )
+			if(!rank){
+				if ( clusterTransRad > 0 )
 				{
-					globalTopValuesT->extractMin( sol );
+					double *hash3d = ( double * ) malloc( sizeof( double ) * numFreq3 );
 
-					double v = sol.m_Value;
-					double x = sol.m_Translation[ 0 ], y = sol.m_Translation[ 1 ], z = sol.m_Translation[ 2 ];
+					for ( int c = 0; c < numFreq3; c++ )
+						hash3d[ c ] = 0;
 
-					int clusterPenalty = 0;
+					int n = globalTopValuesT->getCurrentNumberOfPositions( );
+					ValuePosition3D sol;
 
-					int cVal1 = getClusterValue( x, y, z, hash3d, pr->numFreq, gridSpacing, clusterTransRad * 1, -v );
-					int cVal2 = getClusterValue( x, y, z, hash3d, pr->numFreq, gridSpacing, clusterTransRad * 2, -v );
-					int cVal3 = getClusterValue( x, y, z, hash3d, pr->numFreq, gridSpacing, clusterTransRad * 3, -v );
+					while ( n-- )
+					{
+						globalTopValuesT->extractMin( sol );
 
-					if ( cVal1 >= clusterTransSize * 1 + 0 ) clusterPenalty = 8;
-					else if ( cVal2 >= clusterTransSize * 2 + 1 ) clusterPenalty = 5;
-					else if ( cVal3 >= clusterTransSize * 3 + 3 ) clusterPenalty = 1;
+						double v = sol.m_Value;
+						double x = sol.m_Translation[ 0 ], y = sol.m_Translation[ 1 ], z = sol.m_Translation[ 2 ];
 
-					sol.m_clusterPenalty = clusterPenalty;
+						int clusterPenalty = 0;
+
+						int cVal1 = getClusterValue( x, y, z, hash3d, pr->numFreq, gridSpacing, clusterTransRad * 1, -v );
+						int cVal2 = getClusterValue( x, y, z, hash3d, pr->numFreq, gridSpacing, clusterTransRad * 2, -v );
+						int cVal3 = getClusterValue( x, y, z, hash3d, pr->numFreq, gridSpacing, clusterTransRad * 3, -v );
+
+						if ( cVal1 >= clusterTransSize * 1 + 0 ) clusterPenalty = 8;
+						else if ( cVal2 >= clusterTransSize * 2 + 1 ) clusterPenalty = 5;
+						else if ( cVal3 >= clusterTransSize * 3 + 3 ) clusterPenalty = 1;
+
+						sol.m_clusterPenalty = clusterPenalty;
 #ifdef RERANK_DEBUG
-					sol.m_ConformationIndex = clusterPenalty;  
+						sol.m_ConformationIndex = clusterPenalty;  
 #endif
-					sol.m_Value = ( - sol.m_Value ) * ( 1 - 0.10 * clusterPenalty );
+						sol.m_Value = ( - sol.m_Value ) * ( 1 - 0.10 * clusterPenalty );
 
-					globalTopValues->updateTopValues( sol );
+						globalTopValues->updateTopValues( sol );
 
-					if ( clusterPenalty == 0 ) markCluster( x, y, z, hash3d, pr->numFreq, gridSpacing, 0, -v );
+						if ( clusterPenalty == 0 ) markCluster( x, y, z, hash3d, pr->numFreq, gridSpacing, 0, -v );
+					}
+
+					free( hash3d );
 				}
-
-				free( hash3d );
-			}
-			else
-			{
-				int n = globalTopValuesT->getCurrentNumberOfPositions( );
-				ValuePosition3D sol;
-
-				while ( n-- )
+				else
 				{
-					globalTopValuesT->extractMin( sol );
+					int n = globalTopValuesT->getCurrentNumberOfPositions( );
+					ValuePosition3D sol;
 
-					sol.m_Value = - sol.m_Value;
+					while ( n-- )
+					{
+						globalTopValuesT->extractMin( sol );
 
-					globalTopValues->updateTopValues( sol );
+						sol.m_Value = - sol.m_Value;
+
+						globalTopValues->updateTopValues( sol );
+					}
+
+					fflush( stdout );
 				}
-
-				fflush( stdout );
 			}
 
 			delete globalTopValuesT;
 
+			// TODO: MPI Parallelization
 			if ( pr->rerank )
 			{
 				rerankPoses( &prT[ 0 ], globalTopValues );
@@ -7358,237 +7380,235 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 		}
 	}
 
-	// MPI untill here?
-
-	// Free some of the memory allocated for the FFTs
-	FFTW_free( fkB );
-	if ( elecScale != 0 ) 
-		FFTW_free( fkBElec );
-	if ( hbondWeight != 0 ) 
-		FFTW_free( fkBHbond );
-	if ( ( hydrophobicityWeight != 0 ) || ( hydroPhobicPhobicWeight != 0 ) || ( hydroPhilicPhilicWeight != 0 ) || ( hydroPhobicPhilicWeight != 0 ) )
-	{
-		FFTW_free( fkBHydrophobicity );
-		if ( twoWayHydrophobicity ) 
-			FFTW_free( fkBHydrophobicityTwo );
-	}
-	if ( ( simpleShapeWeight > 0 ) || ( simpleChargeWeight > 0 ) ) 
-		FFTW_free( fkBSimpleComplementarity );
-
-	if ( numCentersB > 0  )
-		for ( int i = 0; i < numThreads; i++ )
+	// TODO: Should only the root free the memory?
+	// check the stuff allocated by other processes
+	if(!rank){
+		// Free some of the memory allocated for the FFTs
+		FFTW_free( fkB );
+		if ( elecScale != 0 ) 
+			FFTW_free( fkBElec );
+		if ( hbondWeight != 0 ) 
+			FFTW_free( fkBHbond );
+		if ( ( hydrophobicityWeight != 0 ) || ( hydroPhobicPhobicWeight != 0 ) || ( hydroPhilicPhilicWeight != 0 ) || ( hydroPhobicPhilicWeight != 0 ) )
 		{
-			delete [ ] xkB[ i ];
-			delete [ ] ykB[ i ];
-			delete [ ] zkB[ i ];
+			FFTW_free( fkBHydrophobicity );
+			if ( twoWayHydrophobicity ) 
+				FFTW_free( fkBHydrophobicityTwo );
 		}
+		if ( ( simpleShapeWeight > 0 ) || ( simpleChargeWeight > 0 ) ) 
+			FFTW_free( fkBSimpleComplementarity );
 
-	if ( breakDownScores )
-	{
-		FFTW_free( fkB_01 );
-		FFTW_free( fkB_10 );
-		FFTW_free( fkB_11 );
-	}
+		if ( numCentersB > 0  )
+			for ( int i = 0; i < numThreads; i++ )
+			{
+				delete [ ] xkB[ i ];
+				delete [ ] ykB[ i ];
+				delete [ ] zkB[ i ];
+			}
 
-	if ( !scoreUntransformed )
-	{
-		printf("# \n# Computation Time = %f sec\n# ", getTime() - mainStartTime);
-
-		fprintf( fpOpt, (char *)"# computation time = %f sec\n# \n# ", getTime() - mainStartTime);
-
-		fprintf( fpOpt, (char *)"# center of the 2nd protein:\n# \n# " );
-		fprintf( fpOpt, (char *)"     conformation 0: %f %f %f\n# ", -translate_B[0], -translate_B[1], -translate_B[2] );
-		printf( "\n# " );
-	}
-
-
-	prT[ 0 ].confID = 0;
-	prT[ 0 ].rotations = rotations;
-	prT[ 0 ].numFreq = numFreq;
-	prT[ 0 ].scaleB = scale;
-	prT[ 0 ].translate_A = translate_A;
-	prT[ 0 ].translate_B = translate_B;
-	prT[ 0 ].functionScaleFactor = functionScaleFactor;
-	prT[ 0 ].localTopValues = globalTopValues;
-	prT[ 0 ].gridFactor = ( double ) gridSize / ( double ) globalTopValues->getGridSize( );
-	prT[ 0 ].pri = pr;
-	prT[ 0 ].randRot = randRot;
-
-
-	if ( !scoreUntransformed )
-	{
-		prT[ 0 ].localTopValues = globalTopValues;
-		printIntermediateStats( fpOpt, 20, 5, &prT[ 0 ] );
-	}
-	else
-	{
-		prT[ 0 ].localTopValues = localTopValues[ 0 ];
-		printUntransformedScore( fpOpt, &prT[ 0 ] );
-	}
-
-	fflush( fpOpt );
-
-	// Free allocated memory
-	FFTW_free( centerFrequenciesA );
-	FFTW_destroy_plan( moreFreqPlanA );
-	FFTW_free( fkA );
-	FFTW_free( gridA );
-	if ( rotateVolume )
-	{
-		free( gridBCells );
 		if ( breakDownScores )
 		{
-			free( gridBCells_01 );
-			free( gridBCells_10 );
-			free( gridBCells_11 );
+			FFTW_free( fkB_01 );
+			FFTW_free( fkB_10 );
+			FFTW_free( fkB_11 );
 		}
-	}
 
-	if ( elecScale != 0 )
-	{
-		FFTW_free( centerElecFrequenciesA );
-		FFTW_destroy_plan( moreElecFreqPlanA );
-		FFTW_free( fkAElec );
-		if ( rotateVolume ) free( elecGridBCells );
-	}
-
-	if ( hbondWeight != 0 )
-	{
-		FFTW_free( centerHbondFrequenciesA );
-		FFTW_free( fkAHbond );
-		if ( rotateVolume ) free( hbondGridBCells );
-	}
-
-	if ( ( hydrophobicityWeight != 0 ) || ( hydroPhobicPhobicWeight != 0 ) || ( hydroPhilicPhilicWeight != 0 ) || ( hydroPhobicPhilicWeight != 0 ) )
-	{
-		FFTW_free( centerHydrophobicityFrequenciesA );
-		FFTW_free( fkAHydrophobicity );
-		if ( rotateVolume ) free( hydrophobicityGridBCells );
-
-		if ( twoWayHydrophobicity )
+		if ( !scoreUntransformed )
 		{
-			FFTW_free( centerHydrophobicityTwoFrequenciesA );
-			FFTW_free( fkAHydrophobicityTwo );
-			if ( rotateVolume ) free( hydrophobicityTwoGridBCells );
+			printf("# \n# Computation Time = %f sec\n# ", getTime() - mainStartTime);
+
+			fprintf( fpOpt, (char *)"# computation time = %f sec\n# \n# ", getTime() - mainStartTime);
+
+			fprintf( fpOpt, (char *)"# center of the 2nd protein:\n# \n# " );
+			fprintf( fpOpt, (char *)"     conformation 0: %f %f %f\n# ", -translate_B[0], -translate_B[1], -translate_B[2] );
+			printf( "\n# " );
 		}
-	}
 
-	if ( ( simpleShapeWeight > 0 ) || ( simpleChargeWeight > 0 ) )
-	{
-		FFTW_free( centerSimpleComplementarityFrequenciesA );
-		FFTW_free( fkASimpleComplementarity );
-		if ( rotateVolume ) free( simpleComplementarityGridBCells );
-	}
 
-	for ( int i = 0; i < numThreads; i++ )
-	{
-		FFTW_free( centerFrequenciesB[ i ] );
-		FFTW_free( centerFrequenciesProduct[ i ] );
-		FFTW_free( sparseProfile[ i ] );
-		FFTW_free( sparseShapeProfile[ i ] );
+		prT[ 0 ].confID = 0;
+		prT[ 0 ].rotations = rotations;
+		prT[ 0 ].numFreq = numFreq;
+		prT[ 0 ].scaleB = scale;
+		prT[ 0 ].translate_A = translate_A;
+		prT[ 0 ].translate_B = translate_B;
+		prT[ 0 ].functionScaleFactor = functionScaleFactor;
+		prT[ 0 ].localTopValues = globalTopValues;
+		prT[ 0 ].gridFactor = ( double ) gridSize / ( double ) globalTopValues->getGridSize( );
+		prT[ 0 ].pri = pr;
+		prT[ 0 ].randRot = randRot;
 
-		FFTW_free( freqHat[ i ] );
 
-		FFTW_free( ourMoreFrequencies[ i ] );
+		if ( !scoreUntransformed )
+		{
+			prT[ 0 ].localTopValues = globalTopValues;
+			printIntermediateStats( fpOpt, 20, 5, &prT[ 0 ] );
+		}
+		else
+		{
+			prT[ 0 ].localTopValues = localTopValues[ 0 ];
+			printUntransformedScore( fpOpt, &prT[ 0 ] );
+		}
 
+		fflush( fpOpt );
+
+		// Free allocated memory
+		FFTW_free( centerFrequenciesA );
+		FFTW_destroy_plan( moreFreqPlanA );
+		FFTW_free( fkA );
+		FFTW_free( gridA );
 		if ( rotateVolume )
 		{
-			FFTW_free( ourMoreFrequenciesOut[ i ] );
-			if ( elecScale != 0 ) FFTW_free( elecGridB[ i ] );
-		}
-
-		FFTW_destroy_plan( freqHatPlan[ i ] );
-
-		if ( !useSparseFFT )
-		{
-			FFTW_destroy_plan( freqPlan[ i ] );
-			FFTW_destroy_plan( moreFreqPlan[ i ] );
+			free( gridBCells );
+			if ( breakDownScores )
+			{
+				free( gridBCells_01 );
+				free( gridBCells_10 );
+				free( gridBCells_11 );
+			}
 		}
 
 		if ( elecScale != 0 )
 		{
-			FFTW_free( centerElecFrequenciesB[ i ] );
-			FFTW_free( centerFrequenciesElecProduct[ i ] );
-			FFTW_free( sparseElecProfile[ i ] );
-
-			FFTW_destroy_plan( elecFreqPlan[ i ] );
-			FFTW_destroy_plan( moreElecFreqPlan[ i ] );
+			FFTW_free( centerElecFrequenciesA );
+			FFTW_destroy_plan( moreElecFreqPlanA );
+			FFTW_free( fkAElec );
+			if ( rotateVolume ) free( elecGridBCells );
 		}
 
 		if ( hbondWeight != 0 )
-			FFTW_free( sparseHbondProfile[ i ] );
+		{
+			FFTW_free( centerHbondFrequenciesA );
+			FFTW_free( fkAHbond );
+			if ( rotateVolume ) free( hbondGridBCells );
+		}
 
 		if ( ( hydrophobicityWeight != 0 ) || ( hydroPhobicPhobicWeight != 0 ) || ( hydroPhilicPhilicWeight != 0 ) || ( hydroPhobicPhilicWeight != 0 ) )
 		{
-			FFTW_free( sparseHydrophobicityProfile[ i ] );
+			FFTW_free( centerHydrophobicityFrequenciesA );
+			FFTW_free( fkAHydrophobicity );
+			if ( rotateVolume ) free( hydrophobicityGridBCells );
 
-			if ( twoWayHydrophobicity ) FFTW_free( sparseHydrophobicityTwoProfile[ i ] );
+			if ( twoWayHydrophobicity )
+			{
+				FFTW_free( centerHydrophobicityTwoFrequenciesA );
+				FFTW_free( fkAHydrophobicityTwo );
+				if ( rotateVolume ) free( hydrophobicityTwoGridBCells );
+			}
 		}
 
 		if ( ( simpleShapeWeight > 0 ) || ( simpleChargeWeight > 0 ) )
-			FFTW_free( sparseSimpleComplementarityProfile[ i ] );
-
-		delete localTopValues[ i ];
-		if ( smoothSkin ) delete smoothingFunction[ i ];
-
-		if ( ( clusterTransRad > 0 ) || ( peaksPerRotation < numFreq3 ) || ( ( clusterRotRad > 0 ) && ( i == 0 ) ) )
-			free( sortedPeaks[ i ] );
-	}
-
-	if ( breakDownScores )
-	{
-		FFTW_free( fkA_01 );
-		FFTW_free( fkA_10 );
-		FFTW_free( fkA_11 );
-
-		FFTW_free( centerFrequenciesA_01 );
-		FFTW_free( centerFrequenciesA_10 );
-		FFTW_free( centerFrequenciesA_11 );
+		{
+			FFTW_free( centerSimpleComplementarityFrequenciesA );
+			FFTW_free( fkASimpleComplementarity );
+			if ( rotateVolume ) free( simpleComplementarityGridBCells );
+		}
 
 		for ( int i = 0; i < numThreads; i++ )
 		{
-			FFTW_free( sparseProfile_01[ i ] );
-			FFTW_free( sparseProfile_10[ i ] );
-			FFTW_free( sparseProfile_11[ i ] );
+			FFTW_free( centerFrequenciesB[ i ] );
+			FFTW_free( centerFrequenciesProduct[ i ] );
+			FFTW_free( sparseProfile[ i ] );
+			FFTW_free( sparseShapeProfile[ i ] );
+
+			FFTW_free( freqHat[ i ] );
+
+			FFTW_free( ourMoreFrequencies[ i ] );
+
+			if ( rotateVolume )
+			{
+				FFTW_free( ourMoreFrequenciesOut[ i ] );
+				if ( elecScale != 0 ) FFTW_free( elecGridB[ i ] );
+			}
+
+			FFTW_destroy_plan( freqHatPlan[ i ] );
+
+			if ( !useSparseFFT )
+			{
+				FFTW_destroy_plan( freqPlan[ i ] );
+				FFTW_destroy_plan( moreFreqPlan[ i ] );
+			}
+
+			if ( elecScale != 0 )
+			{
+				FFTW_free( centerElecFrequenciesB[ i ] );
+				FFTW_free( centerFrequenciesElecProduct[ i ] );
+				FFTW_free( sparseElecProfile[ i ] );
+
+				FFTW_destroy_plan( elecFreqPlan[ i ] );
+				FFTW_destroy_plan( moreElecFreqPlan[ i ] );
+			}
+
+			if ( hbondWeight != 0 )
+				FFTW_free( sparseHbondProfile[ i ] );
+
+			if ( ( hydrophobicityWeight != 0 ) || ( hydroPhobicPhobicWeight != 0 ) || ( hydroPhilicPhilicWeight != 0 ) || ( hydroPhobicPhilicWeight != 0 ) )
+			{
+				FFTW_free( sparseHydrophobicityProfile[ i ] );
+
+				if ( twoWayHydrophobicity ) FFTW_free( sparseHydrophobicityTwoProfile[ i ] );
+			}
+
+			if ( ( simpleShapeWeight > 0 ) || ( simpleChargeWeight > 0 ) )
+				FFTW_free( sparseSimpleComplementarityProfile[ i ] );
+
+			delete localTopValues[ i ];
+			if ( smoothSkin ) delete smoothingFunction[ i ];
+
+			if ( ( clusterTransRad > 0 ) || ( peaksPerRotation < numFreq3 ) || ( ( clusterRotRad > 0 ) && ( i == 0 ) ) )
+				free( sortedPeaks[ i ] );
 		}
+
+		if ( breakDownScores )
+		{
+			FFTW_free( fkA_01 );
+			FFTW_free( fkA_10 );
+			FFTW_free( fkA_11 );
+
+			FFTW_free( centerFrequenciesA_01 );
+			FFTW_free( centerFrequenciesA_10 );
+			FFTW_free( centerFrequenciesA_11 );
+
+			for ( int i = 0; i < numThreads; i++ )
+			{
+				FFTW_free( sparseProfile_01[ i ] );
+				FFTW_free( sparseProfile_10[ i ] );
+				FFTW_free( sparseProfile_11[ i ] );
+			}
+		}
+
+		if ( useSparseFFT )
+		{
+			sparse3DFFT_destroy_plan( sparseFreqPlanForward );
+			sparse3DFFT_destroy_plan( sparseFreqPlanBackward );
+		}
+
+		FFTW_free( validOutputMap );
+
+		delete globalTopValues;
+
+		if ( clusterRotRad > 0 )
+		{
+			delete funnel;
+			delete peakList;
+		}
+
+		if ( pr->applyVdWFilter ) delete ljFilter;
+
+		if ( pr->applyClashFilter ) delete cFilter;
+
+		if ( pr->applyPseudoGsolFilter ) delete pr->pGsol;
+
+		if ( pr->applyDispersionFilter ) delete pr->dispF;
+
+		if ( !scoreUntransformed )
+		{
+			printf("# \n# Total Time = %f sec\n# \n# ", getTime( ) - mainStartTime);
+
+			fprintf( fpOpt, (char *)"\n# total time = %f sec\n# ", getTime( ) - mainStartTime);
+		}
+
+		fclose( fpOpt );
 	}
-
-	if ( useSparseFFT )
-	{
-		sparse3DFFT_destroy_plan( sparseFreqPlanForward );
-		sparse3DFFT_destroy_plan( sparseFreqPlanBackward );
-	}
-
-	FFTW_free( validOutputMap );
-
-	delete globalTopValues;
-
-	if ( clusterRotRad > 0 )
-	{
-		delete funnel;
-		delete peakList;
-	}
-
-	if ( pr->applyVdWFilter ) delete ljFilter;
-
-	if ( pr->applyClashFilter ) delete cFilter;
-
-	if ( pr->applyPseudoGsolFilter ) delete pr->pGsol;
-
-	if ( pr->applyDispersionFilter ) delete pr->dispF;
-
-	if ( !scoreUntransformed )
-	{
-		printf("# \n# Total Time = %f sec\n# \n# ", getTime( ) - mainStartTime);
-
-		fprintf( fpOpt, (char *)"\n# total time = %f sec\n# ", getTime( ) - mainStartTime);
-	}
-
-	fclose( fpOpt );
-
-	#ifdef MPI
-	MPI::Finalize();
-	#endif
 
 	return 0;
 }
