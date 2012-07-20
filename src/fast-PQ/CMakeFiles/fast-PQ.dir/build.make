@@ -53,15 +53,15 @@ src/fast-PQ/CMakeFiles/fast-PQ.dir/PairingHeap.cpp.o: src/fast-PQ/CMakeFiles/fas
 src/fast-PQ/CMakeFiles/fast-PQ.dir/PairingHeap.cpp.o: src/fast-PQ/PairingHeap.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/fast-PQ/CMakeFiles/fast-PQ.dir/PairingHeap.cpp.o"
-	cd /h1/apereira/F2Dock/src/fast-PQ && /h1/apereira/OpenMPI/bin/mpiCC   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/fast-PQ.dir/PairingHeap.cpp.o -c /h1/apereira/F2Dock/src/fast-PQ/PairingHeap.cpp
+	cd /h1/apereira/F2Dock/src/fast-PQ && /h1/apereira/OpenMPI/bin/mpic++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/fast-PQ.dir/PairingHeap.cpp.o -c /h1/apereira/F2Dock/src/fast-PQ/PairingHeap.cpp
 
 src/fast-PQ/CMakeFiles/fast-PQ.dir/PairingHeap.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/fast-PQ.dir/PairingHeap.cpp.i"
-	cd /h1/apereira/F2Dock/src/fast-PQ && /h1/apereira/OpenMPI/bin/mpiCC  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/fast-PQ/PairingHeap.cpp > CMakeFiles/fast-PQ.dir/PairingHeap.cpp.i
+	cd /h1/apereira/F2Dock/src/fast-PQ && /h1/apereira/OpenMPI/bin/mpic++  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/fast-PQ/PairingHeap.cpp > CMakeFiles/fast-PQ.dir/PairingHeap.cpp.i
 
 src/fast-PQ/CMakeFiles/fast-PQ.dir/PairingHeap.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/fast-PQ.dir/PairingHeap.cpp.s"
-	cd /h1/apereira/F2Dock/src/fast-PQ && /h1/apereira/OpenMPI/bin/mpiCC  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/fast-PQ/PairingHeap.cpp -o CMakeFiles/fast-PQ.dir/PairingHeap.cpp.s
+	cd /h1/apereira/F2Dock/src/fast-PQ && /h1/apereira/OpenMPI/bin/mpic++  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/fast-PQ/PairingHeap.cpp -o CMakeFiles/fast-PQ.dir/PairingHeap.cpp.s
 
 src/fast-PQ/CMakeFiles/fast-PQ.dir/PairingHeap.cpp.o.requires:
 .PHONY : src/fast-PQ/CMakeFiles/fast-PQ.dir/PairingHeap.cpp.o.requires

@@ -25,7 +25,7 @@ CMAKE_BUILD_TYPE:STRING=
 CMAKE_COLOR_MAKEFILE:BOOL=ON
 
 //CXX compiler.
-CMAKE_CXX_COMPILER:FILEPATH=/h1/apereira/OpenMPI/bin/mpiCC
+CMAKE_CXX_COMPILER:FILEPATH=/h1/apereira/OpenMPI/bin/mpic++
 
 //Flags used by the compiler during all build types.
 CMAKE_CXX_FLAGS:STRING=

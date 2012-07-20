@@ -53,15 +53,15 @@ src/misc-ident/CMakeFiles/misc-ident.dir/miscIdent.cpp.o: src/misc-ident/CMakeFi
 src/misc-ident/CMakeFiles/misc-ident.dir/miscIdent.cpp.o: src/misc-ident/miscIdent.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /h1/apereira/F2Dock/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/misc-ident/CMakeFiles/misc-ident.dir/miscIdent.cpp.o"
-	cd /h1/apereira/F2Dock/src/misc-ident && /h1/apereira/OpenMPI/bin/mpiCC   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/misc-ident.dir/miscIdent.cpp.o -c /h1/apereira/F2Dock/src/misc-ident/miscIdent.cpp
+	cd /h1/apereira/F2Dock/src/misc-ident && /h1/apereira/OpenMPI/bin/mpic++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/misc-ident.dir/miscIdent.cpp.o -c /h1/apereira/F2Dock/src/misc-ident/miscIdent.cpp
 
 src/misc-ident/CMakeFiles/misc-ident.dir/miscIdent.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/misc-ident.dir/miscIdent.cpp.i"
-	cd /h1/apereira/F2Dock/src/misc-ident && /h1/apereira/OpenMPI/bin/mpiCC  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/misc-ident/miscIdent.cpp > CMakeFiles/misc-ident.dir/miscIdent.cpp.i
+	cd /h1/apereira/F2Dock/src/misc-ident && /h1/apereira/OpenMPI/bin/mpic++  $(CXX_DEFINES) $(CXX_FLAGS) -E /h1/apereira/F2Dock/src/misc-ident/miscIdent.cpp > CMakeFiles/misc-ident.dir/miscIdent.cpp.i
 
 src/misc-ident/CMakeFiles/misc-ident.dir/miscIdent.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/misc-ident.dir/miscIdent.cpp.s"
-	cd /h1/apereira/F2Dock/src/misc-ident && /h1/apereira/OpenMPI/bin/mpiCC  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/misc-ident/miscIdent.cpp -o CMakeFiles/misc-ident.dir/miscIdent.cpp.s
+	cd /h1/apereira/F2Dock/src/misc-ident && /h1/apereira/OpenMPI/bin/mpic++  $(CXX_DEFINES) $(CXX_FLAGS) -S /h1/apereira/F2Dock/src/misc-ident/miscIdent.cpp -o CMakeFiles/misc-ident.dir/miscIdent.cpp.s
 
 src/misc-ident/CMakeFiles/misc-ident.dir/miscIdent.cpp.o.requires:
 .PHONY : src/misc-ident/CMakeFiles/misc-ident.dir/miscIdent.cpp.o.requires

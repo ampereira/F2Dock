@@ -4,7 +4,7 @@ project (F2Dock)
 # Global Variables
 if(CMAKE_HOST_UNIX)
   # standard setup
-  set (CMAKE_CXX_FLAGS "$ENV{CPPFLAGS} -I='/h1/apereira/OpenMPI/include' -O2")
+  set (CMAKE_CXX_FLAGS "$ENV{CPPFLAGS} -g -I='/h1/apereira/OpenMPI/include' -O2")
   set (CMAKE_LD_FLAGS "$ENV{LDFLAGS}")
   
   # Debugging and profiling friendly flags:

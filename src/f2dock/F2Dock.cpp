@@ -23,6 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 #include <stdio.h>
 #include <stdlib.h>
 #include <fstream>
+#include <iostream>
 #include "TopValues.h"
 #include "Docking.h"
 #include <vector>
@@ -154,69 +155,48 @@ bool readRotationsMPI(char *rotationFile, PARAMS_IN *p)
 			sendcount[j] = chunk;
 		}
 
+		sendcount[j] *= 9;
+
 		if(j == 0)
 			displs[j] = 0;
 		else
 			displs[j] = displs[j - 1] + sendcount[j - 1];
 	}
-// Debug stuff
-/*
-MPI_Barrier(MPI_COMM_WORLD);
-	printf("\n\n\n\nrank %d - %d - %d\n\n\n\n", rank, sendcount[rank], displs[rank]);
-MPI_Barrier(MPI_COMM_WORLD);
-exit(0);
-*/
-	float *rotations = new float[ ( sendcount[rank] ) * 9 ];
-	float rot_aux[9];
-	bool eof = false;
+	
+	float *rotations = new float [ ( numberOfRotations + 1 ) * 9 ];
 
-	FILE* fpRot = fopen( rotationFile, "r" );
-	if (  fpRot == NULL )
-	{
-		printf( "Error: Failed to open parameter file %s!\n", rotationFile);
-		return false;
-	}
+	// Root process reads the data and scatters each subset
+	if (!rank) {
+		float buffer[9];
+		ifstream fpRot (rotationFile);
 
-	printf("RANK %d\n\n", rank);
-
-	int i=0, off;
-	while ( (i < displs[rank] + sendcount[rank]) && !eof) {
-		off = i*9;
-
-			if(!rank)
-				sleep(5);
-			else{
-				printf("\n\ni=%d\ndispls=%d\n\n", i, displs[rank]);
-			}
-		if (fscanf( fpRot, "%f %f %f %f %f %f %f %f %f\n",
-					&rot_aux[0], &rot_aux[1], &rot_aux[2],
-					&rot_aux[3], &rot_aux[4], &rot_aux[5],
-					&rot_aux[6], &rot_aux[7], &rot_aux[8] ) == 9 ) {
-
-			if (i >= displs[rank]) {
-				rotations[off  ] = rot_aux[0];
-				rotations[off+1] = rot_aux[1];
-				rotations[off+2] = rot_aux[2];
-				rotations[off+3] = rot_aux[3];
-				rotations[off+4] = rot_aux[4];
-				rotations[off+5] = rot_aux[5];
-				rotations[off+6] = rot_aux[6];
-				rotations[off+7] = rot_aux[7];
-				rotations[off+8] = rot_aux[8];
-
-				printf("rank[%d] = %f - %d\n", rank, rotations[off], np);
-			}
-			++i;
-		} else {
-			eof = true;
+		// Opens the file
+		if ( !fpRot.is_open() )
+		{
+			printf( "Error: Failed to open parameter file %s!\n", rotationFile);
+			return false;
 		}
-	}
-	MPI_Barrier(MPI_COMM_WORLD);
-	exit(0);
 
-	fclose( fpRot );
-	p->rotations = rotations;
-	p->numberOfRotations = numberOfRotations;
+		// Reads the rotations
+		for (int i = 0; i <= numberOfRotations && !fpRot.eof(); ++i) {
+			int off = i*9;
+
+			for (int j = 0; j < 9; ++j)
+				fpRot >> rotations[off + j];
+				
+		}
+		fpRot.close();
+	}
+
+	float *rotations2 = new float [ sendcount[rank] ];
+
+	// Scatters the rotations that each process has to execute
+	MPI_Scatterv(rotations, sendcount, displs, MPI_FLOAT, rotations2, sendcount[rank], MPI_FLOAT, 0, MPI_COMM_WORLD);
+
+	p->rotations = rotations2;
+	p->numberOfRotations = sendcount[rank] / 9;
+
+	delete [] rotations;
 
 	return true;
 }
