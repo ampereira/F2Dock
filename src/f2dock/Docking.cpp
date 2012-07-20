@@ -5937,8 +5937,12 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 	NONZERO_GRIDCELLS *gridBCells, *gridBCells_01, *gridBCells_10, *gridBCells_11, *elecGridBCells;
 	NONZERO_GRIDCELLS *hbondGridBCells, *hydrophobicityGridBCells, *hydrophobicityTwoGridBCells, *simpleComplementarityGridBCells;
 
+	long long unsigned startT, endT;
+
+	startT = clock()/(CLOCKS_PER_SEC/1e3);
+
 	// Only root process executes this portion of the code
-	if(!rank){
+	//if(!rank){
 		if ( !computeGridParameters( pr, &interpFuncExtent, &scale ) ) 
 			return -1;
 
@@ -5958,7 +5962,7 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 			pr->numberOfPositions = numFreq3;
 		}
 
-		//#ifdef DEBUG
+		#ifdef DEBUG
 		printf("\n\ndata in PR in dockingMain\n");
 		printf("performDocking: %d\n", pr->performDocking);
 		printf("numThreads: %d\n", pr->numThreads);
@@ -6035,7 +6039,7 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 
 		printf("control %d\n", pr->control);
 		printf("numFreq %d\n", numFreq);
-		//#endif
+		#endif
 
 		numThreads = pr->numThreads;
 		char *outputFilename = pr->outputFilename;
@@ -6280,7 +6284,7 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 		printf("LibMol was not found. Could not apply hygrogen bond filter\n");
 #endif
 
-		//#ifdef DEBUG
+		#ifdef DEBUG
 		printf("\n\nLocal variable in main\n");
 		printf("numThreads: %d\n", numThreads);
 		printf("performDocking: %d\n", performDocking);
@@ -6328,7 +6332,7 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 		printf("   types: %s\n", typeB);
 		printf("   charges: %f %f\n", chargesB[0], chargesB[numCentersB-1]);
 		printf("   radii: %f %f\n", radiiB[0], radiiB[numCentersB-1]);
-		//#endif
+		#endif
 
 
 		double *xkA = NULL, *ykA = NULL, *zkA = NULL;
@@ -6558,10 +6562,6 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 		}
 
 
-
-		/*
-		 *	A partir daqui parece fazer coisas
-		 */
 
 		if ( elecScale != 0 )
 		{
@@ -6992,9 +6992,12 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 			}
 		}
 
-	}
+//	}
 	// End of root only region
+	endT = clock()/(CLOCKS_PER_SEC/1e3);
 
+	cout << "Region exec time: " << endT - startT << endl << endl;
+	
 
 	prT = new PARAMS [ numThreads ];
 	p = new pthread_t [ numThreads ];
@@ -7139,8 +7142,6 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 
 	// TODO: Bcast of the inputs p and prT
 
-	//MPI_Bcast(prT, numThreads, );
-
 	for ( int i = 0; i < numThreads; i++ )
 		pthread_create( &p[ i ], NULL, startApplyRotationsThread, ( void * ) &prT[ i ] );
 
@@ -7149,13 +7150,18 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 		pthread_join( p[ i ], NULL );
 
 
-
-	if ( clusterTransRad > 0 && !rank)
+	// Free clustPG memory
+	if ( clusterTransRad > 0 )
 	{
 		for ( int i = 0; i < numThreads; i++ )
 			delete prT[ i ].clustPG;
 	}
 
+	// Wait for every process to finish so that the localTopValues can be merged
+	MPI_Barrier(MPI_COMM_WORLD);
+
+	// This region must be executed by one process and at least the
+	// globalTopValues must be the same in every process
 	if ( !scoreUntransformed && !rank)
 	{
 		if ( clusterRotRad > 0  )
@@ -7165,10 +7171,13 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 			int nclashes, r, f, c, k;
 			double vMax;
 
+			// Iterates through the results of all the threads
 			for ( int i = 0; i < numThreads; i++ )
 			{
 				int n = localTopValues[ i ]->getCurrentNumberOfPositions( );
 
+				// Updates the global TopVales (partial results)
+				// TODO: Merge, in order, all the top values and broadcast to all processes
 				while ( n-- )
 				{
 					localTopValues[ i ]->extractMin( &v, &rv, &rv_ss, &rv_cc, &rv_sc, &iv, &iv_ss, &iv_cc, &iv_sc,
@@ -7190,6 +7199,7 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 							vMax = v;
 				}
 
+				// Updates the local (per thread) TopVales
 				while ( n-- )
 				{
 					globalTopValues->extractMin( &v, &rv, &rv_ss, &rv_cc, &rv_sc, &iv, &iv_ss, &iv_cc, &iv_sc,
@@ -7285,6 +7295,7 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 		else
 		{
 			// Only root process executes
+			// TODO: Merge global TopValues and broadcast them
 			if(!rank){
 				globalTopValuesT = new TopValues( numThreads * numberOfPositions, numFreq );
 

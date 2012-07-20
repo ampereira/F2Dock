@@ -2325,7 +2325,9 @@ int main( int argc, char* argv[] )
 
 	getComplexType( &pr, paramFileName );  
 
-	// computevdw and vdwSmoothWidth were commented out out since the vdw scores computed were not believeable and did not compare to a python implementation that was using the same libraries.  Actually, computevdw was never defined in the struc may need to do that if vdw score is to be computed in the future.
+	// computevdw and vdwSmoothWidth were commented out out since the vdw scores computed were not believeable 
+	// and did not compare to a python implementation that was using the same libraries.  Actually, computevdw 
+	// was never defined in the struc may need to do that if vdw score is to be computed in the future.
 	setDefaultValues(&pr);
 
 	//printf("AAAAAAAAAAApr = %p %d\n", &pr, pr.numThreads);
@@ -2333,12 +2335,7 @@ int main( int argc, char* argv[] )
 	// overwrite defaults in pr with values from the parameter file
 	if (! setParamFromFile( &pr, paramFileName) ) 
 		return 1;
-	/*
-	   MPI_Barrier(MPI_COMM_WORLD);
-	   printf ("\n\n\n%d - %d - %d\n", rank, pr.numberOfRotations, pr.numThreads);
-	   MPI_Barrier(MPI_COMM_WORLD);
-	   exit(0);
-	 */
+
 	//  pr.coreCoreWeight *= ( pr.numCentersB / 3000.0 );
 
 #ifdef WITH_ALL_RMSD
