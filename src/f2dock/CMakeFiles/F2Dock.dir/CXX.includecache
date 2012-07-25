@@ -22,6 +22,36 @@ sys/time.h
 mpi.h
 -
 
+/h1/apereira/F2Dock/src/f2dock/F2Dock.cpp
+stdio.h
+-
+stdlib.h
+-
+fstream
+-
+iostream
+-
+TopValues.h
+/h1/apereira/F2Dock/src/f2dock/TopValues.h
+Docking.h
+/h1/apereira/F2Dock/src/f2dock/Docking.h
+vector
+-
+string
+-
+ElementInformation.h
+/h1/apereira/F2Dock/src/f2dock/ElementInformation.h
+mpi.h
+-
+
+/h1/apereira/F2Dock/src/f2dock/TopValues.cpp
+stdio.h
+-
+math.h
+-
+TopValues.h
+/h1/apereira/F2Dock/src/f2dock/TopValues.h
+
 src/f2dock/../../inc/PG-range/1D-IntegerRange.h
 cuckoo.h
 src/f2dock/../../inc/PG-range/cuckoo.h
@@ -53,6 +83,10 @@ cmath
 src/f2dock/../../inc/PG-range/cuckoo.h
 
 src/f2dock/../../inc/PG-range/dsexceptions.h
+
+src/f2dock/../../inc/f2dock/../fft-utils/fftw3.h
+stdio.h
+-
 
 src/f2dock/../../inc/f2dock/Docking.h
 stdio.h
@@ -121,8 +155,8 @@ src/f2dock/../../inc/f2dock/ElementInformation.h
 src/f2dock/../../inc/f2dock/TopValues.h
 stdio.h
 -
-fftw3.h
-src/f2dock/../../inc/f2dock/fftw3.h
+../fft-utils/fftw3.h
+src/f2dock/../../inc/f2dock/../fft-utils/fftw3.h
 fast-PQ/PairingHeap.h
 src/f2dock/../../inc/f2dock/fast-PQ/PairingHeap.h
 Docking.h
@@ -694,10 +728,6 @@ sys/types.h
 sys/timeb.h
 -
 sys/time.h
--
-
-src/f2dock/../../inc/vol/../fft-utils/fftw3.h
-stdio.h
 -
 
 src/f2dock/../../inc/vol/../fft-utils/fftwPrecision.h

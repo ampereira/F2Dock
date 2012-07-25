@@ -4468,6 +4468,67 @@ static void *startApplyFiltersThread( void *v )
 	applyFilters( pr );
 }
 
+void filterPosesMPI( PARAMS *params, TopValues *globalIn, TopValues *globalOut,
+		int numFreq, float scale, float *translate_A, float *translate_B, float *rotations,
+		double functionScaleFactor, Matrix randRot )
+{
+	PARAMS_IN *pr = ( PARAMS_IN * ) params->pri;
+	int numThreads = pr->numThreads;
+	FILTER_PARAMS prT[ numThreads ];
+	pthread_t p[ numThreads ];
+
+	ValuePosition3D sol;
+
+	getFromGlobalIn( globalIn, sol, true, pr->numberOfPositions );
+
+	insertIntoGlobalOut( globalOut, sol, true );
+
+	for ( int i = 0; i < numThreads; i++ )
+	{
+		prT[ i ].threadID = i + 1;
+		prT[ i ].TopValuesIn = globalIn;
+		prT[ i ].TopValuesOut = globalOut;
+		prT[ i ].rotations = rotations;
+		prT[ i ].numFreq = numFreq;
+		prT[ i ].translate_A = translate_A;
+		prT[ i ].scaleB = scale;
+		prT[ i ].translate_B = translate_B;
+		prT[ i ].functionScaleFactor = functionScaleFactor;
+		prT[ i ].randRot = randRot;
+		prT[ i ].pri = pr;
+		prT[ i ].pgsolSum = 0;
+
+		pthread_create( &p[ i ], NULL, startApplyFiltersThread, ( void * ) &prT[ i ] );
+	}
+
+	for ( int i = 0; i < numThreads; i++ )
+		pthread_join( p[ i ], NULL );
+
+	double pgsolSum = 0;
+
+	for ( int i = 0; i < numThreads; i++ )
+		pgsolSum += prT[ i ].pgsolSum;
+
+	int n = globalIn->getCurrentNumberOfPositions( );
+
+	while ( n-- ) 
+		globalIn->extractMin( sol );
+
+	n = globalOut->getCurrentNumberOfPositions( );
+	int m = n - pr->pseudoGsolFilterLowestRank;
+
+	double pgsolAvg = pgsolSum / n;
+	double factor = 0.55;
+
+	params->pGsolAvg = pgsolAvg;
+
+	while ( n-- )
+	{
+		globalOut->extractMin( sol );
+
+		globalIn->updateTopValues( sol );
+	}
+}
 
 void filterPoses( PARAMS *params, TopValues *globalIn, TopValues *globalOut,
 		int numFreq, float scale, float *translate_A, float *translate_B, float *rotations,
@@ -4512,7 +4573,8 @@ void filterPoses( PARAMS *params, TopValues *globalIn, TopValues *globalOut,
 
 	int n = globalIn->getCurrentNumberOfPositions( );
 
-	while ( n-- ) globalIn->extractMin( sol );
+	while ( n-- ) 
+		globalIn->extractMin( sol );
 
 	n = globalOut->getCurrentNumberOfPositions( );
 	int m = n - pr->pseudoGsolFilterLowestRank;
@@ -5881,6 +5943,286 @@ void initHBondFilter( PARAMS_IN *pr )
 #endif
 }
 
+// Data marshaling to pass between processes (did not manage to do it by void* array)
+void marshalTopValues(vector<ValuePosition3D> localSols, double *arr1, int *arr2){
+
+	for (int i = 0; i < localSols.size(); ++i) {
+		int offset1 = i * 23;
+		int offset2 = i * 6;
+
+		// Copy doubles
+		arr1[offset1     ] = localSols[i].m_Value;
+		arr1[offset1 + 1 ] = localSols[i].m_SkinSkinRealValue;
+		arr1[offset1 + 2 ] = localSols[i].m_CoreCoreRealValue;
+		arr1[offset1 + 3 ] = localSols[i].m_SkinCoreRealValue;
+		arr1[offset1 + 4 ] = localSols[i].m_SkinSkinImaginaryValue;
+		arr1[offset1 + 5 ] = localSols[i].m_CoreCoreImaginaryValue;
+		arr1[offset1 + 6 ] = localSols[i].m_SkinCoreImaginaryValue;
+		arr1[offset1 + 7 ] = localSols[i].m_RealValue;
+		arr1[offset1 + 8 ] = localSols[i].m_ImaginaryValue;
+		arr1[offset1 + 9 ] = localSols[i].m_elecValue;
+		arr1[offset1 + 10] = localSols[i].m_hbondValue;
+		arr1[offset1 + 11] = localSols[i].m_hydrophobicityValue;
+		arr1[offset1 + 12] = localSols[i].m_vdWPotential;
+		arr1[offset1 + 13] = localSols[i].m_simpComp;
+		arr1[offset1 + 14] = localSols[i].m_pGsol;
+		arr1[offset1 + 15] = localSols[i].m_pGsolH;
+		arr1[offset1 + 16] = localSols[i].m_delDispE;
+		arr1[offset1 + 17] = localSols[i].m_origScore;
+		arr1[offset1 + 18] = localSols[i].m_rerankerScore;
+		arr1[offset1 + 19] = localSols[i].m_clusterPenalty;
+		arr1[offset1 + 20] = localSols[i].m_Translation[0];
+		arr1[offset1 + 21] = localSols[i].m_Translation[1];
+		arr1[offset1 + 22] = localSols[i].m_Translation[2];
+
+		// Copy ints
+		arr2[offset2    ] = localSols[i].m_origRank;
+		arr2[offset2 + 1] = localSols[i].m_rerankerRank;
+		arr2[offset2 + 2] = localSols[i].m_nClashes;
+		arr2[offset2 + 3] = localSols[i].m_RotationIndex;
+		arr2[offset2 + 4] = localSols[i].m_FineRotationIndex;
+		arr2[offset2 + 5] = localSols[i].m_ConformationIndex;
+	}
+}
+
+// Data marshaling to pass between processes (did not manage to do it by void* array)
+void marshalTopValues(TopValues *localSols, double *arr1, int *arr2){
+
+	int i = 0;
+	while( localSols->getCurrentNumberOfPositions() ) {
+		ValuePosition3D sol;
+		localSols->extractMin( sol );
+
+		int offset1 = i * 23;
+		int offset2 = i * 6;
+
+		// Copy doubles
+		arr1[offset1     ] = sol.m_Value;
+		arr1[offset1 + 1 ] = sol.m_SkinSkinRealValue;
+		arr1[offset1 + 2 ] = sol.m_CoreCoreRealValue;
+		arr1[offset1 + 3 ] = sol.m_SkinCoreRealValue;
+		arr1[offset1 + 4 ] = sol.m_SkinSkinImaginaryValue;
+		arr1[offset1 + 5 ] = sol.m_CoreCoreImaginaryValue;
+		arr1[offset1 + 6 ] = sol.m_SkinCoreImaginaryValue;
+		arr1[offset1 + 7 ] = sol.m_RealValue;
+		arr1[offset1 + 8 ] = sol.m_ImaginaryValue;
+		arr1[offset1 + 9 ] = sol.m_elecValue;
+		arr1[offset1 + 10] = sol.m_hbondValue;
+		arr1[offset1 + 11] = sol.m_hydrophobicityValue;
+		arr1[offset1 + 12] = sol.m_vdWPotential;
+		arr1[offset1 + 13] = sol.m_simpComp;
+		arr1[offset1 + 14] = sol.m_pGsol;
+		arr1[offset1 + 15] = sol.m_pGsolH;
+		arr1[offset1 + 16] = sol.m_delDispE;
+		arr1[offset1 + 17] = sol.m_origScore;
+		arr1[offset1 + 18] = sol.m_rerankerScore;
+		arr1[offset1 + 19] = sol.m_clusterPenalty;
+		arr1[offset1 + 20] = sol.m_Translation[0];
+		arr1[offset1 + 21] = sol.m_Translation[1];
+		arr1[offset1 + 22] = sol.m_Translation[2];
+
+		// Copy ints
+		arr2[offset2    ] = sol.m_origRank;
+		arr2[offset2 + 1] = sol.m_rerankerRank;
+		arr2[offset2 + 2] = sol.m_nClashes;
+		arr2[offset2 + 3] = sol.m_RotationIndex;
+		arr2[offset2 + 4] = sol.m_FineRotationIndex;
+		arr2[offset2 + 5] = sol.m_ConformationIndex;
+
+		++i;
+	}
+}
+
+// Data unmarshaling process
+vector<ValuePosition3D> unmarshalTopValues(double *arr1, int *arr2, int size){
+	vector<ValuePosition3D> localSols (size);
+
+	for(int i = 0; i < size; ++i){
+		int offset = i * 23;
+
+		localSols[i].m_Value 				  = arr1[offset     ];
+		localSols[i].m_SkinSkinRealValue 	  = arr1[offset + 1 ];
+		localSols[i].m_CoreCoreRealValue	  = arr1[offset + 2 ];
+		localSols[i].m_SkinCoreRealValue	  = arr1[offset + 3 ];
+		localSols[i].m_SkinSkinImaginaryValue = arr1[offset + 4 ];
+		localSols[i].m_CoreCoreImaginaryValue = arr1[offset + 5 ];
+		localSols[i].m_SkinCoreImaginaryValue = arr1[offset + 6 ];
+		localSols[i].m_RealValue 			  = arr1[offset + 7 ];
+		localSols[i].m_ImaginaryValue 		  = arr1[offset + 8 ];
+		localSols[i].m_elecValue 			  = arr1[offset + 9 ];
+		localSols[i].m_hbondValue 			  = arr1[offset + 10];
+		localSols[i].m_hydrophobicityValue    = arr1[offset + 11];
+		localSols[i].m_vdWPotential 		  = arr1[offset + 12];
+		localSols[i].m_simpComp 			  = arr1[offset + 13];
+		localSols[i].m_pGsol 				  = arr1[offset + 14];
+		localSols[i].m_pGsolH 				  = arr1[offset + 15];
+		localSols[i].m_delDispE 			  = arr1[offset + 16];
+		localSols[i].m_origScore 			  = arr1[offset + 17];
+		localSols[i].m_rerankerScore 		  = arr1[offset + 18];
+		localSols[i].m_clusterPenalty 		  = arr1[offset + 19];
+		localSols[i].m_Translation[0] 		  = arr1[offset + 20];
+		localSols[i].m_Translation[1] 		  = arr1[offset + 21];
+		localSols[i].m_Translation[2] 		  = arr1[offset + 22];
+	}
+
+	for(int i = 0; i < size; ++i){
+		int offset = i * 6;
+
+		localSols[i].m_origRank 		 = arr2[offset    ];
+		localSols[i].m_rerankerRank 	 = arr2[offset + 1];
+		localSols[i].m_nClashes 		 = arr2[offset + 2];
+		localSols[i].m_RotationIndex 	 = arr2[offset + 3];
+		localSols[i].m_FineRotationIndex = arr2[offset + 4];
+		localSols[i].m_ConformationIndex = arr2[offset + 5];
+	}
+
+	return localSols;
+}
+
+void transferData(vector<ValuePosition3D> localSols, int nTotal, TopValues *globalTopValuesT){
+	int sum = 0, displs1[np], displs2[np], nFinal1[np], nFinal2[np], nFinal[np];
+	
+	// Gather all the sizes of the TopValues from the processes
+	MPI_Gather(&nTotal, 1, MPI_INT, nFinal, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+	if (!rank){
+		for ( int i = 0; i < np; ++i ){
+			sum += nFinal[i];
+
+			nFinal1[i] = nFinal[i] * 23;
+			nFinal2[i] = nFinal[i] * 6;
+
+			if(i){
+				displs1[i] = nFinal1[i - 1] + displs1[i - 1];
+				displs2[i] = nFinal2[i - 1] + displs2[i - 1];
+			}else{
+				displs1[i] = 0;
+				displs2[i] = 0;
+			}
+		}
+	}
+	MPI_Bcast(&sum, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+	double arr1[23 * nTotal], rec1[23 * sum];
+	int arr2[6 * nTotal], rec2[6 * sum];
+	
+	// Marshaling of the data to be transferred
+	marshalTopValues(localSols, arr1, arr2);
+
+	MPI_Status st;
+
+	// Gathers all the local solutions to the root process
+	MPI_Gatherv(arr1, nTotal * 23, MPI_DOUBLE, rec1, nFinal1, displs1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+	MPI_Gatherv(arr2, nTotal * 6, MPI_INT, rec2, nFinal2, displs2, MPI_INT, 0, MPI_COMM_WORLD);
+
+	// Broadcasts the merged results
+	MPI_Bcast(rec1, sum * 23, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+	MPI_Bcast(rec2, sum * 6, MPI_INT, 0, MPI_COMM_WORLD);
+
+	vector<ValuePosition3D> localSols2 = unmarshalTopValues(rec1, rec2, sum);
+
+	// Reconstructs the TopValues structure
+	for(int i = 0; i < localSols2.size(); ++i)
+		globalTopValuesT->updateTopValues( localSols2[i] );
+
+}
+
+// Merges the TopValues from all processes and returns a vector with the data
+vector<ValuePosition3D> transferDataToVector(vector<ValuePosition3D> localSols, int nTotal, TopValues *globalTopValuesT){
+	int sum = 0, displs1[np], displs2[np], nFinal1[np], nFinal2[np], nFinal[np];
+	
+
+	// Gather all the sizes of the TopValues from the processes
+	MPI_Gather(&nTotal, 1, MPI_INT, nFinal, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+	if (!rank){
+		for ( int i = 0; i < np; ++i ){
+			sum += nFinal[i];
+
+			nFinal1[i] = nFinal[i] * 23;
+			nFinal2[i] = nFinal[i] * 6;
+
+			if(i){
+				displs1[i] = nFinal1[i - 1] + displs1[i - 1];
+				displs2[i] = nFinal2[i - 1] + displs2[i - 1];
+			}else{
+				displs1[i] = 0;
+				displs2[i] = 0;
+			}
+		}
+	}
+	MPI_Bcast(&sum, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+	double arr1[23 * nTotal], rec1[23 * sum];
+	int arr2[6 * nTotal], rec2[6 * sum];
+	
+	// Marshaling of the data to be transferred
+	marshalTopValues(localSols, arr1, arr2);
+
+	MPI_Status st;
+
+	// Gathers all the local solutions to the root process
+	MPI_Gatherv(arr1, nTotal * 23, MPI_DOUBLE, rec1, nFinal1, displs1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+	MPI_Gatherv(arr2, nTotal * 6, MPI_INT, rec2, nFinal2, displs2, MPI_INT, 0, MPI_COMM_WORLD);
+
+	// Broadcasts the merged results
+	MPI_Bcast(rec1, sum * 23, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+	MPI_Bcast(rec2, sum * 6, MPI_INT, 0, MPI_COMM_WORLD);
+
+	vector<ValuePosition3D> localSols2 = unmarshalTopValues(rec1, rec2, sum);
+
+	return localSols2;
+}
+
+// Merges and scatters the TopValues
+void mergeTopValues(TopValues *localSols, int nTotal, TopValues *globalTopValuesT){
+	int sum = 0, displs1[np], displs2[np], nFinal1[np], nFinal2[np], nFinal[np];
+
+	// Gather all the sizes of the TopValues from the processes
+	MPI_Gather(&nTotal, 1, MPI_INT, nFinal, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+	// Root calculates the indexes
+	if (!rank){
+		for ( int i = 0; i < np; ++i ){
+			sum += nFinal[i];
+
+			nFinal1[i] = nFinal[i] * 23;
+			nFinal2[i] = nFinal[i] * 6;
+
+			if(i){
+				displs1[i] = nFinal1[i - 1] + displs1[i - 1];
+				displs2[i] = nFinal2[i - 1] + displs2[i - 1];
+			}else{
+				displs1[i] = 0;
+				displs2[i] = 0;
+			}
+		}
+	}
+	MPI_Bcast(&sum, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+	double arr1[23 * nTotal], rec1[23 * sum];
+	int arr2[6 * nTotal], rec2[6 * sum];
+	
+	// Marshaling of the data to be transferred
+	marshalTopValues(localSols, arr1, arr2);
+
+	MPI_Status st;
+
+	// Gathers all the local solutions to the root process
+	MPI_Gatherv(arr1, nTotal * 23, MPI_DOUBLE, rec1, nFinal1, displs1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+	MPI_Gatherv(arr2, nTotal * 6, MPI_INT, rec2, nFinal2, displs2, MPI_INT, 0, MPI_COMM_WORLD);
+
+	// Broadcasts the merged results
+	MPI_Bcast(rec1, sum * 23, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+	MPI_Bcast(rec2, sum * 6, MPI_INT, 0, MPI_COMM_WORLD);
+
+	vector<ValuePosition3D> localSols2 = unmarshalTopValues(rec1, rec2, sum);
+
+	// Reconstructs the TopValues structure
+	for(int i = 0; i < localSols2.size(); ++i)
+		globalTopValuesT->updateTopValues( localSols2[i] );
+
+}
 
 int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 {
@@ -7157,12 +7499,21 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 			delete prT[ i ].clustPG;
 	}
 
-	// Wait for every process to finish so that the localTopValues can be merged
-	MPI_Barrier(MPI_COMM_WORLD);
+	// Merge localTopValues
+	TopValues *lTopValuesMerged[numThreads];
 
-	// This region must be executed by one process and at least the
-	// globalTopValues must be the same in every process
-	if ( !scoreUntransformed && !rank)
+	for (int i = 0; i < numT; ++i) {
+		lTopValuesMerged[i] = new TopValues(numberOfPositions, numFreq);
+		mergeTopValues(localTopValues[i], localTopValues[i]->getCurrentNumberOfPositions(), lTopValuesMerged[i]);
+	}
+
+
+
+
+
+	// From this point localTopValues is the same on every process leading
+	// to the same globalTopValues
+	if ( !scoreUntransformed )
 	{
 		if ( clusterRotRad > 0  )
 		{
@@ -7176,8 +7527,6 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 			{
 				int n = localTopValues[ i ]->getCurrentNumberOfPositions( );
 
-				// Updates the global TopVales (partial results)
-				// TODO: Merge, in order, all the top values and broadcast to all processes
 				while ( n-- )
 				{
 					localTopValues[ i ]->extractMin( &v, &rv, &rv_ss, &rv_cc, &rv_sc, &iv, &iv_ss, &iv_cc, &iv_sc,
@@ -7296,92 +7645,115 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 		{
 			// Only root process executes
 			// TODO: Merge global TopValues and broadcast them
-			if(!rank){
-				globalTopValuesT = new TopValues( numThreads * numberOfPositions, numFreq );
+			
+			globalTopValuesT = new TopValues( np * numThreads * numberOfPositions, numFreq );
 
-				for ( int i = 0; i < numThreads; i++ )
+			// All the solutions local to a process
+			vector<ValuePosition3D> localSols;
+
+			for ( int i = 0; i < numThreads; i++ )
+			{
+				printf("# \n# PROCESSING THREAD = %d\n# \n", i + 1 );
+				fflush( stdout );
+
+				int n = localTopValues[ i ]->getCurrentNumberOfPositions( );
+				ValuePosition3D sol;
+
+				// Iterates through all the positions n
+				while ( n-- )
 				{
-					printf("# \n# PROCESSING THREAD = %d\n# \n", i + 1 );
-					fflush( stdout );
+					localTopValues[ i ]->extractMin( sol );
 
-					int n = localTopValues[ i ]->getCurrentNumberOfPositions( );
-					ValuePosition3D sol;
-
-					while ( n-- )
-					{
-						localTopValues[ i ]->extractMin( sol );
-
-						sol.m_Value = - sol.m_Value;
-
-						globalTopValuesT->updateTopValues( sol );
-					}
+					sol.m_Value = - sol.m_Value;
+			
+					localSols.push_back( sol );
+					//globalTopValuesT->updateTopValues( sol );
 				}
 			}
-			// TODO: MPI Parallelization
-			// needs memory allocation of all the input and output data types
+
+			// Merges the TopValues from each process and broadcasts them to all
+			//transferData(localSols, localSols.size(), globalTopValuesT);
+			vector<ValuePosition3D> globalSols, individualSols[np];
+
+			globalSols = transferDataToVector(localSols, localSols.size(), globalTopValuesT);
+
+			// Scatter the TopValues to sub vectors
+
+			// Assuming that globalTopValues is empty
 			filterPoses( &prT[ 0 ], globalTopValuesT, globalTopValues, numFreq, scale, translate_A, translate_B,
 					rotations, functionScaleFactor, randRot );
 
-			if(!rank){
-				if ( clusterTransRad > 0 )
+			localSols.clear();
+
+		
+			if ( clusterTransRad > 0 )
+			{
+				double *hash3d = ( double * ) malloc( sizeof( double ) * numFreq3 );
+
+				for ( int c = 0; c < numFreq3; c++ )
+					hash3d[ c ] = 0;
+
+				int n = globalTopValuesT->getCurrentNumberOfPositions( );
+				ValuePosition3D sol;
+
+				while ( n-- )
 				{
-					double *hash3d = ( double * ) malloc( sizeof( double ) * numFreq3 );
+					globalTopValuesT->extractMin( sol );
 
-					for ( int c = 0; c < numFreq3; c++ )
-						hash3d[ c ] = 0;
+					double v = sol.m_Value;
+					double x = sol.m_Translation[ 0 ], y = sol.m_Translation[ 1 ], z = sol.m_Translation[ 2 ];
 
-					int n = globalTopValuesT->getCurrentNumberOfPositions( );
-					ValuePosition3D sol;
+					int clusterPenalty = 0;
 
-					while ( n-- )
-					{
-						globalTopValuesT->extractMin( sol );
+					int cVal1 = getClusterValue( x, y, z, hash3d, pr->numFreq, gridSpacing, clusterTransRad * 1, -v );
+					int cVal2 = getClusterValue( x, y, z, hash3d, pr->numFreq, gridSpacing, clusterTransRad * 2, -v );
+					int cVal3 = getClusterValue( x, y, z, hash3d, pr->numFreq, gridSpacing, clusterTransRad * 3, -v );
 
-						double v = sol.m_Value;
-						double x = sol.m_Translation[ 0 ], y = sol.m_Translation[ 1 ], z = sol.m_Translation[ 2 ];
+					if ( cVal1 >= clusterTransSize * 1 + 0 ) clusterPenalty = 8;
+					else if ( cVal2 >= clusterTransSize * 2 + 1 ) clusterPenalty = 5;
+					else if ( cVal3 >= clusterTransSize * 3 + 3 ) clusterPenalty = 1;
 
-						int clusterPenalty = 0;
-
-						int cVal1 = getClusterValue( x, y, z, hash3d, pr->numFreq, gridSpacing, clusterTransRad * 1, -v );
-						int cVal2 = getClusterValue( x, y, z, hash3d, pr->numFreq, gridSpacing, clusterTransRad * 2, -v );
-						int cVal3 = getClusterValue( x, y, z, hash3d, pr->numFreq, gridSpacing, clusterTransRad * 3, -v );
-
-						if ( cVal1 >= clusterTransSize * 1 + 0 ) clusterPenalty = 8;
-						else if ( cVal2 >= clusterTransSize * 2 + 1 ) clusterPenalty = 5;
-						else if ( cVal3 >= clusterTransSize * 3 + 3 ) clusterPenalty = 1;
-
-						sol.m_clusterPenalty = clusterPenalty;
+					sol.m_clusterPenalty = clusterPenalty;
 #ifdef RERANK_DEBUG
-						sol.m_ConformationIndex = clusterPenalty;  
+					sol.m_ConformationIndex = clusterPenalty;  
 #endif
-						sol.m_Value = ( - sol.m_Value ) * ( 1 - 0.10 * clusterPenalty );
+					sol.m_Value = ( - sol.m_Value ) * ( 1 - 0.10 * clusterPenalty );
 
-						globalTopValues->updateTopValues( sol );
+					//globalTopValues->updateTopValues( sol );
+					localSols.push_back( sol );
 
-						if ( clusterPenalty == 0 ) markCluster( x, y, z, hash3d, pr->numFreq, gridSpacing, 0, -v );
-					}
-
-					free( hash3d );
+					if ( clusterPenalty == 0 ) markCluster( x, y, z, hash3d, pr->numFreq, gridSpacing, 0, -v );
 				}
-				else
+
+				free( hash3d );
+			}
+			else
+			{
+				int n = globalTopValuesT->getCurrentNumberOfPositions( );
+				ValuePosition3D sol;
+
+				while ( n-- )
 				{
-					int n = globalTopValuesT->getCurrentNumberOfPositions( );
-					ValuePosition3D sol;
+					globalTopValuesT->extractMin( sol );
 
-					while ( n-- )
-					{
-						globalTopValuesT->extractMin( sol );
+					sol.m_Value = - sol.m_Value;
 
-						sol.m_Value = - sol.m_Value;
-
-						globalTopValues->updateTopValues( sol );
-					}
-
-					fflush( stdout );
+					//globalTopValues->updateTopValues( sol );
+					localSols.push_back( sol );
 				}
+
+				fflush( stdout );
 			}
 
 			delete globalTopValuesT;
+
+			transferData(localSols, localSols.size(), globalTopValues);
+
+			// Debug code
+			cout << "Rank " << rank << " - " << globalTopValues->getCurrentNumberOfPositions() << " - " << localSols.size() << endl;
+
+			MPI_Finalize();
+			exit(0);
 
 			// TODO: MPI Parallelization
 			if ( pr->rerank )
@@ -7391,235 +7763,231 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 		}
 	}
 
-	// TODO: Should only the root free the memory?
-	// check the stuff allocated by other processes
-	if(!rank){
-		// Free some of the memory allocated for the FFTs
-		FFTW_free( fkB );
-		if ( elecScale != 0 ) 
-			FFTW_free( fkBElec );
-		if ( hbondWeight != 0 ) 
-			FFTW_free( fkBHbond );
-		if ( ( hydrophobicityWeight != 0 ) || ( hydroPhobicPhobicWeight != 0 ) || ( hydroPhilicPhilicWeight != 0 ) || ( hydroPhobicPhilicWeight != 0 ) )
+	// Free some of the memory allocated for the FFTs
+	FFTW_free( fkB );
+	if ( elecScale != 0 ) 
+		FFTW_free( fkBElec );
+	if ( hbondWeight != 0 ) 
+		FFTW_free( fkBHbond );
+	if ( ( hydrophobicityWeight != 0 ) || ( hydroPhobicPhobicWeight != 0 ) || ( hydroPhilicPhilicWeight != 0 ) || ( hydroPhobicPhilicWeight != 0 ) )
+	{
+		FFTW_free( fkBHydrophobicity );
+		if ( twoWayHydrophobicity ) 
+			FFTW_free( fkBHydrophobicityTwo );
+	}
+	if ( ( simpleShapeWeight > 0 ) || ( simpleChargeWeight > 0 ) ) 
+		FFTW_free( fkBSimpleComplementarity );
+
+	if ( numCentersB > 0  )
+		for ( int i = 0; i < numThreads; i++ )
 		{
-			FFTW_free( fkBHydrophobicity );
-			if ( twoWayHydrophobicity ) 
-				FFTW_free( fkBHydrophobicityTwo );
+			delete [ ] xkB[ i ];
+			delete [ ] ykB[ i ];
+			delete [ ] zkB[ i ];
 		}
-		if ( ( simpleShapeWeight > 0 ) || ( simpleChargeWeight > 0 ) ) 
-			FFTW_free( fkBSimpleComplementarity );
 
-		if ( numCentersB > 0  )
-			for ( int i = 0; i < numThreads; i++ )
-			{
-				delete [ ] xkB[ i ];
-				delete [ ] ykB[ i ];
-				delete [ ] zkB[ i ];
-			}
+	if ( breakDownScores )
+	{
+		FFTW_free( fkB_01 );
+		FFTW_free( fkB_10 );
+		FFTW_free( fkB_11 );
+	}
 
+	if ( !scoreUntransformed )
+	{
+		printf("# \n# Computation Time = %f sec\n# ", getTime() - mainStartTime);
+
+		fprintf( fpOpt, (char *)"# computation time = %f sec\n# \n# ", getTime() - mainStartTime);
+
+		fprintf( fpOpt, (char *)"# center of the 2nd protein:\n# \n# " );
+		fprintf( fpOpt, (char *)"     conformation 0: %f %f %f\n# ", -translate_B[0], -translate_B[1], -translate_B[2] );
+		printf( "\n# " );
+	}
+
+
+	prT[ 0 ].confID = 0;
+	prT[ 0 ].rotations = rotations;
+	prT[ 0 ].numFreq = numFreq;
+	prT[ 0 ].scaleB = scale;
+	prT[ 0 ].translate_A = translate_A;
+	prT[ 0 ].translate_B = translate_B;
+	prT[ 0 ].functionScaleFactor = functionScaleFactor;
+	prT[ 0 ].localTopValues = globalTopValues;
+	prT[ 0 ].gridFactor = ( double ) gridSize / ( double ) globalTopValues->getGridSize( );
+	prT[ 0 ].pri = pr;
+	prT[ 0 ].randRot = randRot;
+
+
+	if ( !scoreUntransformed )
+	{
+		prT[ 0 ].localTopValues = globalTopValues;
+		printIntermediateStats( fpOpt, 20, 5, &prT[ 0 ] );
+	}
+	else
+	{
+		prT[ 0 ].localTopValues = localTopValues[ 0 ];
+		printUntransformedScore( fpOpt, &prT[ 0 ] );
+	}
+
+	fflush( fpOpt );
+
+	// Free allocated memory
+	FFTW_free( centerFrequenciesA );
+	FFTW_destroy_plan( moreFreqPlanA );
+	FFTW_free( fkA );
+	FFTW_free( gridA );
+	if ( rotateVolume )
+	{
+		free( gridBCells );
 		if ( breakDownScores )
 		{
-			FFTW_free( fkB_01 );
-			FFTW_free( fkB_10 );
-			FFTW_free( fkB_11 );
+			free( gridBCells_01 );
+			free( gridBCells_10 );
+			free( gridBCells_11 );
 		}
+	}
 
-		if ( !scoreUntransformed )
+	if ( elecScale != 0 )
+	{
+		FFTW_free( centerElecFrequenciesA );
+		FFTW_destroy_plan( moreElecFreqPlanA );
+		FFTW_free( fkAElec );
+		if ( rotateVolume ) free( elecGridBCells );
+	}
+
+	if ( hbondWeight != 0 )
+	{
+		FFTW_free( centerHbondFrequenciesA );
+		FFTW_free( fkAHbond );
+		if ( rotateVolume ) free( hbondGridBCells );
+	}
+
+	if ( ( hydrophobicityWeight != 0 ) || ( hydroPhobicPhobicWeight != 0 ) || ( hydroPhilicPhilicWeight != 0 ) || ( hydroPhobicPhilicWeight != 0 ) )
+	{
+		FFTW_free( centerHydrophobicityFrequenciesA );
+		FFTW_free( fkAHydrophobicity );
+		if ( rotateVolume ) free( hydrophobicityGridBCells );
+
+		if ( twoWayHydrophobicity )
 		{
-			printf("# \n# Computation Time = %f sec\n# ", getTime() - mainStartTime);
-
-			fprintf( fpOpt, (char *)"# computation time = %f sec\n# \n# ", getTime() - mainStartTime);
-
-			fprintf( fpOpt, (char *)"# center of the 2nd protein:\n# \n# " );
-			fprintf( fpOpt, (char *)"     conformation 0: %f %f %f\n# ", -translate_B[0], -translate_B[1], -translate_B[2] );
-			printf( "\n# " );
+			FFTW_free( centerHydrophobicityTwoFrequenciesA );
+			FFTW_free( fkAHydrophobicityTwo );
+			if ( rotateVolume ) free( hydrophobicityTwoGridBCells );
 		}
+	}
 
+	if ( ( simpleShapeWeight > 0 ) || ( simpleChargeWeight > 0 ) )
+	{
+		FFTW_free( centerSimpleComplementarityFrequenciesA );
+		FFTW_free( fkASimpleComplementarity );
+		if ( rotateVolume ) free( simpleComplementarityGridBCells );
+	}
 
-		prT[ 0 ].confID = 0;
-		prT[ 0 ].rotations = rotations;
-		prT[ 0 ].numFreq = numFreq;
-		prT[ 0 ].scaleB = scale;
-		prT[ 0 ].translate_A = translate_A;
-		prT[ 0 ].translate_B = translate_B;
-		prT[ 0 ].functionScaleFactor = functionScaleFactor;
-		prT[ 0 ].localTopValues = globalTopValues;
-		prT[ 0 ].gridFactor = ( double ) gridSize / ( double ) globalTopValues->getGridSize( );
-		prT[ 0 ].pri = pr;
-		prT[ 0 ].randRot = randRot;
+	for ( int i = 0; i < numThreads; i++ )
+	{
+		FFTW_free( centerFrequenciesB[ i ] );
+		FFTW_free( centerFrequenciesProduct[ i ] );
+		FFTW_free( sparseProfile[ i ] );
+		FFTW_free( sparseShapeProfile[ i ] );
 
+		FFTW_free( freqHat[ i ] );
 
-		if ( !scoreUntransformed )
-		{
-			prT[ 0 ].localTopValues = globalTopValues;
-			printIntermediateStats( fpOpt, 20, 5, &prT[ 0 ] );
-		}
-		else
-		{
-			prT[ 0 ].localTopValues = localTopValues[ 0 ];
-			printUntransformedScore( fpOpt, &prT[ 0 ] );
-		}
+		FFTW_free( ourMoreFrequencies[ i ] );
 
-		fflush( fpOpt );
-
-		// Free allocated memory
-		FFTW_free( centerFrequenciesA );
-		FFTW_destroy_plan( moreFreqPlanA );
-		FFTW_free( fkA );
-		FFTW_free( gridA );
 		if ( rotateVolume )
 		{
-			free( gridBCells );
-			if ( breakDownScores )
-			{
-				free( gridBCells_01 );
-				free( gridBCells_10 );
-				free( gridBCells_11 );
-			}
+			FFTW_free( ourMoreFrequenciesOut[ i ] );
+			if ( elecScale != 0 ) FFTW_free( elecGridB[ i ] );
+		}
+
+		FFTW_destroy_plan( freqHatPlan[ i ] );
+
+		if ( !useSparseFFT )
+		{
+			FFTW_destroy_plan( freqPlan[ i ] );
+			FFTW_destroy_plan( moreFreqPlan[ i ] );
 		}
 
 		if ( elecScale != 0 )
 		{
-			FFTW_free( centerElecFrequenciesA );
-			FFTW_destroy_plan( moreElecFreqPlanA );
-			FFTW_free( fkAElec );
-			if ( rotateVolume ) free( elecGridBCells );
+			FFTW_free( centerElecFrequenciesB[ i ] );
+			FFTW_free( centerFrequenciesElecProduct[ i ] );
+			FFTW_free( sparseElecProfile[ i ] );
+
+			FFTW_destroy_plan( elecFreqPlan[ i ] );
+			FFTW_destroy_plan( moreElecFreqPlan[ i ] );
 		}
 
 		if ( hbondWeight != 0 )
-		{
-			FFTW_free( centerHbondFrequenciesA );
-			FFTW_free( fkAHbond );
-			if ( rotateVolume ) free( hbondGridBCells );
-		}
+			FFTW_free( sparseHbondProfile[ i ] );
 
 		if ( ( hydrophobicityWeight != 0 ) || ( hydroPhobicPhobicWeight != 0 ) || ( hydroPhilicPhilicWeight != 0 ) || ( hydroPhobicPhilicWeight != 0 ) )
 		{
-			FFTW_free( centerHydrophobicityFrequenciesA );
-			FFTW_free( fkAHydrophobicity );
-			if ( rotateVolume ) free( hydrophobicityGridBCells );
+			FFTW_free( sparseHydrophobicityProfile[ i ] );
 
-			if ( twoWayHydrophobicity )
-			{
-				FFTW_free( centerHydrophobicityTwoFrequenciesA );
-				FFTW_free( fkAHydrophobicityTwo );
-				if ( rotateVolume ) free( hydrophobicityTwoGridBCells );
-			}
+			if ( twoWayHydrophobicity ) FFTW_free( sparseHydrophobicityTwoProfile[ i ] );
 		}
 
 		if ( ( simpleShapeWeight > 0 ) || ( simpleChargeWeight > 0 ) )
-		{
-			FFTW_free( centerSimpleComplementarityFrequenciesA );
-			FFTW_free( fkASimpleComplementarity );
-			if ( rotateVolume ) free( simpleComplementarityGridBCells );
-		}
+			FFTW_free( sparseSimpleComplementarityProfile[ i ] );
+
+		delete localTopValues[ i ];
+		if ( smoothSkin ) delete smoothingFunction[ i ];
+
+		if ( ( clusterTransRad > 0 ) || ( peaksPerRotation < numFreq3 ) || ( ( clusterRotRad > 0 ) && ( i == 0 ) ) )
+			free( sortedPeaks[ i ] );
+	}
+
+	if ( breakDownScores )
+	{
+		FFTW_free( fkA_01 );
+		FFTW_free( fkA_10 );
+		FFTW_free( fkA_11 );
+
+		FFTW_free( centerFrequenciesA_01 );
+		FFTW_free( centerFrequenciesA_10 );
+		FFTW_free( centerFrequenciesA_11 );
 
 		for ( int i = 0; i < numThreads; i++ )
 		{
-			FFTW_free( centerFrequenciesB[ i ] );
-			FFTW_free( centerFrequenciesProduct[ i ] );
-			FFTW_free( sparseProfile[ i ] );
-			FFTW_free( sparseShapeProfile[ i ] );
-
-			FFTW_free( freqHat[ i ] );
-
-			FFTW_free( ourMoreFrequencies[ i ] );
-
-			if ( rotateVolume )
-			{
-				FFTW_free( ourMoreFrequenciesOut[ i ] );
-				if ( elecScale != 0 ) FFTW_free( elecGridB[ i ] );
-			}
-
-			FFTW_destroy_plan( freqHatPlan[ i ] );
-
-			if ( !useSparseFFT )
-			{
-				FFTW_destroy_plan( freqPlan[ i ] );
-				FFTW_destroy_plan( moreFreqPlan[ i ] );
-			}
-
-			if ( elecScale != 0 )
-			{
-				FFTW_free( centerElecFrequenciesB[ i ] );
-				FFTW_free( centerFrequenciesElecProduct[ i ] );
-				FFTW_free( sparseElecProfile[ i ] );
-
-				FFTW_destroy_plan( elecFreqPlan[ i ] );
-				FFTW_destroy_plan( moreElecFreqPlan[ i ] );
-			}
-
-			if ( hbondWeight != 0 )
-				FFTW_free( sparseHbondProfile[ i ] );
-
-			if ( ( hydrophobicityWeight != 0 ) || ( hydroPhobicPhobicWeight != 0 ) || ( hydroPhilicPhilicWeight != 0 ) || ( hydroPhobicPhilicWeight != 0 ) )
-			{
-				FFTW_free( sparseHydrophobicityProfile[ i ] );
-
-				if ( twoWayHydrophobicity ) FFTW_free( sparseHydrophobicityTwoProfile[ i ] );
-			}
-
-			if ( ( simpleShapeWeight > 0 ) || ( simpleChargeWeight > 0 ) )
-				FFTW_free( sparseSimpleComplementarityProfile[ i ] );
-
-			delete localTopValues[ i ];
-			if ( smoothSkin ) delete smoothingFunction[ i ];
-
-			if ( ( clusterTransRad > 0 ) || ( peaksPerRotation < numFreq3 ) || ( ( clusterRotRad > 0 ) && ( i == 0 ) ) )
-				free( sortedPeaks[ i ] );
+			FFTW_free( sparseProfile_01[ i ] );
+			FFTW_free( sparseProfile_10[ i ] );
+			FFTW_free( sparseProfile_11[ i ] );
 		}
-
-		if ( breakDownScores )
-		{
-			FFTW_free( fkA_01 );
-			FFTW_free( fkA_10 );
-			FFTW_free( fkA_11 );
-
-			FFTW_free( centerFrequenciesA_01 );
-			FFTW_free( centerFrequenciesA_10 );
-			FFTW_free( centerFrequenciesA_11 );
-
-			for ( int i = 0; i < numThreads; i++ )
-			{
-				FFTW_free( sparseProfile_01[ i ] );
-				FFTW_free( sparseProfile_10[ i ] );
-				FFTW_free( sparseProfile_11[ i ] );
-			}
-		}
-
-		if ( useSparseFFT )
-		{
-			sparse3DFFT_destroy_plan( sparseFreqPlanForward );
-			sparse3DFFT_destroy_plan( sparseFreqPlanBackward );
-		}
-
-		FFTW_free( validOutputMap );
-
-		delete globalTopValues;
-
-		if ( clusterRotRad > 0 )
-		{
-			delete funnel;
-			delete peakList;
-		}
-
-		if ( pr->applyVdWFilter ) delete ljFilter;
-
-		if ( pr->applyClashFilter ) delete cFilter;
-
-		if ( pr->applyPseudoGsolFilter ) delete pr->pGsol;
-
-		if ( pr->applyDispersionFilter ) delete pr->dispF;
-
-		if ( !scoreUntransformed )
-		{
-			printf("# \n# Total Time = %f sec\n# \n# ", getTime( ) - mainStartTime);
-
-			fprintf( fpOpt, (char *)"\n# total time = %f sec\n# ", getTime( ) - mainStartTime);
-		}
-
-		fclose( fpOpt );
 	}
+
+	if ( useSparseFFT )
+	{
+		sparse3DFFT_destroy_plan( sparseFreqPlanForward );
+		sparse3DFFT_destroy_plan( sparseFreqPlanBackward );
+	}
+
+	FFTW_free( validOutputMap );
+
+	delete globalTopValues;
+
+	if ( clusterRotRad > 0 )
+	{
+		delete funnel;
+		delete peakList;
+	}
+
+	if ( pr->applyVdWFilter ) delete ljFilter;
+
+	if ( pr->applyClashFilter ) delete cFilter;
+
+	if ( pr->applyPseudoGsolFilter ) delete pr->pGsol;
+
+	if ( pr->applyDispersionFilter ) delete pr->dispF;
+
+	if ( !scoreUntransformed )
+	{
+		printf("# \n# Total Time = %f sec\n# \n# ", getTime( ) - mainStartTime);
+
+		fprintf( fpOpt, (char *)"\n# total time = %f sec\n# ", getTime( ) - mainStartTime);
+	}
+
+	fclose( fpOpt );
 
 	return 0;
 }

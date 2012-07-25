@@ -105,11 +105,11 @@ public:
                                          PARAMS *pr );
 
         bool updateTopPositions( int *validOutputMap,
-		   FFTW_complex* grid, FFTW_complex* skinSkinGrid,
-		   FFTW_complex* coreCoreGrid, FFTW_complex* skinCoreGrid,
-		   FFTW_complex* elecGrid, double elecWeight,
-		   FFTW_complex* hbondGrid, double hbondWeight,
-		   FFTW_complex* hydrophobicityGrid, double realHydrophobicityWeight, double imaginaryHydrophobicityWeight,
+            		   FFTW_complex* grid, FFTW_complex* skinSkinGrid,
+            		   FFTW_complex* coreCoreGrid, FFTW_complex* skinCoreGrid,
+            		   FFTW_complex* elecGrid, double elecWeight,
+            		   FFTW_complex* hbondGrid, double hbondWeight,
+            		   FFTW_complex* hydrophobicityGrid, double realHydrophobicityWeight, double imaginaryHydrophobicityWeight,
                    FFTW_complex* simpleComplementarityGrid,
 		   int rotationIndex, int fineRotationIndex, int conformationIndex, PARAMS *pr );
 

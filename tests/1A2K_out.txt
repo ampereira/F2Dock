@@ -1,6 +1,6 @@
 # INPUT PARAMETERS:
 #
-# 	 numThreads = 2
+# 	 numThreads = 4
 # 	 breakDownScores = 1
 # 	 numberOfPositions = 200
 # 	 gridSize = 480
@@ -13,7 +13,7 @@
 # 	 pseudoAtomRadius = 1.100000
 # 	 rotateVolume = 1
 # 	 dockVolume = 0
-# 	 numberOfRotations = 2
+# 	 numberOfRotations = 5
 # 	 pruneAngle = 0.000000
 # 	 curvatureWeightedStaticMol = 1
 # 	 curvatureWeightedMovingMol = 0

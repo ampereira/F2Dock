@@ -1467,7 +1467,7 @@ bool setParamFromFile(PARAMS_IN *p, char *paramFile)
 
 					p->numberOfRotations = ival;
 			} else if (strcasecmp(key, "rotFile")==0) {
-							readRotationsMPI(val, p);
+						readRotationsMPI(val, p);
 
 			} else if (strcasecmp(key, "outFile")==0) {
 				p->outputFilename = strdup(val);
