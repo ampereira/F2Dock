@@ -31,6 +31,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 #include "ElementInformation.h"
 
 #include <mpi.h>
+#include <unistd.h>
 // Global MPI variables
 int rank, np;
 
@@ -2299,6 +2300,10 @@ int main( int argc, char* argv[] )
 	MPI_Init(&argc, &argv);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	MPI_Comm_size(MPI_COMM_WORLD, &np);
+
+	// Only root process writes on stdout
+	if(rank)
+		fclose(stdout);
 
 	char *fixedMolFileName, *movingMolFileName, paramFileName[256];
 	

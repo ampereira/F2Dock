@@ -20,5 +20,5 @@ numRerank 2000
 
 breakDownScores true
 
-numThreads 4
+numThreads 2
 

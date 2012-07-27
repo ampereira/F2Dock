@@ -41,6 +41,7 @@ using CCVOpenGLMath::Vector;
 #endif
 
 #include <mpi.h>
+#include <unistd.h>
 // MPI global variables
 extern int rank;
 extern int np;
@@ -3784,7 +3785,7 @@ bool applyRotations( int threadID, int confID, float *rotations,
 
 		if ( r < 0 ) break;
 
-		printf("# \n# THREAD = %d, ROTATION = %d\n# \n", threadID, r + 1 );
+		printf("# \n# PROCESS = %d, THREAD = %d, ROTATION = %d\n# \n", rank, threadID, r + 1 );
 		fflush( stdout );
 
 		if ( rotateVolume )
@@ -4337,7 +4338,7 @@ void applyFilters( FILTER_PARAMS *pr )
 
 	while ( ( retVal =  getFromGlobalIn( pr->TopValuesIn, sol, false, 0 ) ) > 0 )
 	{
-		printf("# \n# THREAD = %d, SOL = %d\n# \n", pr->threadID, retVal );
+		printf("# \n# PROCESS = %d, THREAD = %d, SOL = %d\n# \n", rank, pr->threadID, retVal );
 		fflush( stdout );
 
 		Matrix transM;
@@ -6079,102 +6080,7 @@ vector<ValuePosition3D> unmarshalTopValues(double *arr1, int *arr2, int size){
 	return localSols;
 }
 
-void transferData(vector<ValuePosition3D> localSols, int nTotal, TopValues *globalTopValuesT){
-	int sum = 0, displs1[np], displs2[np], nFinal1[np], nFinal2[np], nFinal[np];
-	
-	// Gather all the sizes of the TopValues from the processes
-	MPI_Gather(&nTotal, 1, MPI_INT, nFinal, 1, MPI_INT, 0, MPI_COMM_WORLD);
-
-	if (!rank){
-		for ( int i = 0; i < np; ++i ){
-			sum += nFinal[i];
-
-			nFinal1[i] = nFinal[i] * 23;
-			nFinal2[i] = nFinal[i] * 6;
-
-			if(i){
-				displs1[i] = nFinal1[i - 1] + displs1[i - 1];
-				displs2[i] = nFinal2[i - 1] + displs2[i - 1];
-			}else{
-				displs1[i] = 0;
-				displs2[i] = 0;
-			}
-		}
-	}
-	MPI_Bcast(&sum, 1, MPI_INT, 0, MPI_COMM_WORLD);
-
-	double arr1[23 * nTotal], rec1[23 * sum];
-	int arr2[6 * nTotal], rec2[6 * sum];
-	
-	// Marshaling of the data to be transferred
-	marshalTopValues(localSols, arr1, arr2);
-
-	MPI_Status st;
-
-	// Gathers all the local solutions to the root process
-	MPI_Gatherv(arr1, nTotal * 23, MPI_DOUBLE, rec1, nFinal1, displs1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-	MPI_Gatherv(arr2, nTotal * 6, MPI_INT, rec2, nFinal2, displs2, MPI_INT, 0, MPI_COMM_WORLD);
-
-	// Broadcasts the merged results
-	MPI_Bcast(rec1, sum * 23, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-	MPI_Bcast(rec2, sum * 6, MPI_INT, 0, MPI_COMM_WORLD);
-
-	vector<ValuePosition3D> localSols2 = unmarshalTopValues(rec1, rec2, sum);
-
-	// Reconstructs the TopValues structure
-	for(int i = 0; i < localSols2.size(); ++i)
-		globalTopValuesT->updateTopValues( localSols2[i] );
-
-}
-
-// Merges the TopValues from all processes and returns a vector with the data
-vector<ValuePosition3D> transferDataToVector(vector<ValuePosition3D> localSols, int nTotal, TopValues *globalTopValuesT){
-	int sum = 0, displs1[np], displs2[np], nFinal1[np], nFinal2[np], nFinal[np];
-	
-
-	// Gather all the sizes of the TopValues from the processes
-	MPI_Gather(&nTotal, 1, MPI_INT, nFinal, 1, MPI_INT, 0, MPI_COMM_WORLD);
-
-	if (!rank){
-		for ( int i = 0; i < np; ++i ){
-			sum += nFinal[i];
-
-			nFinal1[i] = nFinal[i] * 23;
-			nFinal2[i] = nFinal[i] * 6;
-
-			if(i){
-				displs1[i] = nFinal1[i - 1] + displs1[i - 1];
-				displs2[i] = nFinal2[i - 1] + displs2[i - 1];
-			}else{
-				displs1[i] = 0;
-				displs2[i] = 0;
-			}
-		}
-	}
-	MPI_Bcast(&sum, 1, MPI_INT, 0, MPI_COMM_WORLD);
-
-	double arr1[23 * nTotal], rec1[23 * sum];
-	int arr2[6 * nTotal], rec2[6 * sum];
-	
-	// Marshaling of the data to be transferred
-	marshalTopValues(localSols, arr1, arr2);
-
-	MPI_Status st;
-
-	// Gathers all the local solutions to the root process
-	MPI_Gatherv(arr1, nTotal * 23, MPI_DOUBLE, rec1, nFinal1, displs1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-	MPI_Gatherv(arr2, nTotal * 6, MPI_INT, rec2, nFinal2, displs2, MPI_INT, 0, MPI_COMM_WORLD);
-
-	// Broadcasts the merged results
-	MPI_Bcast(rec1, sum * 23, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-	MPI_Bcast(rec2, sum * 6, MPI_INT, 0, MPI_COMM_WORLD);
-
-	vector<ValuePosition3D> localSols2 = unmarshalTopValues(rec1, rec2, sum);
-
-	return localSols2;
-}
-
-// Merges and scatters the TopValues
+// Merges and broadcasts the TopValues
 void mergeTopValues(TopValues *localSols, int nTotal, TopValues *globalTopValuesT){
 	int sum = 0, displs1[np], displs2[np], nFinal1[np], nFinal2[np], nFinal[np];
 
@@ -6217,6 +6123,60 @@ void mergeTopValues(TopValues *localSols, int nTotal, TopValues *globalTopValues
 	MPI_Bcast(rec2, sum * 6, MPI_INT, 0, MPI_COMM_WORLD);
 
 	vector<ValuePosition3D> localSols2 = unmarshalTopValues(rec1, rec2, sum);
+
+	// Reconstructs the TopValues structure
+	for(int i = 0; i < localSols2.size(); ++i)
+		globalTopValuesT->updateTopValues( localSols2[i] );
+
+}
+
+// Merges and scatter the TopValues
+void scatterTopValues(TopValues *localSols, TopValues *globalTopValuesT){
+
+	// Scattering of the data
+	int chunk, excess, sendcount1[np], sendcount2[np], displs1[np], displs2[np];
+	int size = localSols->getCurrentNumberOfPositions();
+
+	double arr1[size * 23], *rec1;
+	int arr2[size * 6], *rec2;
+
+	if(!rank){
+		chunk = size / np;
+		excess = size - chunk * np;
+
+		for(int i = 0; i < np; ++i){
+			if(excess){
+				sendcount1[i] = chunk * 23 + 23;
+				sendcount2[i] = chunk * 6 + 6;
+
+				--excess;
+			}else{
+				sendcount1[i] = chunk * 23;
+				sendcount2[i] = chunk * 6;
+			}
+			if(i == 0){
+				displs1[i] = 0;
+				displs2[i] = 0;
+			}else{
+				displs1[i] = displs1[i - 1] + sendcount1[i - 1];
+				displs2[i] = displs2[i - 1] + sendcount2[i - 1];
+			}
+		}
+	}
+
+	marshalTopValues(localSols, arr1, arr2);
+
+	// MPI scattering
+	MPI_Bcast(sendcount1, np, MPI_INT, 0, MPI_COMM_WORLD);
+	MPI_Bcast(sendcount2, np, MPI_INT, 0, MPI_COMM_WORLD);
+
+	rec1 = new double [sendcount1[rank]];
+	rec2 = new int [sendcount2[rank]];
+
+	MPI_Scatterv(arr1, sendcount1, displs1, MPI_DOUBLE, rec1, sendcount1[rank], MPI_DOUBLE, 0, MPI_COMM_WORLD);
+	MPI_Scatterv(arr2, sendcount2, displs2, MPI_INT, rec2, sendcount2[rank], MPI_INT, 0, MPI_COMM_WORLD);
+
+	vector<ValuePosition3D> localSols2 = unmarshalTopValues(rec1, rec2, sendcount1[rank]/23);
 
 	// Reconstructs the TopValues structure
 	for(int i = 0; i < localSols2.size(); ++i)
@@ -6278,10 +6238,6 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 
 	NONZERO_GRIDCELLS *gridBCells, *gridBCells_01, *gridBCells_10, *gridBCells_11, *elecGridBCells;
 	NONZERO_GRIDCELLS *hbondGridBCells, *hydrophobicityGridBCells, *hydrophobicityTwoGridBCells, *simpleComplementarityGridBCells;
-
-	long long unsigned startT, endT;
-
-	startT = clock()/(CLOCKS_PER_SEC/1e3);
 
 	// Only root process executes this portion of the code
 	//if(!rank){
@@ -7335,10 +7291,6 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 		}
 
 //	}
-	// End of root only region
-	endT = clock()/(CLOCKS_PER_SEC/1e3);
-
-	cout << "Region exec time: " << endT - startT << endl << endl;
 	
 
 	prT = new PARAMS [ numThreads ];
@@ -7481,6 +7433,10 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 		}
 
 	}
+	// All processes write on stdout
+	if(rank){
+		freopen("/dev/tty", "w", stdout);
+	}
 
 	// TODO: Bcast of the inputs p and prT
 
@@ -7502,14 +7458,12 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 	// Merge localTopValues
 	TopValues *lTopValuesMerged[numThreads];
 
-	for (int i = 0; i < numT; ++i) {
+	for (int i = 0; i < numThreads; ++i) {
 		lTopValuesMerged[i] = new TopValues(numberOfPositions, numFreq);
 		mergeTopValues(localTopValues[i], localTopValues[i]->getCurrentNumberOfPositions(), lTopValuesMerged[i]);
 	}
 
-
-
-
+	localTopValues = lTopValuesMerged;
 
 	// From this point localTopValues is the same on every process leading
 	// to the same globalTopValues
@@ -7643,8 +7597,8 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 		}
 		else
 		{
-			// Only root process executes
-			// TODO: Merge global TopValues and broadcast them
+			// Since all the processes did the same computation with the localTopValues (which were merged)
+			// it is suposed that the globalTopValues are also consistent at this point
 			
 			globalTopValuesT = new TopValues( np * numThreads * numberOfPositions, numFreq );
 
@@ -7653,7 +7607,7 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 
 			for ( int i = 0; i < numThreads; i++ )
 			{
-				printf("# \n# PROCESSING THREAD = %d\n# \n", i + 1 );
+				printf("# \n# PROCESS %d PROCESSING THREAD = %d\n# \n", rank, i + 1 );
 				fflush( stdout );
 
 				int n = localTopValues[ i ]->getCurrentNumberOfPositions( );
@@ -7666,25 +7620,30 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 
 					sol.m_Value = - sol.m_Value;
 			
-					localSols.push_back( sol );
-					//globalTopValuesT->updateTopValues( sol );
+					//localSols.push_back( sol );
+					globalTopValuesT->updateTopValues( sol );
 				}
 			}
+			TopValues* globalTopValuesTScattered = new TopValues( np * numThreads * numberOfPositions, numFreq );
 
 			// Merges the TopValues from each process and broadcasts them to all
 			//transferData(localSols, localSols.size(), globalTopValuesT);
-			vector<ValuePosition3D> globalSols, individualSols[np];
-
-			globalSols = transferDataToVector(localSols, localSols.size(), globalTopValuesT);
+			// EDIT: since they are merged only the scatter is needed
 
 			// Scatter the TopValues to sub vectors
+			scatterTopValues(globalTopValuesT, globalTopValuesTScattered);
+
+			globalTopValuesT = globalTopValuesTScattered;
 
 			// Assuming that globalTopValues is empty
 			filterPoses( &prT[ 0 ], globalTopValuesT, globalTopValues, numFreq, scale, translate_A, translate_B,
 					rotations, functionScaleFactor, randRot );
 
-			localSols.clear();
+			// After filterPoses the globalTopValues are merged again
+			mergeTopValues(globalTopValuesT, globalTopValuesT->getCurrentNumberOfPositions(), globalTopValuesTScattered);
+			globalTopValuesT = globalTopValuesTScattered;
 
+			// MAIS TESTES AQUI
 		
 			if ( clusterTransRad > 0 )
 			{
@@ -7719,8 +7678,7 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 #endif
 					sol.m_Value = ( - sol.m_Value ) * ( 1 - 0.10 * clusterPenalty );
 
-					//globalTopValues->updateTopValues( sol );
-					localSols.push_back( sol );
+					globalTopValues->updateTopValues( sol );
 
 					if ( clusterPenalty == 0 ) markCluster( x, y, z, hash3d, pr->numFreq, gridSpacing, 0, -v );
 				}
@@ -7738,8 +7696,7 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 
 					sol.m_Value = - sol.m_Value;
 
-					//globalTopValues->updateTopValues( sol );
-					localSols.push_back( sol );
+					globalTopValues->updateTopValues( sol );
 				}
 
 				fflush( stdout );
@@ -7747,21 +7704,51 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 
 			delete globalTopValuesT;
 
-			transferData(localSols, localSols.size(), globalTopValues);
 
-			// Debug code
-			cout << "Rank " << rank << " - " << globalTopValues->getCurrentNumberOfPositions() << " - " << localSols.size() << endl;
-
-			MPI_Finalize();
-			exit(0);
-
-			// TODO: MPI Parallelization
+			
 			if ( pr->rerank )
 			{
+				// TODO: MPI Parallelization
+				// Dividir numrerank e os TopValues pelos processos
+				int chunk, excess;
+
+				chunk = prT[0].pri->numRerank / np;
+				excess = prT[0].pri->numRerank - chunk * np;
+
+				for (int i = 0; i < np && excess; ++i, --excess) {
+					if(i == rank)
+						++chunk;
+				}
+
+				prT[0].pri->numRerank = chunk;
+
+				TopValues* globalTopValuesScattered = new TopValues( np * numThreads * numberOfPositions, numFreq );
+
+				// Scatter the TopValues to sub vectors
+				scatterTopValues(globalTopValues, globalTopValuesScattered);
+
+				globalTopValues = globalTopValuesScattered;
+
+
+
+
 				rerankPoses( &prT[ 0 ], globalTopValues );
+
+				// Merge globalTopValues
+				mergeTopValues(globalTopValues, globalTopValues->getCurrentNumberOfPositions(), globalTopValuesScattered);
+
+				globalTopValues = globalTopValuesScattered;
+				// Debug code
+				//cout << "Rank " << rank << " - " << globalTopValues->getCurrentNumberOfPositions() <<endl;
+				//MPI_Finalize();
+				//exit(0);
 			}
 		}
 	}
+
+	// Only root process writes on stdout
+	if(rank)
+		fclose(stdout);
 
 	// Free some of the memory allocated for the FFTs
 	FFTW_free( fkB );
