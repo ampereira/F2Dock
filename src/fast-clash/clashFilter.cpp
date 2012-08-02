@@ -839,7 +839,8 @@ bool clashFilter::computeInteractions( Matrix transMat, int *nClashes, int *nSev
 
    double startT = getTime( );
    
-   if ( numThreads == 1 ) approximateInteractions( transMat, staticAtomsOctreeRoot, movingAtomsOctreeRoot, nClashes, nSevereClashes, interactionValue );
+   if ( numThreads == 1 ) 
+      approximateInteractions( transMat, staticAtomsOctreeRoot, movingAtomsOctreeRoot, nClashes, nSevereClashes, interactionValue );
    else
       {
        initSubtreeRootServer( );

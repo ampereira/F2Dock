@@ -42,9 +42,11 @@ using CCVOpenGLMath::Vector;
 
 #include <mpi.h>
 #include <unistd.h>
+#include <fstream>
 // MPI global variables
 extern int rank;
 extern int np;
+extern int desc;
 
 // variables for the rotation server for pthreads
 pthread_mutex_t rotLock;
@@ -2466,7 +2468,10 @@ float getRMSD(PARAMS_IN *pr, Matrix transformation )
 		oldposz++;
 	}
 
-	return floor( 10 * sqrt( rmsd / ( ( double ) pr->nbRMSDAtoms ) ) ) / 10.0;
+	//cout << endl << endl << "RMSD rank " << rank << " - " <<  oldposx[] << endl << endl;
+	float rt_val = floor( 10 * sqrt( rmsd / ( ( double ) pr->nbRMSDAtoms ) ) ) / 10.0;
+
+	return rt_val;
 }
 
 
@@ -2649,6 +2654,7 @@ void printIntermediateStats( FILE *fp,
 		int rmsdGood,
 		PARAMS *pr )
 {
+
 	bool reDocking = (pr->pri->nbRMSDAtoms > 0) ? true:false;
 	bool breakDownScores = (pr->pri->breakDownScores==1) ? true:false;
 	double skinSkinWeight = pr->skinSkinWeight;
@@ -2672,7 +2678,7 @@ void printIntermediateStats( FILE *fp,
 	Matrix transformation;
 
 	double mv, mrv, mrv_ss, mrv_cc, mrv_sc, miv, miv_ss, miv_cc, miv_sc, melec, mhbond, mhydrop, mvdw, mscomp, mpgsol, mpgsolh, mdispe, mx, my, mz, mrmsd = 100000000;
-	int mnclashes, mr, mf, mc, rank;
+	int mnclashes, mr, mf, mc, rank1;
 	Matrix mtransformation;
 
 #if defined(__APPLE__)
@@ -2701,13 +2707,14 @@ void printIntermediateStats( FILE *fp,
 	for ( int i = 0; i < 6; i++ )
 		hitsInRange[ i ] = 0;
 
-	f_printf( fp, (char *)"\n# grid spacing = %f angstrom\n# ", 1.0 / ( ( double ) scale_B * curTopValues->getGridSize( ) ) );
-	f_printf( fp, (char *)"\n# number of peaks = %d\n# ", n );
-	f_printf( fp, (char *)"\n# score scale down factor = %lf\n# ", functionScaleFactor );
-	f_printf( fp, (char *)"\n# number of rotation matrices processed = %d ( %0.2lf\% )\n# ", processedRotations, ( processedRotations * 100.0 ) / pr->pri->numberOfRotations );
-
-	fprintf( fp, (char *)"\n# START PEAKS" );
-
+	if(!rank){
+		f_printf( fp, (char *)"\n# grid spacing = %f angstrom\n# ", 1.0 / ( ( double ) scale_B * curTopValues->getGridSize( ) ) );
+		f_printf( fp, (char *)"\n# number of peaks = %d\n# ", n );
+		f_printf( fp, (char *)"\n# score scale down factor = %lf\n# ", functionScaleFactor );
+		f_printf( fp, (char *)"\n# number of rotation matrices processed = %d ( %0.2lf\% )\n# ", processedRotations, ( processedRotations * 100.0 ) / pr->pri->numberOfRotations );
+			
+		fprintf( fp, (char *)"\n# START PEAKS" );
+	}
 	int numberOfGoodPeaks = 0;
 	int highestRank = maxRank;
 
@@ -2745,37 +2752,42 @@ void printIntermediateStats( FILE *fp,
 		// MS .. WHAT IS THAT ?? FIXME
 		//          rmsd = baseComplex->getRMSD( transformation, unboundLigandAtomList[ c ], unboundLigandInterfaceAtomIndex[ c ] );
 
+
 		if ( !breakDownScores ) {
 			double riv = rv + iv * unrealWeight;
-			fprintf( fp, (char *)"\n%6d %16.5lf %16.5lf %16.5lf %16.5lf %16.5lf %20.5lf %20.5lf %20.5lf %20.5lf %16.5lf %10d %20.5lf %20.5lf %20.5lf ",
-					( n + 1 ), ( double ) v / functionScaleFactor, ( double ) riv / functionScaleFactor, ( double ) rv_ss / functionScaleFactor,
-					( double ) rv_cc / functionScaleFactor, ( double ) iv / functionScaleFactor, ( double ) elec / functionScaleFactor,
-					( double ) hbond / functionScaleFactor, ( double ) hydrop / functionScaleFactor, ( double ) scomp / functionScaleFactor,
-					vdw, nclashes, pgsol, pgsolh, dispe );
+			if(!rank)
+				fprintf( fp, (char *)"\n%6d %16.5lf %16.5lf %16.5lf %16.5lf %16.5lf %20.5lf %20.5lf %20.5lf %20.5lf %16.5lf %10d %20.5lf %20.5lf %20.5lf ",
+						( n + 1 ), ( double ) v / functionScaleFactor, ( double ) riv / functionScaleFactor, ( double ) rv_ss / functionScaleFactor,
+						( double ) rv_cc / functionScaleFactor, ( double ) iv / functionScaleFactor, ( double ) elec / functionScaleFactor,
+						( double ) hbond / functionScaleFactor, ( double ) hydrop / functionScaleFactor, ( double ) scomp / functionScaleFactor,
+						vdw, nclashes, pgsol, pgsolh, dispe );
 
 			//	fprintf( fp, (char *)"\n%6d %16.5lf %16.5lf %16.5lf %16.5lf %20.5lf %20.5lf %16.5lf %10d ", ( n + 1 ), ( double ) v / functionScaleFactor,
 			//	       ( double ) riv / functionScaleFactor, ( double ) rv / functionScaleFactor, ( double ) iv / functionScaleFactor,
 			//	       ( double ) elec / functionScaleFactor, ( double ) hbond / functionScaleFactor, vdw, nclashes );
 		} else {
 			double riv = skinSkinWeight * rv_ss + coreCoreWeight * rv_cc + skinCoreWeight * iv_sc;
-			fprintf( fp, (char *)"\n%6d %16.5lf %16.5lf %16.5lf %16.5lf %16.5lf %16.5lf %16.5lf %16.5lf %20.5lf %20.5lf %20.5lf %20.5lf %16.5lf %10d %20.5lf %20.5lf %20.5lf ",
-					( n + 1 ), ( double ) v / functionScaleFactor,
-					( double ) riv / functionScaleFactor,
-					( double ) rv_ss / functionScaleFactor, ( double ) rv_cc / functionScaleFactor,
-					( double ) rv_sc / functionScaleFactor,
-					( double ) iv_ss / functionScaleFactor, ( double ) iv_cc / functionScaleFactor,
-					( double ) iv_sc / functionScaleFactor,
-					( double ) elec / functionScaleFactor,
-					( double ) hbond / functionScaleFactor,
-					( double ) hydrop / functionScaleFactor,
-					( double ) scomp / functionScaleFactor,
-					vdw, nclashes, pgsol, pgsolh, dispe );
+			if(!rank)
+				fprintf( fp, (char *)"\n%6d %16.5lf %16.5lf %16.5lf %16.5lf %16.5lf %16.5lf %16.5lf %16.5lf %20.5lf %20.5lf %20.5lf %20.5lf %16.5lf %10d %20.5lf %20.5lf %20.5lf ",
+						( n + 1 ), ( double ) v / functionScaleFactor,
+						( double ) riv / functionScaleFactor,
+						( double ) rv_ss / functionScaleFactor, ( double ) rv_cc / functionScaleFactor,
+						( double ) rv_sc / functionScaleFactor,
+						( double ) iv_ss / functionScaleFactor, ( double ) iv_cc / functionScaleFactor,
+						( double ) iv_sc / functionScaleFactor,
+						( double ) elec / functionScaleFactor,
+						( double ) hbond / functionScaleFactor,
+						( double ) hydrop / functionScaleFactor,
+						( double ) scomp / functionScaleFactor,
+						vdw, nclashes, pgsol, pgsolh, dispe );
 		}
 
 		for ( int i = 0; i < 3; i++ )
 			for ( int j = 0; j < 4; j++ )
-				fprintf( fp, (char *)"%9.3f ", transformation.get( i, j ) );
-		fprintf( fp, (char *)"%2d %9.2f", c, rmsd );
+				if(!rank)
+					fprintf( fp, (char *)"%9.3f ", transformation.get( i, j ) );
+		if(!rank)
+			fprintf( fp, (char *)"%2d %9.2f", c, rmsd );
 
 		if ( mrmsd > rmsd )
 		{
@@ -2796,8 +2808,9 @@ void printIntermediateStats( FILE *fp,
 			mx = rx; my = ry; mz = rz;
 			mr = r; mf = f; mc = c;
 			mtransformation = transformation;
-			rank = n + 1;
+			rank1 = n + 1;
 		}
+
 
 		int rmsdIntF = ( int ) floor( rmsd );
 		int rmsdIntC = ( int ) ceil( rmsd );
@@ -2817,16 +2830,30 @@ void printIntermediateStats( FILE *fp,
 
 		if ( rmsdIntC <= rmsdGood )
 		{
-			if ( n <= 0 ) hitsInRange[ 0 ]++;
-			if ( n <= 9 ) hitsInRange[ 1 ]++;
-			if ( n <= 99 ) hitsInRange[ 2 ]++;
-			if ( n <= 999 ) hitsInRange[ 3 ]++;
-			if ( n <= 9999 ) hitsInRange[ 4 ]++;
-			if ( n <= 99999 ) hitsInRange[ 5 ]++;
+			if ( n <= 0 ) 		hitsInRange[ 0 ]++;
+			if ( n <= 9 ) 		hitsInRange[ 1 ]++;
+			if ( n <= 99 ) 		hitsInRange[ 2 ]++;
+			if ( n <= 999 ) 	hitsInRange[ 3 ]++;
+			if ( n <= 9999 ) 	hitsInRange[ 4 ]++;
+			if ( n <= 99999 ) 	hitsInRange[ 5 ]++;
 		}
 	}
-	fprintf( fp, (char *)"\n# END PEAKS" );
 
+	if(!rank)
+		fprintf( fp, (char *)"\n# END PEAKS" );
+
+	// MEUUUUUUUUUUUU ----------------------------------------------------------
+	// MEUUUUUUUUUUUU ----------------------------------------------------------
+
+	double all_mrmsd;
+
+	//MPI_Allreduce(&mrmsd, &all_mrmsd, 1, MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
+
+	//if(mrmsd != all_mrmsd)
+	//	return;
+
+	// MEUUUUUUUUUUUU ----------------------------------------------------------
+	// MEUUUUUUUUUUUU ----------------------------------------------------------
 
 	//   int numberOfGoodPeaks = 0;
 	//   int highestRank = maxRank;
@@ -2850,7 +2877,7 @@ void printIntermediateStats( FILE *fp,
 
 	f_printf( fp, (char *)"\n# good peaks under %d A: count = %d highest rank = %d min RMSD = %f\n# ", rmsdGood, numberOfGoodPeaks, highestRank + 1, mrmsd );
 
-	f_printf( fp, (char *)"\n# best peak: rmsd = %f rank = %d score = %lf ", mrmsd, rank, ( double ) mv / functionScaleFactor );
+	f_printf( fp, (char *)"\n# %d best peak: rmsd = %f rank = %d score = %lf ", rank, mrmsd, rank1, ( double ) mv / functionScaleFactor );
 
 	if ( breakDownScores )
 		fprintf( fp, (char *)"realScore = < skin-skin = %lf core-core = %lf skin-core = %lf >, unrealScore = < skin-skin = %lf core-core = %lf skin-core = %lf >, elecScore = %lf, hbondScore = %lf, hydrophobicityScore = %lf, simpleComplementarityScore = %lf, vdWPotential = %lf, nClashes = %d, pGsol = %lf, pGsolH = %lf, delDispE = %lf ",
@@ -4365,7 +4392,7 @@ void applyFilters( FILTER_PARAMS *pr )
 
 			else {
 
-				Vector oldPos( pr->pri->centroidxB,pr->pri->centroidyB, pr->pri->centroidzB,  1.0 );
+				Vector oldPos( pr->pri->centroidxB, pr->pri->centroidyB, pr->pri->centroidzB,  1.0 );
 				Vector newPos = transM * oldPos;
 				double xM = newPos[ 0 ], yM = newPos[ 1 ], zM = newPos[ 2 ];
 
@@ -4469,68 +4496,6 @@ static void *startApplyFiltersThread( void *v )
 	applyFilters( pr );
 }
 
-void filterPosesMPI( PARAMS *params, TopValues *globalIn, TopValues *globalOut,
-		int numFreq, float scale, float *translate_A, float *translate_B, float *rotations,
-		double functionScaleFactor, Matrix randRot )
-{
-	PARAMS_IN *pr = ( PARAMS_IN * ) params->pri;
-	int numThreads = pr->numThreads;
-	FILTER_PARAMS prT[ numThreads ];
-	pthread_t p[ numThreads ];
-
-	ValuePosition3D sol;
-
-	getFromGlobalIn( globalIn, sol, true, pr->numberOfPositions );
-
-	insertIntoGlobalOut( globalOut, sol, true );
-
-	for ( int i = 0; i < numThreads; i++ )
-	{
-		prT[ i ].threadID = i + 1;
-		prT[ i ].TopValuesIn = globalIn;
-		prT[ i ].TopValuesOut = globalOut;
-		prT[ i ].rotations = rotations;
-		prT[ i ].numFreq = numFreq;
-		prT[ i ].translate_A = translate_A;
-		prT[ i ].scaleB = scale;
-		prT[ i ].translate_B = translate_B;
-		prT[ i ].functionScaleFactor = functionScaleFactor;
-		prT[ i ].randRot = randRot;
-		prT[ i ].pri = pr;
-		prT[ i ].pgsolSum = 0;
-
-		pthread_create( &p[ i ], NULL, startApplyFiltersThread, ( void * ) &prT[ i ] );
-	}
-
-	for ( int i = 0; i < numThreads; i++ )
-		pthread_join( p[ i ], NULL );
-
-	double pgsolSum = 0;
-
-	for ( int i = 0; i < numThreads; i++ )
-		pgsolSum += prT[ i ].pgsolSum;
-
-	int n = globalIn->getCurrentNumberOfPositions( );
-
-	while ( n-- ) 
-		globalIn->extractMin( sol );
-
-	n = globalOut->getCurrentNumberOfPositions( );
-	int m = n - pr->pseudoGsolFilterLowestRank;
-
-	double pgsolAvg = pgsolSum / n;
-	double factor = 0.55;
-
-	params->pGsolAvg = pgsolAvg;
-
-	while ( n-- )
-	{
-		globalOut->extractMin( sol );
-
-		globalIn->updateTopValues( sol );
-	}
-}
-
 void filterPoses( PARAMS *params, TopValues *globalIn, TopValues *globalOut,
 		int numFreq, float scale, float *translate_A, float *translate_B, float *rotations,
 		double functionScaleFactor, Matrix randRot )
@@ -4584,6 +4549,7 @@ void filterPoses( PARAMS *params, TopValues *globalIn, TopValues *globalOut,
 	double factor = 0.55;
 
 	params->pGsolAvg = pgsolAvg;
+		cout << "rank " << rank << " " << pgsolAvg << endl;
 
 	while ( n-- )
 	{
@@ -6081,8 +6047,11 @@ vector<ValuePosition3D> unmarshalTopValues(double *arr1, int *arr2, int size){
 }
 
 // Merges and broadcasts the TopValues
-void mergeTopValues(TopValues *localSols, int nTotal, TopValues *globalTopValuesT){
+TopValues* mergeTopValues(TopValues *inputTopValues, int topValSize, int numFreq){
 	int sum = 0, displs1[np], displs2[np], nFinal1[np], nFinal2[np], nFinal[np];
+	int nTotal = inputTopValues->getCurrentNumberOfPositions();
+
+	TopValues *outputTopValues = new TopValues (topValSize, numFreq);
 
 	// Gather all the sizes of the TopValues from the processes
 	MPI_Gather(&nTotal, 1, MPI_INT, nFinal, 1, MPI_INT, 0, MPI_COMM_WORLD);
@@ -6110,7 +6079,7 @@ void mergeTopValues(TopValues *localSols, int nTotal, TopValues *globalTopValues
 	int arr2[6 * nTotal], rec2[6 * sum];
 	
 	// Marshaling of the data to be transferred
-	marshalTopValues(localSols, arr1, arr2);
+	marshalTopValues(inputTopValues, arr1, arr2);
 
 	MPI_Status st;
 
@@ -6122,20 +6091,23 @@ void mergeTopValues(TopValues *localSols, int nTotal, TopValues *globalTopValues
 	MPI_Bcast(rec1, sum * 23, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 	MPI_Bcast(rec2, sum * 6, MPI_INT, 0, MPI_COMM_WORLD);
 
-	vector<ValuePosition3D> localSols2 = unmarshalTopValues(rec1, rec2, sum);
+	vector<ValuePosition3D> inputTopValues2 = unmarshalTopValues(rec1, rec2, sum);
 
 	// Reconstructs the TopValues structure
-	for(int i = 0; i < localSols2.size(); ++i)
-		globalTopValuesT->updateTopValues( localSols2[i] );
+	for(int i = 0; i < inputTopValues2.size(); ++i)
+		outputTopValues->updateTopValues( inputTopValues2[i] );
 
+	return outputTopValues;
 }
 
 // Merges and scatter the TopValues
-void scatterTopValues(TopValues *localSols, TopValues *globalTopValuesT){
+TopValues* scatterTopValues(TopValues *inputTopValues, int topValSize, int numFreq){
 
 	// Scattering of the data
 	int chunk, excess, sendcount1[np], sendcount2[np], displs1[np], displs2[np];
-	int size = localSols->getCurrentNumberOfPositions();
+	int size = inputTopValues->getCurrentNumberOfPositions();
+
+	TopValues *outputTopValues = new TopValues (topValSize, numFreq);
 
 	double arr1[size * 23], *rec1;
 	int arr2[size * 6], *rec2;
@@ -6164,9 +6136,10 @@ void scatterTopValues(TopValues *localSols, TopValues *globalTopValuesT){
 		}
 	}
 
-	marshalTopValues(localSols, arr1, arr2);
+	marshalTopValues(inputTopValues, arr1, arr2);
 
 	// MPI scattering
+	// TODO: tentar eliminar estes bcasts
 	MPI_Bcast(sendcount1, np, MPI_INT, 0, MPI_COMM_WORLD);
 	MPI_Bcast(sendcount2, np, MPI_INT, 0, MPI_COMM_WORLD);
 
@@ -6176,13 +6149,253 @@ void scatterTopValues(TopValues *localSols, TopValues *globalTopValuesT){
 	MPI_Scatterv(arr1, sendcount1, displs1, MPI_DOUBLE, rec1, sendcount1[rank], MPI_DOUBLE, 0, MPI_COMM_WORLD);
 	MPI_Scatterv(arr2, sendcount2, displs2, MPI_INT, rec2, sendcount2[rank], MPI_INT, 0, MPI_COMM_WORLD);
 
-	vector<ValuePosition3D> localSols2 = unmarshalTopValues(rec1, rec2, sendcount1[rank]/23);
+	vector<ValuePosition3D> inputTopValues2 = unmarshalTopValues(rec1, rec2, sendcount1[rank]/23);
 
 	// Reconstructs the TopValues structure
-	for(int i = 0; i < localSols2.size(); ++i)
-		globalTopValuesT->updateTopValues( localSols2[i] );
+	for(int i = 0; i < inputTopValues2.size(); ++i)
+		outputTopValues->updateTopValues( inputTopValues2[i] );
 
+	return outputTopValues;
 }
+
+// Merges the rotations from all processes and broadcasts the merged list
+void gatherRotations(PARAMS *pr){
+
+	int total, recvcount[np], displs[np];
+	float *rots;
+
+	MPI_Allreduce(&pr->pri->numberOfRotations, &total, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+
+	rots = new float [total * 9];
+
+	int chunk = total / np;
+	int excess = total - chunk * np;
+
+	// Calculates the sendcount and displacements arrays for the rotations
+	// that each process uses
+	for(int j = 0; j < np; ++j){
+		if(excess){
+			recvcount[j] = chunk + 1;
+			--excess;
+		}else{
+			recvcount[j] = chunk;
+		}
+
+		recvcount[j] *= 9;
+
+		if(j == 0)
+			displs[j] = 0;
+		else
+			displs[j] = displs[j - 1] + recvcount[j - 1];
+	}
+
+	MPI_Allgatherv(pr->pri->rotations, pr->pri->numberOfRotations, MPI_FLOAT, rots, recvcount, displs, MPI_FLOAT, MPI_COMM_WORLD);
+
+	pr->pri->rotations = rots;
+	pr->pri->numberOfRotations = total;
+}
+
+void printParams(PARAMS pr){
+	ofstream outFile;
+
+	switch (rank){
+		case 0: outFile.open("Params_0.txt", ios::out | ios::trunc); break;
+		case 1: outFile.open("Params_1.txt", ios::out | ios::trunc); break;
+		case 2: outFile.open("Params_2.txt", ios::out | ios::trunc); break;
+		case 3: outFile.open("Params_3.txt", ios::out | ios::trunc); break;
+	}
+
+	if (outFile.is_open()){
+		outFile << "Data on the PARAMS structure of process " << rank << endl << endl;
+
+		outFile << "threadID\t\t" << pr.threadID << endl;
+		outFile << "breakDownScores\t\t" << pr.breakDownScores << endl;
+		outFile << "numberOfPositions\t\t" << pr.numberOfPositions << endl;
+		outFile << "gridSize\t\t" << pr.gridSize << endl;
+		outFile << "numFreq\t\t" << pr.numFreq << endl;
+		outFile << "interpFuncExtent\t\t" << pr.interpFuncExtent << endl;
+		outFile << "alpha\t\t" << pr.alpha << endl;
+		outFile << "blobbiness\t\t" << pr.blobbiness << endl;
+		outFile << "skinSkinWeight\t\t" << pr.skinSkinWeight << endl;
+		outFile << "coreCoreWeight\t\t" << pr.coreCoreWeight << endl;
+		outFile << "skinCoreWeight\t\t" << pr.skinCoreWeight << endl;
+		outFile << "realSCWeight\t\t" << pr.realSCWeight << endl;
+		outFile << "imaginarySCWeight\t\t" << pr.imaginarySCWeight << endl;
+		outFile << "elecScale\t\t" << pr.elecScale << endl;
+		outFile << "elecRadiusInGrids\t\t" << pr.elecRadiusInGrids << endl;
+		outFile << "hbondWeight\t\t" << pr.hbondWeight << endl;
+		outFile << "hbondDistanceCutoff\t\t" << pr.hbondDistanceCutoff << endl;
+		outFile << "hydrophobicityWeight\t\t" << pr.hydrophobicityWeight << endl;
+		outFile << "hydroPhobicPhobicWeight\t\t" << pr.hydroPhobicPhobicWeight << endl;
+		outFile << "hydroPhilicPhilicWeight\t\t" << pr.hydroPhilicPhilicWeight << endl;
+
+		outFile << "hydroPhobicPhilicWeight\t\t" << pr.hydroPhobicPhilicWeight << endl;
+		outFile << "simpleShapeWeight\t\t" << pr.simpleShapeWeight << endl;
+		outFile << "simpleChargeWeight\t\t" << pr.simpleChargeWeight << endl;
+		outFile << "scaleA\t\t" << pr.scaleA << endl;
+		outFile << "functionScaleFactor\t\t" << pr.functionScaleFactor << endl;
+		outFile << "gridFactor\t\t" << pr.gridFactor << endl;
+		outFile << "numberOfRotations\t\t" << pr.numberOfRotations << endl;
+		outFile << "numCentersA\t\t" << pr.numCentersA << endl;
+		outFile << "numCentersB\t\t" << pr.numCentersB << endl;
+		outFile << "rotateVolume\t\t" << pr.rotateVolume << endl;
+		outFile << "numNonzeroGridBCells\t\t" << pr.numNonzeroGridBCells << endl;
+		outFile << "numNonzeroGridBCells_01\t\t" << pr.numNonzeroGridBCells_01 << endl;
+		outFile << "numNonzeroGridBCells_10\t\t" << pr.numNonzeroGridBCells_10 << endl;
+		outFile << "numNonzeroGridBCells_11\t\t" << pr.numNonzeroGridBCells_11 << endl;
+		outFile << "numNonzeroElecGridBCells\t\t" << pr.numNonzeroElecGridBCells << endl;
+		outFile << "numNonzeroHbondGridBCells\t\t" << pr.numNonzeroHbondGridBCells << endl;
+		outFile << "numNonzeroHydrophobicityGridBCells\t\t" << pr.numNonzeroHydrophobicityGridBCells << endl;
+		outFile << "numNonzeroHydrophobicityTwoGridBCells\t\t" << pr.numNonzeroHydrophobicityTwoGridBCells << endl;
+		outFile << "numNonzeroSimpleComplementarityGridBCells\t\t" << pr.numNonzeroSimpleComplementarityGridBCells << endl;
+		outFile << "smoothSkin\t\t" << pr.smoothSkin << endl;
+		outFile << "pGsolAvg\t\t" << pr.pGsolAvg << endl;
+		outFile << "nbRMSDAtoms\t\t" << pr.nbRMSDAtoms << endl;
+
+		MPI_Finalize();
+		exit(0);
+	} else {
+		cout << "Could not create the output file" << endl;
+		MPI_Finalize();
+		exit(0);
+	}
+}
+
+void printParams(PARAMS_IN pr){
+	ofstream outFile;
+
+	switch (rank){
+		case 0: outFile.open("Params_in_0.txt", ios::out | ios::trunc); break;
+		case 1: outFile.open("Params_in_1.txt", ios::out | ios::trunc); break;
+		case 2: outFile.open("Params_in_2.txt", ios::out | ios::trunc); break;
+		case 3: outFile.open("Params_in_3.txt", ios::out | ios::trunc); break;
+	}
+
+	if (outFile.is_open()){
+		outFile << "Data on the PARAMS_IN structure of process " << rank << endl << endl;
+
+		outFile << "performDocking\t\t" << pr.performDocking << endl;
+		outFile << "numThreads\t\t" << pr.numThreads << endl;
+		outFile << "breakDownScores\t\t" << pr.breakDownScores << endl;
+		outFile << "numberOfPositions\t\t" << pr.numberOfPositions << endl;
+		outFile << "gridSize\t\t" << pr.gridSize << endl;
+		outFile << "gridSizeSpecified\t\t" << pr.gridSizeSpecified << endl;
+		outFile << "gridSpacing\t\t" << pr.gridSpacing << endl;
+		outFile << "enforceExactGridSpacing\t\t" << pr.enforceExactGridSpacing << endl;
+		outFile << "gridSpacingSpecified\t\t" << pr.gridSpacingSpecified << endl;
+		outFile << "interpFuncExtentInAngstroms\t\t" << pr.interpFuncExtentInAngstroms << endl;
+		outFile << "numFreq\t\t" << pr.numFreq << endl;
+		outFile << "numFreqSpecified\t\t" << pr.numFreqSpecified << endl;
+		outFile << "smoothSkin\t\t" << pr.smoothSkin << endl;
+		outFile << "singleLayerLigandSkin\t\t" << pr.singleLayerLigandSkin << endl;
+		outFile << "pseudoAtomRadius\t\t" << pr.pseudoAtomRadius << endl;
+		outFile << "pseudoAtomDistance\t\t" << pr.pseudoAtomDistance << endl;
+		outFile << "rotateVolume\t\t" << pr.rotateVolume << endl;
+		outFile << "dockVolume\t\t" << pr.dockVolume << endl;
+		outFile << "useSparseFFT\t\t" << pr.useSparseFFT << endl;
+		outFile << "narrowBand\t\t" << pr.narrowBand << endl;
+
+		outFile << "numEfficientGridSizes\t\t" << pr.numEfficientGridSizes << endl;
+		outFile << "minEffGridSize\t\t" << pr.minEffGridSize << endl;
+		outFile << "maxEffGridSize\t\t" << pr.maxEffGridSize << endl;
+		outFile << "numCentersA\t\t" << pr.numCentersA << endl;
+		outFile << "numCentersB\t\t" << pr.numCentersB << endl;
+		outFile << "numberOfRotations\t\t" << pr.numberOfRotations << endl;
+		outFile << "distanceCutoff\t\t" << pr.distanceCutoff << endl;
+		outFile << "alpha\t\t" << pr.alpha << endl;
+		outFile << "blobbiness\t\t" << pr.blobbiness << endl;
+		outFile << "blobbinessSpecified\t\t" << pr.blobbinessSpecified << endl;
+		outFile << "skinSkinWeight\t\t" << pr.skinSkinWeight << endl;
+		outFile << "coreCoreWeight\t\t" << pr.coreCoreWeight << endl;
+		outFile << "skinCoreWeight\t\t" << pr.skinCoreWeight << endl;
+		outFile << "realSCWeight\t\t" << pr.realSCWeight << endl;
+		outFile << "imaginarySCWeight\t\t" << pr.imaginarySCWeight << endl;
+		outFile << "elecKernelVoidRad\t\t" << pr.elecKernelVoidRad << endl;
+		outFile << "elecKernelDistLow\t\t" << pr.elecKernelDistLow << endl;
+		outFile << "elecKernelDistHigh\t\t" << pr.elecKernelDistHigh << endl;
+		outFile << "elecKernelValLow\t\t" << pr.elecKernelValLow << endl;
+		outFile << "elecKernelValHigh\t\t" << pr.elecKernelValHigh << endl;
+		outFile << "elecScale\t\t" << pr.elecScale << endl;
+		outFile << "elecRadiusInGrids\t\t" << pr.elecRadiusInGrids << endl;
+
+		outFile << "hbondWeight\t\t" << pr.hbondWeight << endl;
+		outFile << "hbondDistanceCutoff\t\t" << pr.hbondDistanceCutoff << endl;
+		outFile << "hydrophobicityWeight\t\t" << pr.hydrophobicityWeight << endl;
+		outFile << "hydrophobicityProductWeight\t\t" << pr.hydrophobicityProductWeight << endl;
+		outFile << "hydroRatioTolerance\t\t" << pr.hydroRatioTolerance << endl;
+		outFile << "hydroMinRatio\t\t" << pr.hydroMinRatio << endl;
+		outFile << "hydroRatioNumeratorLow\t\t" << pr.hydroRatioNumeratorLow << endl;
+		outFile << "hydroRatioNumeratorHigh\t\t" << pr.hydroRatioNumeratorHigh << endl;
+		outFile << "hydroRatioDenominatorLow\t\t" << pr.hydroRatioDenominatorLow << endl;
+		outFile << "hydroRatioDenominatorHigh\t\t" << pr.hydroRatioDenominatorHigh << endl;
+		outFile << "twoWayHydrophobicity\t\t" << pr.twoWayHydrophobicity << endl;
+		outFile << "hydroPhobicPhobicWeight\t\t" << pr.hydroPhobicPhobicWeight << endl;
+		outFile << "hydroPhilicPhilicWeight\t\t" << pr.hydroPhilicPhilicWeight << endl;
+		outFile << "hydroPhobicPhilicWeight\t\t" << pr.hydroPhobicPhilicWeight << endl;
+		outFile << "hydroRadExt\t\t" << pr.hydroRadExt << endl;
+		outFile << "useInterfacePropensity\t\t" << pr.useInterfacePropensity << endl;
+		outFile << "perResidueHydrophobicity\t\t" << pr.perResidueHydrophobicity << endl;
+		outFile << "numTopHydrophobicResidues\t\t" << pr.numTopHydrophobicResidues << endl;
+		outFile << "staticMolHydroDistCutoff\t\t" << pr.staticMolHydroDistCutoff << endl;
+		outFile << "simpleShapeWeight\t\t" << pr.simpleShapeWeight << endl;
+		outFile << "simpleChargeWeight\t\t" << pr.simpleChargeWeight << endl;
+		outFile << "simpleRadExt\t\t" << pr.simpleRadExt << endl;
+
+		outFile << "clashWeight\t\t" << pr.clashWeight << endl;
+		outFile << "scoreScaleUpFactor\t\t" << pr.scoreScaleUpFactor << endl;
+		outFile << "bandwidth\t\t" << pr.bandwidth << endl;
+		outFile << "gradFactor\t\t" << pr.gradFactor << endl;
+		outFile << "curvatureWeightedStaticMol\t\t" << pr.curvatureWeightedStaticMol << endl;
+		outFile << "curvatureWeightedMovingMol\t\t" << pr.curvatureWeightedMovingMol << endl;
+		outFile << "curvatureWeightingRadius\t\t" << pr.curvatureWeightingRadius << endl;
+		outFile << "spreadReceptorSkin\t\t" << pr.spreadReceptorSkin << endl;
+		outFile << "randomRotate\t\t" << pr.randomRotate << endl;
+		outFile << "pruneAngle\t\t" << pr.pruneAngle << endl;
+		outFile << "centroidxB\t\t" << pr.centroidxB << endl;
+		outFile << "centroidyB\t\t" << pr.centroidyB << endl;
+		outFile << "centroidzB\t\t" << pr.centroidzB << endl;
+		outFile << "bboxXBMin\t\t" << pr.bboxXBMin << endl;
+		outFile << "bboxYBMin\t\t" << pr.bboxYBMin << endl;
+		outFile << "bboxZBMin\t\t" << pr.bboxZBMin << endl;
+		outFile << "bboxXBMax\t\t" << pr.bboxXBMax << endl;
+		outFile << "bboxYBMax\t\t" << pr.bboxYBMax << endl;
+		outFile << "bboxZBMax\t\t" << pr.bboxZBMax << endl;
+		outFile << "forbiddenBBoxXMin\t\t" << pr.forbiddenBBoxXMin << endl;
+		outFile << "forbiddenBBoxYMin\t\t" << pr.forbiddenBBoxYMin << endl;
+		outFile << "forbiddenBBoxZMin\t\t" << pr.forbiddenBBoxZMin << endl;
+
+		outFile << "forbiddenBBoxXMax\t\t" << pr.forbiddenBBoxXMax << endl;
+		outFile << "forbiddenBBoxYMax\t\t" << pr.forbiddenBBoxYMax << endl;
+		outFile << "forbiddenBBoxZMax\t\t" << pr.forbiddenBBoxZMax << endl;
+		outFile << "nbRMSDAtoms\t\t" << pr.nbRMSDAtoms << endl;
+		outFile << "vdWGridSize\t\t" << pr.vdWGridSize << endl;
+		outFile << "compQuadVdW\t\t" << pr.compQuadVdW << endl;
+		outFile << "surfaceBasedVdW\t\t" << pr.surfaceBasedVdW << endl;
+		outFile << "applyVdWFilter\t\t" << pr.applyVdWFilter << endl;
+		outFile << "vdWCutoffLow\t\t" << pr.vdWCutoffLow << endl;
+		outFile << "vdWCutoffHigh\t\t" << pr.vdWCutoffHigh << endl;
+		outFile << "vdWEqmRadScale\t\t" << pr.vdWEqmRadScale << endl;
+		outFile << "vdWWellWidth\t\t" << pr.vdWWellWidth << endl;
+		outFile << "vdWTolerance\t\t" << pr.vdWTolerance << endl;
+		outFile << "applyClashFilter\t\t" << pr.applyClashFilter << endl;
+		outFile << "applyForbiddenVolumeFilter\t\t" << pr.applyForbiddenVolumeFilter << endl;
+		outFile << "eqmDistFrac\t\t" << pr.eqmDistFrac << endl;
+		outFile << "clashTolerance\t\t" << pr.clashTolerance << endl;
+		outFile << "forbiddenVolClashTolerance\t\t" << pr.forbiddenVolClashTolerance << endl;
+		outFile << "forbiddenVolumeFileType\t\t" << pr.forbiddenVolumeFileType << endl;
+		outFile << "applyMiscFilter\t\t" << pr.applyMiscFilter << endl;
+		outFile << "filterDepth\t\t" << pr.filterDepth << endl;
+		outFile << "applyPseudoGsolFilter\t\t" << pr.applyPseudoGsolFilter << endl;
+
+		MPI_Finalize();
+		exit(0);
+	} else {
+		cout << "Could not create the output file" << endl;
+		MPI_Finalize();
+		exit(0);
+	}
+}
+
 
 int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 {
@@ -7433,12 +7646,13 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 		}
 
 	}
-	// All processes write on stdout
-	if(rank){
-		freopen("/dev/tty", "w", stdout);
-	}
 
-	// TODO: Bcast of the inputs p and prT
+	// All processes write on stdout
+	
+	/*if(rank){
+		fflush(stdout);
+		dup2(desc, STDOUT_FILENO);
+	}*/
 
 	for ( int i = 0; i < numThreads; i++ )
 		pthread_create( &p[ i ], NULL, startApplyRotationsThread, ( void * ) &prT[ i ] );
@@ -7454,19 +7668,16 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 		for ( int i = 0; i < numThreads; i++ )
 			delete prT[ i ].clustPG;
 	}
-
+	
 	// Merge localTopValues
-	TopValues *lTopValuesMerged[numThreads];
-
 	for (int i = 0; i < numThreads; ++i) {
-		lTopValuesMerged[i] = new TopValues(numberOfPositions, numFreq);
-		mergeTopValues(localTopValues[i], localTopValues[i]->getCurrentNumberOfPositions(), lTopValuesMerged[i]);
+		localTopValues[i] = mergeTopValues(localTopValues[i], np * numThreads * numberOfPositions, numFreq);
+		//gatherRotations(&prT[i]);
 	}
-
-	localTopValues = lTopValuesMerged;
 
 	// From this point localTopValues is the same on every process leading
 	// to the same globalTopValues
+	//if(!rank) // remover
 	if ( !scoreUntransformed )
 	{
 		if ( clusterRotRad > 0  )
@@ -7602,9 +7813,6 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 			
 			globalTopValuesT = new TopValues( np * numThreads * numberOfPositions, numFreq );
 
-			// All the solutions local to a process
-			vector<ValuePosition3D> localSols;
-
 			for ( int i = 0; i < numThreads; i++ )
 			{
 				printf("# \n# PROCESS %d PROCESSING THREAD = %d\n# \n", rank, i + 1 );
@@ -7620,30 +7828,33 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 
 					sol.m_Value = - sol.m_Value;
 			
-					//localSols.push_back( sol );
 					globalTopValuesT->updateTopValues( sol );
 				}
 			}
-			TopValues* globalTopValuesTScattered = new TopValues( np * numThreads * numberOfPositions, numFreq );
 
 			// Merges the TopValues from each process and broadcasts them to all
-			//transferData(localSols, localSols.size(), globalTopValuesT);
 			// EDIT: since they are merged only the scatter is needed
-
 			// Scatter the TopValues to sub vectors
-			scatterTopValues(globalTopValuesT, globalTopValuesTScattered);
-
-			globalTopValuesT = globalTopValuesTScattered;
+			globalTopValuesT = scatterTopValues(globalTopValuesT, np * numThreads * numberOfPositions, numFreq);
 
 			// Assuming that globalTopValues is empty
 			filterPoses( &prT[ 0 ], globalTopValuesT, globalTopValues, numFreq, scale, translate_A, translate_B,
 					rotations, functionScaleFactor, randRot );
 
 			// After filterPoses the globalTopValues are merged again
-			mergeTopValues(globalTopValuesT, globalTopValuesT->getCurrentNumberOfPositions(), globalTopValuesTScattered);
-			globalTopValuesT = globalTopValuesTScattered;
+			globalTopValuesT = mergeTopValues(globalTopValuesT, np * numThreads * numberOfPositions, numFreq);
 
-			// MAIS TESTES AQUI
+			/*if(!rank){
+				int x = globalTopValuesT->getCurrentNumberOfPositions();
+				for (int i = 0; i < x; ++i){
+					ValuePosition3D sol;
+					globalTopValuesT->extractMin(sol);
+					cout << "RANK " << rank << " - " << sol.m_Value << " -> " << x << endl;
+				}
+			}*/
+			//MPI_Finalize();
+			//exit(0);
+
 		
 			if ( clusterTransRad > 0 )
 			{
@@ -7709,9 +7920,9 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 			if ( pr->rerank )
 			{
 				// TODO: MPI Parallelization
-				// Dividir numrerank e os TopValues pelos processos
-				int chunk, excess;
+				int chunk, excess, temp;
 
+				temp = prT[0].pri->numRerank;
 				chunk = prT[0].pri->numRerank / np;
 				excess = prT[0].pri->numRerank - chunk * np;
 
@@ -7720,37 +7931,32 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 						++chunk;
 				}
 
+				ValuePosition3D sol;
+
 				prT[0].pri->numRerank = chunk;
 
-				TopValues* globalTopValuesScattered = new TopValues( np * numThreads * numberOfPositions, numFreq );
-
 				// Scatter the TopValues to sub vectors
-				scatterTopValues(globalTopValues, globalTopValuesScattered);
-
-				globalTopValues = globalTopValuesScattered;
-
-
-
+				globalTopValues = scatterTopValues(globalTopValues, np * numThreads * numberOfPositions, numFreq);
 
 				rerankPoses( &prT[ 0 ], globalTopValues );
 
 				// Merge globalTopValues
-				mergeTopValues(globalTopValues, globalTopValues->getCurrentNumberOfPositions(), globalTopValuesScattered);
-
-				globalTopValues = globalTopValuesScattered;
-				// Debug code
-				//cout << "Rank " << rank << " - " << globalTopValues->getCurrentNumberOfPositions() <<endl;
-				//MPI_Finalize();
-				//exit(0);
+				globalTopValues = mergeTopValues(globalTopValues, np * numThreads * numberOfPositions, numFreq);
+				//prT[0].pri->numRerank = temp;
+				// Merge prts
 			}
 		}
 	}
-
 	// Only root process writes on stdout
-	if(rank)
-		fclose(stdout);
+	
+	/*if(rank){
+		fflush(stdout);
+		dup2(NULL, STDOUT_FILENO);
+	}*/
+	
 
 	// Free some of the memory allocated for the FFTs
+	//if(!rank){ // remover
 	FFTW_free( fkB );
 	if ( elecScale != 0 ) 
 		FFTW_free( fkBElec );
@@ -7782,12 +7988,14 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 
 	if ( !scoreUntransformed )
 	{
+		if(!rank){
 		printf("# \n# Computation Time = %f sec\n# ", getTime() - mainStartTime);
 
-		fprintf( fpOpt, (char *)"# computation time = %f sec\n# \n# ", getTime() - mainStartTime);
+			fprintf( fpOpt, (char *)"# computation time = %f sec\n# \n# ", getTime() - mainStartTime);
+			fprintf( fpOpt, (char *)"# center of the 2nd protein:\n# \n# " );
+			fprintf( fpOpt, (char *)"     conformation 0: %f %f %f\n# ", -translate_B[0], -translate_B[1], -translate_B[2] );
+		}
 
-		fprintf( fpOpt, (char *)"# center of the 2nd protein:\n# \n# " );
-		fprintf( fpOpt, (char *)"     conformation 0: %f %f %f\n# ", -translate_B[0], -translate_B[1], -translate_B[2] );
 		printf( "\n# " );
 	}
 
@@ -7808,12 +8016,16 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 	if ( !scoreUntransformed )
 	{
 		prT[ 0 ].localTopValues = globalTopValues;
-		printIntermediateStats( fpOpt, 20, 5, &prT[ 0 ] );
+
+		//if(!rank)
+			printIntermediateStats( fpOpt, 20, 5, &prT[ 0 ] );
 	}
 	else
 	{
 		prT[ 0 ].localTopValues = localTopValues[ 0 ];
-		printUntransformedScore( fpOpt, &prT[ 0 ] );
+
+		//if(!rank)
+			printUntransformedScore( fpOpt, &prT[ 0 ] );
 	}
 
 	fflush( fpOpt );
@@ -7973,7 +8185,7 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 
 		fprintf( fpOpt, (char *)"\n# total time = %f sec\n# ", getTime( ) - mainStartTime);
 	}
-
+	//}
 	fclose( fpOpt );
 
 	return 0;

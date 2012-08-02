@@ -23,6 +23,8 @@ mpi.h
 -
 unistd.h
 -
+fstream
+-
 
 src/f2dock/../../inc/PG-range/1D-IntegerRange.h
 cuckoo.h

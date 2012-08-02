@@ -33,7 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 #include <mpi.h>
 #include <unistd.h>
 // Global MPI variables
-int rank, np;
+int rank, np, desc;
 
 using namespace std;
 
@@ -193,9 +193,12 @@ bool readRotationsMPI(char *rotationFile, PARAMS_IN *p)
 
 	// Scatters the rotations that each process has to execute
 	MPI_Scatterv(rotations, sendcount, displs, MPI_FLOAT, rotations2, sendcount[rank], MPI_FLOAT, 0, MPI_COMM_WORLD);
+	//MPI_Bcast(rotations, numberOfRotations, MPI_FLOAT, 0, MPI_COMM_WORLD);
 
 	p->rotations = rotations2;
 	p->numberOfRotations = sendcount[rank] / 9;
+	//p->rotations = rotations;
+	//p->numberOfRotations = numberOfRotations;
 
 	delete [] rotations;
 
@@ -1469,7 +1472,6 @@ bool setParamFromFile(PARAMS_IN *p, char *paramFile)
 					p->numberOfRotations = ival;
 			} else if (strcasecmp(key, "rotFile")==0) {
 						readRotationsMPI(val, p);
-
 			} else if (strcasecmp(key, "outFile")==0) {
 				p->outputFilename = strdup(val);
 
@@ -2302,8 +2304,12 @@ int main( int argc, char* argv[] )
 	MPI_Comm_size(MPI_COMM_WORLD, &np);
 
 	// Only root process writes on stdout
-	if(rank)
-		fclose(stdout);
+	
+	/*if(rank){
+		desc = dup(STDOUT_FILENO);
+		dup2(NULL, STDOUT_FILENO);
+	}*/
+	
 
 	char *fixedMolFileName, *movingMolFileName, paramFileName[256];
 	
