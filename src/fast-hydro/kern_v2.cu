@@ -466,14 +466,13 @@ __device__ void block_sum(double *input, double *results, int n)
 */
 
 
-__global__ void kern(/*static stuff*/ball_cuda *ballsStatic, int *totBallsStatic, int *offsetStatic, double *transI, double *pGsolStatic, double *pGsolHStaticPos, double *pGsolHStaticNeg, bool *staticQPointsOctreeFlags, QPOINTS_OCTREE_NODE_CUDA *staticQPointsOctree, QPOINT_CUDA *staticQPoints, int *numStaticQPointsOctreeNodes,  double *TRANSLATEstatic, double *DIMstatic, int *rangeCountStatic, double *distanceCutoff /*moving stuff*/, ball_cuda *ballsMoving, int *totBallsMoving, int *offsetMoving, double *trans, double *pGsolMoving, double *pGsolHMovingPos, double *pGsolHMovingNeg, bool *movingQPointsOctreeFlags, QPOINTS_OCTREE_NODE_CUDA *movingQPointsOctree, QPOINT_CUDA *movingQPoints, int *numMovingQPointsOctreeNodes,  double *TRANSLATEmoving, double *DIMmoving, int *rangeCountMoving /*others*/)//, double *pGsol_scalar_d, double *pGsolHStaticPos_scalar_d, double *pGsolHStaticNeg_scalar_d, double *pGsolHMovingPos_scalar_d, double *pGsolHMovingNeg_scalar_d)
+__global__ void kern1(/*static stuff*/ball_cuda *ballsStatic, int *totBallsStatic, int *offsetStatic, double *transI, double *pGsolStatic, double *pGsolHStaticPos, double *pGsolHStaticNeg, bool *staticQPointsOctreeFlags, QPOINTS_OCTREE_NODE_CUDA *staticQPointsOctree, QPOINT_CUDA *staticQPoints, int *numStaticQPointsOctreeNodes,  double *TRANSLATEstatic, double *DIMstatic, int *rangeCountStatic, double *distanceCutoff /*moving stuff*/, ball_cuda *ballsMoving, int *totBallsMoving, int *offsetMoving, double *trans, double *pGsolMoving, double *pGsolHMovingPos, double *pGsolHMovingNeg, bool *movingQPointsOctreeFlags, QPOINTS_OCTREE_NODE_CUDA *movingQPointsOctree, QPOINT_CUDA *movingQPoints, int *numMovingQPointsOctreeNodes,  double *TRANSLATEmoving, double *DIMmoving, int *rangeCountMoving /*others*/)//, double *pGsol_scalar_d, double *pGsolHStaticPos_scalar_d, double *pGsolHStaticNeg_scalar_d, double *pGsolHMovingPos_scalar_d, double *pGsolHMovingNeg_scalar_d)
 //__global__ void  kern(struct static_params *statP)
 {
 		//printf("ola\n");
 
 
-		if (blockIdx.x == 0)
-		{
+
 			__shared__ grid_cuda movingGrid;
 
 			if (threadIdx.x == 0)
@@ -482,12 +481,19 @@ __global__ void kern(/*static stuff*/ball_cuda *ballsStatic, int *totBallsStatic
 			__syncthreads();
 
 			pseudoGsolStatic(&movingGrid, offsetStatic, transI, pGsolStatic, pGsolHStaticPos, pGsolHStaticNeg, staticQPointsOctreeFlags, staticQPointsOctree, staticQPoints, numStaticQPointsOctreeNodes, TRANSLATEstatic, DIMstatic, rangeCountStatic, distanceCutoff);
+
+
+
+
 		}
 
-//		printf("threadID %d\n", threadIdx.x);	
-		
-		if (blockIdx.x == 1)
-		{
+
+__global__ void kern2(/*static stuff*/ball_cuda *ballsStatic, int *totBallsStatic, int *offsetStatic, double *transI, double *pGsolStatic, double *pGsolHStaticPos, double *pGsolHStaticNeg, bool *staticQPointsOctreeFlags, QPOINTS_OCTREE_NODE_CUDA *staticQPointsOctree, QPOINT_CUDA *staticQPoints, int *numStaticQPointsOctreeNodes,  double *TRANSLATEstatic, double *DIMstatic, int *rangeCountStatic, double *distanceCutoff /*moving stuff*/, ball_cuda *ballsMoving, int *totBallsMoving, int *offsetMoving, double *trans, double *pGsolMoving, double *pGsolHMovingPos, double *pGsolHMovingNeg, bool *movingQPointsOctreeFlags, QPOINTS_OCTREE_NODE_CUDA *movingQPointsOctree, QPOINT_CUDA *movingQPoints, int *numMovingQPointsOctreeNodes,  double *TRANSLATEmoving, double *DIMmoving, int *rangeCountMoving /*others*/)//, double *pGsol_scalar_d, double *pGsolHStaticPos_scalar_d, double *pGsolHStaticNeg_scalar_d, double *pGsolHMovingPos_scalar_d, double *pGsolHMovingNeg_scalar_d)
+//__global__ void  kern(struct static_params *statP)
+{
+		//printf("ola\n");
+
+
 
 			__shared__ grid_cuda staticGrid;
 
@@ -497,25 +503,6 @@ __global__ void kern(/*static stuff*/ball_cuda *ballsStatic, int *totBallsStatic
 			__syncthreads();
 
 			pseudoGsolMoving(offsetMoving, trans, pGsolMoving, pGsolHMovingPos, pGsolHMovingNeg, movingQPointsOctreeFlags, movingQPointsOctree, movingQPoints, numMovingQPointsOctreeNodes, &staticGrid, distanceCutoff, TRANSLATEmoving, DIMmoving, rangeCountMoving);
-
-		}
-/*
-
-		if (threadIdx.x == 0)
-			printf("CUDA antes *numStaticQPointsOctreeNodes %d\n", *numStaticQPointsOctreeNodes);
-		pGsolStatic[threadIdx.x] = 0;
-		pGsolHStaticPos[threadIdx.x] = 0;
-		pGsolHStaticNeg[threadIdx.x] = 0;
-
-		pseudoGsol_static(offsetStatic, transI, pGsolStatic, pGsolHStaticPos, pGsolHStaticNeg, staticQPointsOctreeFlags, staticQPointsOctree, staticQPoints, numStaticQPointsOctreeNodes, &movingGrid, distanceCutoff, TRANSLATEstatic, DIMstatic, rangeCountStatic);
-
-*/
-
-//		printf("pGsolStatic %lf\n", pGsolStatic[threadIdx.x]);
-//		*pGsol_scalar_d = *pGsolHStaticPos_scalar_d = *pGsolHStaticNeg_scalar_d = *pGsolHMovingPos_scalar_d = *pGsolHMovingNeg_scalar_d = 0;
-
-//s		__syncthreads();
-
 
 }
 
@@ -764,12 +751,10 @@ cudaError_t cudaMemcpyAsync 	( 	void *  	dst,
 
 // call Kernel ---------------------
 
-		int numBlocks = 2;
+		int numBlocks = 1;
 		int threadsPerBlock;
-		if ( numMovingQPointsOctreeNodes > numStaticQPointsOctreeNodes)
-			threadsPerBlock = numMovingQPointsOctreeNodes;
-		else
-			threadsPerBlock = numStaticQPointsOctreeNodes;
+
+		threadsPerBlock = numStaticQPointsOctreeNodes;
 
 //		int threadsPerBlock = 1;
 
@@ -779,9 +764,11 @@ cudaError_t cudaMemcpyAsync 	( 	void *  	dst,
 
 		printf("calling... %d\n", threadsPerBlock);
 
-		kern<<< numBlocks,threadsPerBlock >>>(arrayMoving_d, totBallsMoving_d, &(statS_d->offset), transI_d, pGsolStatic_d, pGsolHStaticPos_d, pGsolHStaticNeg_d, staticQPointsOctreeFlags_d, staticQPointsOctree_d, staticQPoints_d, &(statS_d->numStaticQPointsOctreeNodes), &(statS_d->TRANSLATE), &(statS_d->DIM), &(statS_d->rangeCount), &(statS_d->distanceCutoff), arrayStatic_d, totBallsStatic_d, &(statM_d->offset), trans_d, pGsolMoving_d, pGsolHMovingPos_d, pGsolHMovingNeg_d, movingQPointsOctreeFlags_d, movingQPointsOctree_d, movingQPoints_d, &(statM_d->numMovingQPointsOctreeNodes), &(statM_d->TRANSLATE), &(statM_d->DIM), &(statM_d->rangeCount));
+		kern1<<< numBlocks,threadsPerBlock >>>(arrayMoving_d, totBallsMoving_d, &(statS_d->offset), transI_d, pGsolStatic_d, pGsolHStaticPos_d, pGsolHStaticNeg_d, staticQPointsOctreeFlags_d, staticQPointsOctree_d, staticQPoints_d, &(statS_d->numStaticQPointsOctreeNodes), &(statS_d->TRANSLATE), &(statS_d->DIM), &(statS_d->rangeCount), &(statS_d->distanceCutoff), arrayStatic_d, totBallsStatic_d, &(statM_d->offset), trans_d, pGsolMoving_d, pGsolHMovingPos_d, pGsolHMovingNeg_d, movingQPointsOctreeFlags_d, movingQPointsOctree_d, movingQPoints_d, &(statM_d->numMovingQPointsOctreeNodes), &(statM_d->TRANSLATE), &(statM_d->DIM), &(statM_d->rangeCount));
 
+	threadsPerBlock = numMovingQPointsOctreeNodes;
 
+	kern2<<< numBlocks,threadsPerBlock >>>(arrayMoving_d, totBallsMoving_d, &(statS_d->offset), transI_d, pGsolStatic_d, pGsolHStaticPos_d, pGsolHStaticNeg_d, staticQPointsOctreeFlags_d, staticQPointsOctree_d, staticQPoints_d, &(statS_d->numStaticQPointsOctreeNodes), &(statS_d->TRANSLATE), &(statS_d->DIM), &(statS_d->rangeCount), &(statS_d->distanceCutoff), arrayStatic_d, totBallsStatic_d, &(statM_d->offset), trans_d, pGsolMoving_d, pGsolHMovingPos_d, pGsolHMovingNeg_d, movingQPointsOctreeFlags_d, movingQPointsOctree_d, movingQPoints_d, &(statM_d->numMovingQPointsOctreeNodes), &(statM_d->TRANSLATE), &(statM_d->DIM), &(statM_d->rangeCount));
 
 //(/*static stuff*/ball_cuda *ballsStatic, int *totBallsStatic, int *offsetStatic, double *transI, double *pGsolStatic, double *pGsolHStaticPos, double *pGsolHStaticNeg, bool *staticQPointsOctreeFlags, QPOINTS_OCTREE_NODE_CUDA *staticQPointsOctree, QPOINT_CUDA *staticQPoints, int *numStaticQPointsOctreeNodes,  double *TRANSLATEstatic, double *DIMstatic, int *rangeCountStatic, double *distanceCutoff /*moving stuff*/, ball_cuda *ballsMoving, int *totBallsMoving, int *offsetMoving, double *trans, double *pGsolMoving, double *pGsolHMovingPos, double *pGsolHMovingNeg, bool *movingQPointsOctreeFlags, QPOINTS_OCTREE_NODE_CUDA *movingQPointsOctree, QPOINT_CUDA *movingQPoints, int *numMovingQPointsOctreeNodes,  double *TRANSLATEmoving, double *DIMmoving, int *rangeCountMoving /*others*/, double *pGsol_scalar_d, double *pGsolHStaticPos_scalar_d, double *pGsolHStaticNeg_scalar_d, double *pGsolHMovingPos_scalar_d, double *pGsolHMovingNeg_scalar_d)
 //__global__ void  kern(struct static_params *statP)
@@ -853,7 +840,7 @@ cudaError_t cudaMemcpyAsync 	( 	void *  	dst,
 
 
 
-printf("CUDA *pGsol, *pGsolHStaticPos, *pGsolHStaticNeg, *pGsolHMovingPos, *pGsolHMovingNeg %lf %lf %lf %lf %lf\n", sPgSt+sPgMov, sPosSt, sNegSt, sPosMov, sPosMov);
+printf("CUDA *pGsol, *pGsolHStaticPos, *pGsolHStaticNeg, *pGsolHMovingPos, *pGsolHMovingNeg %lf %lf %lf %lf %lf\n", sPgSt+sPgMov, sPosSt, sNegSt, sPosMov, sNegMov);
 
 
 
@@ -948,8 +935,6 @@ vector<ball_cuda> convertGrid(PG *grid_)
 		grid1 = g1.RR.report(grid_init, grid_end);
 
 		
-		// count the total number of balls
-		
 		// goes through all planes
 		for (int i = 0; i < nPlanes; i++)
 		{
@@ -959,39 +944,24 @@ vector<ball_cuda> convertGrid(PG *grid_)
 			nLines = (plane1.ptr)->RR.getn();
 //			printf(" nLines %d\n", nLines);
 			
-//			plane_init =(plane1.ptr)->RR.getRepMap().at(0); 
-//			plane_end = (plane1.ptr)->RR.getRepMap().at(nLines-1);
-
 			plane_init =(plane1.ptr)->RR.getOverallMin(); 
 			plane_end = (plane1.ptr)->RR.getOverallMax();
 
 			plane2 = (plane1.ptr)->RR.report(plane_init, plane_end);
-			
-	//		printf("min max lines %d %d\n", (plane1.ptr)->RR.getOverallMin(), (plane1.ptr)->RR.getOverallMax());
+
 			// goes through all lines
 			for (int j = 0; j < nLines; j++)
 			{
 				line1 = plane2.at(j);
-
-				//(line1.ptr)->RR.printAll();
 	//			printf("	line ID %d\n", line1.id);
-		
-
-				//vector<BinarySearchTree<tuple<gridcell*> >*> BST3 =  (line1.ptr)->RR.getBST();
-				//printf("print BST3 size %d \n", BST3.size());
 
 				nCells = (line1.ptr)->RR.getn();
 		//		printf("nCells  %d\n", nCells);
-				
-		//		printf("min max cells %d %d\n", (line1.ptr)->RR.getOverallMin(), (line1.ptr)->RR.getOverallMax());
+
 				line_init = (line1.ptr)->RR.getOverallMin(); 
 				line_end = (line1.ptr)->RR.getOverallMax(); 
 				line2 = (line1.ptr)->RR.report(line_init, line_end);
-/*
-				for (int k = 0; k < nCells; k++){
-					printf("line_init = (line1.ptr)->RR.getRepMap().at(k) %d\n", (line1.ptr)->RR.getRepMap().at(k));
-				}
-				*/
+
 				// goes through all cells
 				for (int k = 0; k < nCells; k++)
 				{
@@ -1001,7 +971,6 @@ vector<ball_cuda> convertGrid(PG *grid_)
 
 					nBalls = cell1.ptr->balls.size();
 	//				printf("			nBalls %d\n", nBalls);
-
 
 					// create vector with total number of balls and plane, line, and cell ID
 					//goes through all balls
