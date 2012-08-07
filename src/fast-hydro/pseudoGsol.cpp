@@ -26,6 +26,10 @@
 #endif
 
 #include "pseudoGsol.h"
+  #include <mpi.h>
+  #include <fstream>
+
+  extern int rank;
 
 void pseudoGsol::freeMemory( void )
 {
@@ -93,7 +97,6 @@ void pseudoGsol::processQPoints( void )
        printError( (char *)"Failed to allocate memory!" );  
        exit( 1 );                 
      }
-                 
   double xlatePG = computeXlateForPG( numStaticQPoints, staticQPoints, numMovingQPoints, movingQPoints );
 
   staticPG = new PG( 10.0, xlatePG, 5.0 );  
@@ -140,7 +143,7 @@ void pseudoGsol::processQPoints( void )
      {
        printError( (char *)"Failed to allocate memory!" );  
        exit( 1 );                 
-     }                                 
+     }                            
 }
 
 
@@ -247,8 +250,8 @@ bool pseudoGsol::readQPoints( char *qPtsFile, int *nQPoints, QPOINT **qPoints )
          return false;
         }
 
-      qPt.h = 0;          
-      
+      qPt.h = 0;   
+
       ( *qPoints )[ i ] = qPt;         
      }    
      
@@ -943,7 +946,7 @@ void pseudoGsol::assignHydrophobicityToQPoints( ATOMS_OCTREE_NODE *atomsOctree, 
                           assignHydrophobicityToQPoints( atomsOctree, nodeA, atoms, 
                                                          qPointsOctree, qPointsOctree[ nodeQ ].cPtr[ j ], qPoints, farDist, rangeExt );                         
                    }              
-      }      
+      }       
 }
 
 
@@ -1162,11 +1165,14 @@ void pseudoGsol::collectPseudoGsol( int threadID, double *trans, double *transI,
                if ( staticPG->pointsWithinRange( &q, params.distanceCutoff ) )
                  {
                    ( *pGsol ) += movingQPoints[ j ].w;
+                   //cout << "rank " << rank << " " << movingQPoints[ j ].h << endl;
                    if ( movingQPoints[ j ].h > 0 ) ( *pGsolHMovingPos ) += movingQPoints[ j ].h * movingQPoints[ j ].w;
                    else ( *pGsolHMovingNeg ) += movingQPoints[ j ].h * movingQPoints[ j ].w;
                  }  
              }         
-        }         
+        }
+       // MPI_Finalize();
+        //exit(0);         
 }
 
 

@@ -2844,7 +2844,7 @@ void printIntermediateStats( FILE *fp,
 
 	// MEUUUUUUUUUUUU ----------------------------------------------------------
 	// MEUUUUUUUUUUUU ----------------------------------------------------------
-
+	cout << "chegou" << endl;
 	double all_mrmsd;
 
 	//MPI_Allreduce(&mrmsd, &all_mrmsd, 1, MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
@@ -4358,6 +4358,7 @@ bool insertIntoGlobalOut( TopValues *globalOut, ValuePosition3D &sol, bool setVa
 }
 
 
+
 void applyFilters( FILTER_PARAMS *pr )
 {
 	ValuePosition3D sol;
@@ -4365,13 +4366,29 @@ void applyFilters( FILTER_PARAMS *pr )
 
 	while ( ( retVal =  getFromGlobalIn( pr->TopValuesIn, sol, false, 0 ) ) > 0 )
 	{
-		printf("# \n# PROCESS = %d, THREAD = %d, SOL = %d\n# \n", rank, pr->threadID, retVal );
+		//printf("# \n# PROCESS = %d, THREAD = %d, SOL = %d\n# \n", rank, pr->threadID, retVal );
 		fflush( stdout );
 
 		Matrix transM;
 		double transD[ 16 ];
+		float arr[16];
 
-		retrieveTransformation( sol, pr, transM, transD );
+		//if(!rank){
+			retrieveTransformation( sol, pr, transM, transD );
+		MPI_Bcast(transD, 16, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+		/*	memcpy(arr, transM.getMatrix(), 16*sizeof(float));
+		}
+
+		MPI_Bcast(arr, 16, MPI_FLOAT, 0, MPI_COMM_WORLD);
+		if(rank)
+			sleep(5);
+		for(int k = 0; k < 16; ++k)
+			cout << arr[k] << endl;
+
+		MPI_Finalize();
+		exit(0);
+		transM.set (arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6], arr[7], 
+							arr[8], arr[9], arr[10], arr[11], arr[12], arr[13], arr[14], arr[15]);*/
 
 		bool filtered = false;
 		bool fFiltered = false;
@@ -4447,6 +4464,7 @@ void applyFilters( FILTER_PARAMS *pr )
 			pr->pri->pGsol->getPseudoGsol( pr->threadID - 1, transD, &pseudoGsol,
 					&pGsolHStaticPos, &pGsolHStaticNeg, &pGsolHMovingPos, &pGsolHMovingNeg );
 
+
 			if ( pGsolHStaticPos + pGsolHMovingPos > 0 )
 			{
 				sol.m_pGsol = - ( pGsolHStaticNeg + pGsolHMovingNeg ) / ( pGsolHStaticPos + pGsolHMovingPos );
@@ -4496,6 +4514,8 @@ static void *startApplyFiltersThread( void *v )
 	applyFilters( pr );
 }
 
+void printParams(ValuePosition3D);
+
 void filterPoses( PARAMS *params, TopValues *globalIn, TopValues *globalOut,
 		int numFreq, float scale, float *translate_A, float *translate_B, float *rotations,
 		double functionScaleFactor, Matrix randRot )
@@ -4508,7 +4528,7 @@ void filterPoses( PARAMS *params, TopValues *globalIn, TopValues *globalOut,
 	ValuePosition3D sol;
 
 	getFromGlobalIn( globalIn, sol, true, pr->numberOfPositions );
-
+	
 	insertIntoGlobalOut( globalOut, sol, true );
 
 	for ( int i = 0; i < numThreads; i++ )
@@ -4544,22 +4564,16 @@ void filterPoses( PARAMS *params, TopValues *globalIn, TopValues *globalOut,
 
 	n = globalOut->getCurrentNumberOfPositions( );
 	int m = n - pr->pseudoGsolFilterLowestRank;
+	//MPI_Finalize();
+	//exit(0);
 
 	double pgsolAvg = pgsolSum / n;
 	double factor = 0.55;
-
 	params->pGsolAvg = pgsolAvg;
-		cout << "rank " << rank << " " << pgsolAvg << endl;
 
 	while ( n-- )
 	{
 		globalOut->extractMin( sol );
-
-		//       if ( ( n >= m ) && pr->applyPseudoGsolFilter && ( sol.m_pGsol < factor * pgsolAvg ) )
-		//          {
-		//            double pseudoGsolPenalty = ( ( ( factor * pgsolAvg ) - sol.m_pGsol ) / ( factor * pgsolAvg ) ) * 0.5 * ( - sol.m_Value );
-		//            sol.m_Value += pseudoGsolPenalty;
-		//          }
 
 		globalIn->updateTopValues( sol );
 	}
@@ -5954,9 +5968,16 @@ void marshalTopValues(vector<ValuePosition3D> localSols, double *arr1, int *arr2
 
 // Data marshaling to pass between processes (did not manage to do it by void* array)
 void marshalTopValues(TopValues *localSols, double *arr1, int *arr2){
-
+	/*FILE* fp;
+	if(rank)
+		fp = fopen("testes_marshal1", "a+");
+	else
+		fp = fopen("testes_marshal0", "a+");
+*/
+	int n = localSols->getCurrentNumberOfPositions();
+	//fprintf(fp, "nsols %d\n", n);
 	int i = 0;
-	while( localSols->getCurrentNumberOfPositions() ) {
+	while( n-- ) {
 		ValuePosition3D sol;
 		localSols->extractMin( sol );
 
@@ -5988,6 +6009,8 @@ void marshalTopValues(TopValues *localSols, double *arr1, int *arr2){
 		arr1[offset1 + 21] = sol.m_Translation[1];
 		arr1[offset1 + 22] = sol.m_Translation[2];
 
+		//fprintf(fp, "%lf %lf %lf\n", arr1[offset1 + 20], arr1[offset1 + 21], arr1[offset1 + 22]);
+
 		// Copy ints
 		arr2[offset2    ] = sol.m_origRank;
 		arr2[offset2 + 1] = sol.m_rerankerRank;
@@ -5998,12 +6021,18 @@ void marshalTopValues(TopValues *localSols, double *arr1, int *arr2){
 
 		++i;
 	}
+	//fclose(fp);
 }
 
 // Data unmarshaling process
 vector<ValuePosition3D> unmarshalTopValues(double *arr1, int *arr2, int size){
 	vector<ValuePosition3D> localSols (size);
-
+	/*FILE* fp;
+	if(rank)
+		fp = fopen("testes_unmarshal1", "a+");
+	else
+		fp = fopen("testes_unmarshal0", "a+");
+*/
 	for(int i = 0; i < size; ++i){
 		int offset = i * 23;
 
@@ -6030,6 +6059,8 @@ vector<ValuePosition3D> unmarshalTopValues(double *arr1, int *arr2, int size){
 		localSols[i].m_Translation[0] 		  = arr1[offset + 20];
 		localSols[i].m_Translation[1] 		  = arr1[offset + 21];
 		localSols[i].m_Translation[2] 		  = arr1[offset + 22];
+
+	//	fprintf(fp, "%lf %lf %lf\n", arr1[offset + 20], arr1[offset + 21], arr1[offset + 22]);
 	}
 
 	for(int i = 0; i < size; ++i){
@@ -6042,7 +6073,7 @@ vector<ValuePosition3D> unmarshalTopValues(double *arr1, int *arr2, int size){
 		localSols[i].m_FineRotationIndex = arr2[offset + 4];
 		localSols[i].m_ConformationIndex = arr2[offset + 5];
 	}
-
+	//fclose(fp);
 	return localSols;
 }
 
@@ -6054,10 +6085,10 @@ TopValues* mergeTopValues(TopValues *inputTopValues, int topValSize, int numFreq
 	TopValues *outputTopValues = new TopValues (topValSize, numFreq);
 
 	// Gather all the sizes of the TopValues from the processes
-	MPI_Gather(&nTotal, 1, MPI_INT, nFinal, 1, MPI_INT, 0, MPI_COMM_WORLD);
+	MPI_Allgather(&nTotal, 1, MPI_INT, nFinal, 1, MPI_INT, MPI_COMM_WORLD);
 
 	// Root calculates the indexes
-	if (!rank){
+	//if (!rank){
 		for ( int i = 0; i < np; ++i ){
 			sum += nFinal[i];
 
@@ -6072,8 +6103,8 @@ TopValues* mergeTopValues(TopValues *inputTopValues, int topValSize, int numFreq
 				displs2[i] = 0;
 			}
 		}
-	}
-	MPI_Bcast(&sum, 1, MPI_INT, 0, MPI_COMM_WORLD);
+	//}
+	//MPI_Bcast(&sum, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
 	double arr1[23 * nTotal], rec1[23 * sum];
 	int arr2[6 * nTotal], rec2[6 * sum];
@@ -6083,13 +6114,9 @@ TopValues* mergeTopValues(TopValues *inputTopValues, int topValSize, int numFreq
 
 	MPI_Status st;
 
-	// Gathers all the local solutions to the root process
-	MPI_Gatherv(arr1, nTotal * 23, MPI_DOUBLE, rec1, nFinal1, displs1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-	MPI_Gatherv(arr2, nTotal * 6, MPI_INT, rec2, nFinal2, displs2, MPI_INT, 0, MPI_COMM_WORLD);
-
-	// Broadcasts the merged results
-	MPI_Bcast(rec1, sum * 23, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-	MPI_Bcast(rec2, sum * 6, MPI_INT, 0, MPI_COMM_WORLD);
+	// Gathers all the local solutions and broadcasts to all processes
+	MPI_Allgatherv(arr1, nTotal * 23, MPI_DOUBLE, rec1, nFinal1, displs1, MPI_DOUBLE, MPI_COMM_WORLD);
+	MPI_Allgatherv(arr2, nTotal * 6, MPI_INT, rec2, nFinal2, displs2, MPI_INT, MPI_COMM_WORLD);
 
 	vector<ValuePosition3D> inputTopValues2 = unmarshalTopValues(rec1, rec2, sum);
 
@@ -6195,15 +6222,36 @@ void gatherRotations(PARAMS *pr){
 	pr->pri->numberOfRotations = total;
 }
 
+void printParams(ValuePosition3D vp){
+	FILE* outFile;
+
+	if(np == 1)
+		outFile = fopen("translations_seq.txt", "a");
+	else
+		switch (rank){
+			case 0: outFile = fopen("translations_0.txt", "a"); break;
+			case 1: outFile = fopen("translations_1.txt", "a"); break;
+			case 2: outFile = fopen("translations_2.txt", "a"); break;
+			case 3: outFile = fopen("translations_3.txt", "a"); break;
+		}
+
+	fprintf(outFile, "%lf %lf %lf\n", vp.m_Translation[0], vp.m_Translation[1], vp.m_Translation[2]);
+
+	fclose(outFile);
+}
+
 void printParams(PARAMS pr){
 	ofstream outFile;
 
-	switch (rank){
-		case 0: outFile.open("Params_0.txt", ios::out | ios::trunc); break;
-		case 1: outFile.open("Params_1.txt", ios::out | ios::trunc); break;
-		case 2: outFile.open("Params_2.txt", ios::out | ios::trunc); break;
-		case 3: outFile.open("Params_3.txt", ios::out | ios::trunc); break;
-	}
+	if(np == 1)
+		outFile.open("Params_seq.txt", ios::out | ios::trunc);
+	else
+		switch (rank){
+			case 0: outFile.open("Params_0.txt", ios::out | ios::trunc); break;
+			case 1: outFile.open("Params_1.txt", ios::out | ios::trunc); break;
+			case 2: outFile.open("Params_2.txt", ios::out | ios::trunc); break;
+			case 3: outFile.open("Params_3.txt", ios::out | ios::trunc); break;
+		}
 
 	if (outFile.is_open()){
 		outFile << "Data on the PARAMS structure of process " << rank << endl << endl;
@@ -6264,12 +6312,15 @@ void printParams(PARAMS pr){
 void printParams(PARAMS_IN pr){
 	ofstream outFile;
 
-	switch (rank){
-		case 0: outFile.open("Params_in_0.txt", ios::out | ios::trunc); break;
-		case 1: outFile.open("Params_in_1.txt", ios::out | ios::trunc); break;
-		case 2: outFile.open("Params_in_2.txt", ios::out | ios::trunc); break;
-		case 3: outFile.open("Params_in_3.txt", ios::out | ios::trunc); break;
-	}
+	if(np == 1)
+		outFile.open("Params_in_seq.txt", ios::out | ios::trunc);
+	else
+		switch (rank){
+			case 0: outFile.open("Params_in_0.txt", ios::out | ios::trunc); break;
+			case 1: outFile.open("Params_in_1.txt", ios::out | ios::trunc); break;
+			case 2: outFile.open("Params_in_2.txt", ios::out | ios::trunc); break;
+			case 3: outFile.open("Params_in_3.txt", ios::out | ios::trunc); break;
+		}
 
 	if (outFile.is_open()){
 		outFile << "Data on the PARAMS_IN structure of process " << rank << endl << endl;
@@ -6387,6 +6438,35 @@ void printParams(PARAMS_IN pr){
 		outFile << "filterDepth\t\t" << pr.filterDepth << endl;
 		outFile << "applyPseudoGsolFilter\t\t" << pr.applyPseudoGsolFilter << endl;
 
+		outFile << "pseudoGsolCutoff\t\t" << pr.pseudoGsolCutoff << endl;
+		outFile << "pseudoGsolWeight\t\t" << pr.pseudoGsolWeight << endl;
+		outFile << "pseudoGsolFilterLowestRank\t\t" << pr.pseudoGsolFilterLowestRank << endl;
+		outFile << "applyDispersionFilter\t\t" << pr.applyDispersionFilter << endl;
+		outFile << "dispersionCutoff\t\t" << pr.dispersionCutoff << endl;
+		outFile << "dispersionWeight\t\t" << pr.dispersionWeight << endl;
+		outFile << "dispersionEnergyLimit\t\t" << pr.dispersionEnergyLimit << endl;
+		outFile << "dispersionMinAtomRadius\t\t" << pr.dispersionMinAtomRadius << endl;
+		outFile << "filterScaleDownFactor\t\t" << pr.filterScaleDownFactor << endl;
+		outFile << "clusterTransRad\t\t" << pr.clusterTransRad << endl;
+		outFile << "clusterTransSize\t\t" << pr.clusterTransSize << endl;
+		outFile << "clusterRotRad\t\t" << pr.clusterRotRad << endl;
+		outFile << "peaksPerRotation\t\t" << pr.peaksPerRotation << endl;
+		outFile << "complexType\t\t" << pr.complexType << endl;
+		outFile << "rerank\t\t" << pr.rerank << endl;
+		outFile << "antibody\t\t" << pr.antibody << endl;
+		outFile << "applyAntibodyFilter\t\t" << pr.applyAntibodyFilter << endl;
+		outFile << "enzyme\t\t" << pr.enzyme << endl;
+		outFile << "applyEnzymeFilter\t\t" << pr.applyEnzymeFilter << endl;
+		outFile << "applyResidueContactFilter\t\t" << pr.applyResidueContactFilter << endl;
+
+		outFile << "numBands\t\t" << pr.numBands << endl;
+		outFile << "numRerank\t\t" << pr.numRerank << endl;
+		outFile << "rerankerPseudoGsolWeight\t\t" << pr.rerankerPseudoGsolWeight << endl;
+		outFile << "rerankerDispersionWeightHigh\t\t" << pr.rerankerDispersionWeightHigh << endl;
+		outFile << "rerankerDispersionWeightLow\t\t" << pr.rerankerDispersionWeightLow << endl;
+		outFile << "rerankerMinF2DockRank\t\t" << pr.rerankerMinF2DockRank << endl;
+		outFile << "rerankerF2DockScoreWeight\t\t" << pr.rerankerF2DockScoreWeight << endl;
+
 		MPI_Finalize();
 		exit(0);
 	} else {
@@ -6396,6 +6476,27 @@ void printParams(PARAMS_IN pr){
 	}
 }
 
+template<class T> 
+void printArray(T *arr, int size){
+	ofstream outFile;
+
+	if(np == 1)
+		outFile.open("Array_seq.txt", ios::out | ios::trunc);
+	else
+		switch (rank){
+			case 0: outFile.open("Array_0.txt", ios::out | ios::trunc); break;
+			case 1: outFile.open("Array_1.txt", ios::out | ios::trunc); break;
+			case 2: outFile.open("Array_2.txt", ios::out | ios::trunc); break;
+			case 3: outFile.open("Array_3.txt", ios::out | ios::trunc); break;
+		}
+
+	for (int i = 0; i < size; ++i)
+		outFile << arr[i] << endl;
+
+	outFile.close();
+	MPI_Finalize();
+	exit(0);
+}
 
 int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 {
@@ -7654,6 +7755,8 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 		dup2(desc, STDOUT_FILENO);
 	}*/
 
+	//printParams(prT[0]);
+	//printArray<double>(prT[0].pri->xkBOrig, prT[0].pri->numCentersA);
 	for ( int i = 0; i < numThreads; i++ )
 		pthread_create( &p[ i ], NULL, startApplyRotationsThread, ( void * ) &prT[ i ] );
 
@@ -7661,6 +7764,8 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 	for ( int i = 0; i < numThreads; i++ )
 		pthread_join( p[ i ], NULL );
 
+
+	//printParams(prT[0]);
 
 	// Free clustPG memory
 	if ( clusterTransRad > 0 )
@@ -7672,12 +7777,10 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 	// Merge localTopValues
 	for (int i = 0; i < numThreads; ++i) {
 		localTopValues[i] = mergeTopValues(localTopValues[i], np * numThreads * numberOfPositions, numFreq);
-		//gatherRotations(&prT[i]);
 	}
 
 	// From this point localTopValues is the same on every process leading
 	// to the same globalTopValues
-	//if(!rank) // remover
 	if ( !scoreUntransformed )
 	{
 		if ( clusterRotRad > 0  )
@@ -7821,6 +7924,8 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 				int n = localTopValues[ i ]->getCurrentNumberOfPositions( );
 				ValuePosition3D sol;
 
+				//cout << "gtv " << rank << " - " << numThreads << " - " << n << endl;
+
 				// Iterates through all the positions n
 				while ( n-- )
 				{
@@ -7835,26 +7940,31 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 			// Merges the TopValues from each process and broadcasts them to all
 			// EDIT: since they are merged only the scatter is needed
 			// Scatter the TopValues to sub vectors
-			globalTopValuesT = scatterTopValues(globalTopValuesT, np * numThreads * numberOfPositions, numFreq);
-
+			//cout << "rank " << rank << " " << globalTopValuesT->getCurrentNumberOfPositions() << endl;
+			//globalTopValuesT = scatterTopValues(globalTopValuesT, np * numThreads * numberOfPositions, numFreq);
 			// Assuming that globalTopValues is empty
+			gatherRotations(&prT[0]);
+
+			//printParams(*prT[0].pri);
+			/*
+			prT[0].pri->centroidxB = 6.95327e-310;
+			prT[0].pri->centroidyB = 6.95327e-310;
+			prT[0].pri->centroidzB = 6.92508e-310;
+			prT[0].pri->bboxXBMin = 6.95327e-310;
+			prT[0].pri->bboxXBMax = 6.92508e-310;
+			prT[0].pri->forbiddenBBoxXMin = 6.95327e-310;
+			prT[0].pri->forbiddenBBoxYMin = 6.92508e-310;
+			prT[0].pri->forbiddenBBoxZMin = 6.92508e-310;
+			prT[0].pri->forbiddenBBoxYMax = 6.95327e-310;
+			prT[0].pri->forbiddenBBoxZMax = 6.92508e-310;
+			*/
+
 			filterPoses( &prT[ 0 ], globalTopValuesT, globalTopValues, numFreq, scale, translate_A, translate_B,
 					rotations, functionScaleFactor, randRot );
 
 			// After filterPoses the globalTopValues are merged again
-			globalTopValuesT = mergeTopValues(globalTopValuesT, np * numThreads * numberOfPositions, numFreq);
-
-			/*if(!rank){
-				int x = globalTopValuesT->getCurrentNumberOfPositions();
-				for (int i = 0; i < x; ++i){
-					ValuePosition3D sol;
-					globalTopValuesT->extractMin(sol);
-					cout << "RANK " << rank << " - " << sol.m_Value << " -> " << x << endl;
-				}
-			}*/
-			//MPI_Finalize();
-			//exit(0);
-
+			//globalTopValuesT = mergeTopValues(globalTopValuesT, np * numThreads * numberOfPositions, numFreq);
+		
 		
 			if ( clusterTransRad > 0 )
 			{
@@ -7920,7 +8030,7 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 			if ( pr->rerank )
 			{
 				// TODO: MPI Parallelization
-				int chunk, excess, temp;
+				/*int chunk, excess, temp;
 
 				temp = prT[0].pri->numRerank;
 				chunk = prT[0].pri->numRerank / np;
@@ -7931,19 +8041,28 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 						++chunk;
 				}
 
-				ValuePosition3D sol;
-
-				prT[0].pri->numRerank = chunk;
+				prT[0].pri->numRerank = chunk;*/
 
 				// Scatter the TopValues to sub vectors
-				globalTopValues = scatterTopValues(globalTopValues, np * numThreads * numberOfPositions, numFreq);
+			//	globalTopValues = scatterTopValues(globalTopValues, np * numThreads * numberOfPositions, numFreq);
 
 				rerankPoses( &prT[ 0 ], globalTopValues );
 
 				// Merge globalTopValues
-				globalTopValues = mergeTopValues(globalTopValues, np * numThreads * numberOfPositions, numFreq);
+			//	globalTopValues = mergeTopValues(globalTopValues, np * numThreads * numberOfPositions, numFreq);
 				//prT[0].pri->numRerank = temp;
 				// Merge prts
+
+				/*int x = globalTopValues->getCurrentNumberOfPositions();
+				cout << "rank " << rank << " " << x << endl;
+				if(!var){
+					++var;
+					for (int j = 0; j < x; ++j){
+						ValuePosition3D c;
+						globalTopValues->extractMin(c);
+						printParams(c);
+					}
+				}*/
 			}
 		}
 	}
@@ -8017,7 +8136,6 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 	{
 		prT[ 0 ].localTopValues = globalTopValues;
 
-		//if(!rank)
 			printIntermediateStats( fpOpt, 20, 5, &prT[ 0 ] );
 	}
 	else

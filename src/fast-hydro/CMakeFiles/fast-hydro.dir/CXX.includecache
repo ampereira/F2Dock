@@ -9,14 +9,10 @@
 /h1/apereira/F2Dock/src/fast-hydro/pseudoGsol.cpp
 pseudoGsol.h
 /h1/apereira/F2Dock/src/fast-hydro/pseudoGsol.h
-
-/h1/apereira/F2Dock/src/fast-hydro/testPseudoGsol.cpp
-stdio.h
+mpi.h
 -
-../utils/utils.h
-/h1/apereira/F2Dock/src/fast-hydro/../utils/utils.h
-pseudoGsol.h
-/h1/apereira/F2Dock/src/fast-hydro/pseudoGsol.h
+fstream
+-
 
 src/fast-hydro/../../inc/PG-range/1D-IntegerRange.h
 cuckoo.h
@@ -51,32 +47,6 @@ src/fast-hydro/../../inc/PG-range/cuckoo.h
 src/fast-hydro/../../inc/PG-range/dsexceptions.h
 
 src/fast-hydro/../../inc/f2dock/ElementInformation.h
-
-src/fast-hydro/../../inc/fast-hydro/../utils/utils.h
-iostream
--
-vector
--
-math.h
--
-cstdlib
--
-cstring
--
-pthread.h
--
-malloc.h
--
-stdarg.h
--
-time.h
--
-sys/types.h
--
-sys/timeb.h
--
-sys/time.h
--
 
 src/fast-hydro/../../inc/fast-hydro/pseudoGsol.h
 stdio.h
