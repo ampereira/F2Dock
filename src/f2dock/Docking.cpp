@@ -20,7 +20,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
-
+#include <mpiModule.h>
 #include "Docking.h"
 
 #include "TopValues.h"
@@ -40,13 +40,8 @@ using CCVOpenGLMath::Vector;
 #define 	M_PI   3.14159265358979323846
 #endif
 
-#include <mpi.h>
 #include <unistd.h>
 #include <fstream>
-// MPI global variables
-extern int rank;
-extern int np;
-extern int desc;
 
 // variables for the rotation server for pthreads
 pthread_mutex_t rotLock;
@@ -2707,7 +2702,8 @@ void printIntermediateStats( FILE *fp,
 	for ( int i = 0; i < 6; i++ )
 		hitsInRange[ i ] = 0;
 
-	if(!rank){
+	// Only one process prints the results
+	if(MpiModule::isRoot()){
 		f_printf( fp, (char *)"\n# grid spacing = %f angstrom\n# ", 1.0 / ( ( double ) scale_B * curTopValues->getGridSize( ) ) );
 		f_printf( fp, (char *)"\n# number of peaks = %d\n# ", n );
 		f_printf( fp, (char *)"\n# score scale down factor = %lf\n# ", functionScaleFactor );
@@ -2755,7 +2751,7 @@ void printIntermediateStats( FILE *fp,
 
 		if ( !breakDownScores ) {
 			double riv = rv + iv * unrealWeight;
-			if(!rank)
+			if(MpiModule::isRoot())
 				fprintf( fp, (char *)"\n%6d %16.5lf %16.5lf %16.5lf %16.5lf %16.5lf %20.5lf %20.5lf %20.5lf %20.5lf %16.5lf %10d %20.5lf %20.5lf %20.5lf ",
 						( n + 1 ), ( double ) v / functionScaleFactor, ( double ) riv / functionScaleFactor, ( double ) rv_ss / functionScaleFactor,
 						( double ) rv_cc / functionScaleFactor, ( double ) iv / functionScaleFactor, ( double ) elec / functionScaleFactor,
@@ -2767,7 +2763,7 @@ void printIntermediateStats( FILE *fp,
 			//	       ( double ) elec / functionScaleFactor, ( double ) hbond / functionScaleFactor, vdw, nclashes );
 		} else {
 			double riv = skinSkinWeight * rv_ss + coreCoreWeight * rv_cc + skinCoreWeight * iv_sc;
-			if(!rank)
+			if(MpiModule::isRoot())
 				fprintf( fp, (char *)"\n%6d %16.5lf %16.5lf %16.5lf %16.5lf %16.5lf %16.5lf %16.5lf %16.5lf %20.5lf %20.5lf %20.5lf %20.5lf %16.5lf %10d %20.5lf %20.5lf %20.5lf ",
 						( n + 1 ), ( double ) v / functionScaleFactor,
 						( double ) riv / functionScaleFactor,
@@ -2784,9 +2780,9 @@ void printIntermediateStats( FILE *fp,
 
 		for ( int i = 0; i < 3; i++ )
 			for ( int j = 0; j < 4; j++ )
-				if(!rank)
+				if(MpiModule::isRoot())
 					fprintf( fp, (char *)"%9.3f ", transformation.get( i, j ) );
-		if(!rank)
+		if(MpiModule::isRoot())
 			fprintf( fp, (char *)"%2d %9.2f", c, rmsd );
 
 		if ( mrmsd > rmsd )
@@ -2839,30 +2835,8 @@ void printIntermediateStats( FILE *fp,
 		}
 	}
 
-	if(!rank)
+	if(MpiModule::isRoot())
 		fprintf( fp, (char *)"\n# END PEAKS" );
-
-	// MEUUUUUUUUUUUU ----------------------------------------------------------
-	// MEUUUUUUUUUUUU ----------------------------------------------------------
-	cout << "chegou" << endl;
-	double all_mrmsd;
-
-	//MPI_Allreduce(&mrmsd, &all_mrmsd, 1, MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
-
-	//if(mrmsd != all_mrmsd)
-	//	return;
-
-	// MEUUUUUUUUUUUU ----------------------------------------------------------
-	// MEUUUUUUUUUUUU ----------------------------------------------------------
-
-	//   int numberOfGoodPeaks = 0;
-	//   int highestRank = maxRank;
-	//
-	//   for ( int i = 0; i < rmsdGood; i++ )
-	//     {
-	//      numberOfGoodPeaks += counter[ i ];
-	//      if ( highestPos[ i ] < highestRank ) highestRank = highestPos[ i ];
-	//     }
 
 	f_printf( fp, (char *)"\n#\n#" );
 	for ( int i = 0; i < rmsdToReport; i++ )
@@ -2877,7 +2851,7 @@ void printIntermediateStats( FILE *fp,
 
 	f_printf( fp, (char *)"\n# good peaks under %d A: count = %d highest rank = %d min RMSD = %f\n# ", rmsdGood, numberOfGoodPeaks, highestRank + 1, mrmsd );
 
-	f_printf( fp, (char *)"\n# %d best peak: rmsd = %f rank = %d score = %lf ", rank, mrmsd, rank1, ( double ) mv / functionScaleFactor );
+	f_printf( fp, (char *)"\n# %d best peak: rmsd = %f rank = %d score = %lf ", MpiModule::getRank(), mrmsd, rank1, ( double ) mv / functionScaleFactor );
 
 	if ( breakDownScores )
 		fprintf( fp, (char *)"realScore = < skin-skin = %lf core-core = %lf skin-core = %lf >, unrealScore = < skin-skin = %lf core-core = %lf skin-core = %lf >, elecScore = %lf, hbondScore = %lf, hydrophobicityScore = %lf, simpleComplementarityScore = %lf, vdWPotential = %lf, nClashes = %d, pGsol = %lf, pGsolH = %lf, delDispE = %lf ",
@@ -3812,7 +3786,7 @@ bool applyRotations( int threadID, int confID, float *rotations,
 
 		if ( r < 0 ) break;
 
-		printf("# \n# PROCESS = %d, THREAD = %d, ROTATION = %d\n# \n", rank, threadID, r + 1 );
+		printf("# \n# PROCESS = %d, THREAD = %d, ROTATION = %d\n# \n", MpiModule::getRank(), threadID, r + 1 );
 		fflush( stdout );
 
 		if ( rotateVolume )
@@ -4366,7 +4340,7 @@ void applyFilters( FILTER_PARAMS *pr )
 
 	while ( ( retVal =  getFromGlobalIn( pr->TopValuesIn, sol, false, 0 ) ) > 0 )
 	{
-		//printf("# \n# PROCESS = %d, THREAD = %d, SOL = %d\n# \n", rank, pr->threadID, retVal );
+		printf("# \n# PROCESS = %d, THREAD = %d, SOL = %d\n# \n", rank, pr->threadID, retVal );
 		fflush( stdout );
 
 		Matrix transM;
@@ -5924,311 +5898,14 @@ void initHBondFilter( PARAMS_IN *pr )
 #endif
 }
 
-// Data marshaling to pass between processes (did not manage to do it by void* array)
-void marshalTopValues(vector<ValuePosition3D> localSols, double *arr1, int *arr2){
-
-	for (int i = 0; i < localSols.size(); ++i) {
-		int offset1 = i * 23;
-		int offset2 = i * 6;
-
-		// Copy doubles
-		arr1[offset1     ] = localSols[i].m_Value;
-		arr1[offset1 + 1 ] = localSols[i].m_SkinSkinRealValue;
-		arr1[offset1 + 2 ] = localSols[i].m_CoreCoreRealValue;
-		arr1[offset1 + 3 ] = localSols[i].m_SkinCoreRealValue;
-		arr1[offset1 + 4 ] = localSols[i].m_SkinSkinImaginaryValue;
-		arr1[offset1 + 5 ] = localSols[i].m_CoreCoreImaginaryValue;
-		arr1[offset1 + 6 ] = localSols[i].m_SkinCoreImaginaryValue;
-		arr1[offset1 + 7 ] = localSols[i].m_RealValue;
-		arr1[offset1 + 8 ] = localSols[i].m_ImaginaryValue;
-		arr1[offset1 + 9 ] = localSols[i].m_elecValue;
-		arr1[offset1 + 10] = localSols[i].m_hbondValue;
-		arr1[offset1 + 11] = localSols[i].m_hydrophobicityValue;
-		arr1[offset1 + 12] = localSols[i].m_vdWPotential;
-		arr1[offset1 + 13] = localSols[i].m_simpComp;
-		arr1[offset1 + 14] = localSols[i].m_pGsol;
-		arr1[offset1 + 15] = localSols[i].m_pGsolH;
-		arr1[offset1 + 16] = localSols[i].m_delDispE;
-		arr1[offset1 + 17] = localSols[i].m_origScore;
-		arr1[offset1 + 18] = localSols[i].m_rerankerScore;
-		arr1[offset1 + 19] = localSols[i].m_clusterPenalty;
-		arr1[offset1 + 20] = localSols[i].m_Translation[0];
-		arr1[offset1 + 21] = localSols[i].m_Translation[1];
-		arr1[offset1 + 22] = localSols[i].m_Translation[2];
-
-		// Copy ints
-		arr2[offset2    ] = localSols[i].m_origRank;
-		arr2[offset2 + 1] = localSols[i].m_rerankerRank;
-		arr2[offset2 + 2] = localSols[i].m_nClashes;
-		arr2[offset2 + 3] = localSols[i].m_RotationIndex;
-		arr2[offset2 + 4] = localSols[i].m_FineRotationIndex;
-		arr2[offset2 + 5] = localSols[i].m_ConformationIndex;
-	}
-}
-
-// Data marshaling to pass between processes (did not manage to do it by void* array)
-void marshalTopValues(TopValues *localSols, double *arr1, int *arr2){
-	/*FILE* fp;
-	if(rank)
-		fp = fopen("testes_marshal1", "a+");
-	else
-		fp = fopen("testes_marshal0", "a+");
-*/
-	int n = localSols->getCurrentNumberOfPositions();
-	//fprintf(fp, "nsols %d\n", n);
-	int i = 0;
-	while( n-- ) {
-		ValuePosition3D sol;
-		localSols->extractMin( sol );
-
-		int offset1 = i * 23;
-		int offset2 = i * 6;
-
-		// Copy doubles
-		arr1[offset1     ] = sol.m_Value;
-		arr1[offset1 + 1 ] = sol.m_SkinSkinRealValue;
-		arr1[offset1 + 2 ] = sol.m_CoreCoreRealValue;
-		arr1[offset1 + 3 ] = sol.m_SkinCoreRealValue;
-		arr1[offset1 + 4 ] = sol.m_SkinSkinImaginaryValue;
-		arr1[offset1 + 5 ] = sol.m_CoreCoreImaginaryValue;
-		arr1[offset1 + 6 ] = sol.m_SkinCoreImaginaryValue;
-		arr1[offset1 + 7 ] = sol.m_RealValue;
-		arr1[offset1 + 8 ] = sol.m_ImaginaryValue;
-		arr1[offset1 + 9 ] = sol.m_elecValue;
-		arr1[offset1 + 10] = sol.m_hbondValue;
-		arr1[offset1 + 11] = sol.m_hydrophobicityValue;
-		arr1[offset1 + 12] = sol.m_vdWPotential;
-		arr1[offset1 + 13] = sol.m_simpComp;
-		arr1[offset1 + 14] = sol.m_pGsol;
-		arr1[offset1 + 15] = sol.m_pGsolH;
-		arr1[offset1 + 16] = sol.m_delDispE;
-		arr1[offset1 + 17] = sol.m_origScore;
-		arr1[offset1 + 18] = sol.m_rerankerScore;
-		arr1[offset1 + 19] = sol.m_clusterPenalty;
-		arr1[offset1 + 20] = sol.m_Translation[0];
-		arr1[offset1 + 21] = sol.m_Translation[1];
-		arr1[offset1 + 22] = sol.m_Translation[2];
-
-		//fprintf(fp, "%lf %lf %lf\n", arr1[offset1 + 20], arr1[offset1 + 21], arr1[offset1 + 22]);
-
-		// Copy ints
-		arr2[offset2    ] = sol.m_origRank;
-		arr2[offset2 + 1] = sol.m_rerankerRank;
-		arr2[offset2 + 2] = sol.m_nClashes;
-		arr2[offset2 + 3] = sol.m_RotationIndex;
-		arr2[offset2 + 4] = sol.m_FineRotationIndex;
-		arr2[offset2 + 5] = sol.m_ConformationIndex;
-
-		++i;
-	}
-	//fclose(fp);
-}
-
-// Data unmarshaling process
-vector<ValuePosition3D> unmarshalTopValues(double *arr1, int *arr2, int size){
-	vector<ValuePosition3D> localSols (size);
-	/*FILE* fp;
-	if(rank)
-		fp = fopen("testes_unmarshal1", "a+");
-	else
-		fp = fopen("testes_unmarshal0", "a+");
-*/
-	for(int i = 0; i < size; ++i){
-		int offset = i * 23;
-
-		localSols[i].m_Value 				  = arr1[offset     ];
-		localSols[i].m_SkinSkinRealValue 	  = arr1[offset + 1 ];
-		localSols[i].m_CoreCoreRealValue	  = arr1[offset + 2 ];
-		localSols[i].m_SkinCoreRealValue	  = arr1[offset + 3 ];
-		localSols[i].m_SkinSkinImaginaryValue = arr1[offset + 4 ];
-		localSols[i].m_CoreCoreImaginaryValue = arr1[offset + 5 ];
-		localSols[i].m_SkinCoreImaginaryValue = arr1[offset + 6 ];
-		localSols[i].m_RealValue 			  = arr1[offset + 7 ];
-		localSols[i].m_ImaginaryValue 		  = arr1[offset + 8 ];
-		localSols[i].m_elecValue 			  = arr1[offset + 9 ];
-		localSols[i].m_hbondValue 			  = arr1[offset + 10];
-		localSols[i].m_hydrophobicityValue    = arr1[offset + 11];
-		localSols[i].m_vdWPotential 		  = arr1[offset + 12];
-		localSols[i].m_simpComp 			  = arr1[offset + 13];
-		localSols[i].m_pGsol 				  = arr1[offset + 14];
-		localSols[i].m_pGsolH 				  = arr1[offset + 15];
-		localSols[i].m_delDispE 			  = arr1[offset + 16];
-		localSols[i].m_origScore 			  = arr1[offset + 17];
-		localSols[i].m_rerankerScore 		  = arr1[offset + 18];
-		localSols[i].m_clusterPenalty 		  = arr1[offset + 19];
-		localSols[i].m_Translation[0] 		  = arr1[offset + 20];
-		localSols[i].m_Translation[1] 		  = arr1[offset + 21];
-		localSols[i].m_Translation[2] 		  = arr1[offset + 22];
-
-	//	fprintf(fp, "%lf %lf %lf\n", arr1[offset + 20], arr1[offset + 21], arr1[offset + 22]);
-	}
-
-	for(int i = 0; i < size; ++i){
-		int offset = i * 6;
-
-		localSols[i].m_origRank 		 = arr2[offset    ];
-		localSols[i].m_rerankerRank 	 = arr2[offset + 1];
-		localSols[i].m_nClashes 		 = arr2[offset + 2];
-		localSols[i].m_RotationIndex 	 = arr2[offset + 3];
-		localSols[i].m_FineRotationIndex = arr2[offset + 4];
-		localSols[i].m_ConformationIndex = arr2[offset + 5];
-	}
-	//fclose(fp);
-	return localSols;
-}
-
-// Merges and broadcasts the TopValues
-TopValues* mergeTopValues(TopValues *inputTopValues, int topValSize, int numFreq){
-	int sum = 0, displs1[np], displs2[np], nFinal1[np], nFinal2[np], nFinal[np];
-	int nTotal = inputTopValues->getCurrentNumberOfPositions();
-
-	TopValues *outputTopValues = new TopValues (topValSize, numFreq);
-
-	// Gather all the sizes of the TopValues from the processes
-	MPI_Allgather(&nTotal, 1, MPI_INT, nFinal, 1, MPI_INT, MPI_COMM_WORLD);
-
-	// Root calculates the indexes
-	//if (!rank){
-		for ( int i = 0; i < np; ++i ){
-			sum += nFinal[i];
-
-			nFinal1[i] = nFinal[i] * 23;
-			nFinal2[i] = nFinal[i] * 6;
-
-			if(i){
-				displs1[i] = nFinal1[i - 1] + displs1[i - 1];
-				displs2[i] = nFinal2[i - 1] + displs2[i - 1];
-			}else{
-				displs1[i] = 0;
-				displs2[i] = 0;
-			}
-		}
-	//}
-	//MPI_Bcast(&sum, 1, MPI_INT, 0, MPI_COMM_WORLD);
-
-	double arr1[23 * nTotal], rec1[23 * sum];
-	int arr2[6 * nTotal], rec2[6 * sum];
-	
-	// Marshaling of the data to be transferred
-	marshalTopValues(inputTopValues, arr1, arr2);
-
-	MPI_Status st;
-
-	// Gathers all the local solutions and broadcasts to all processes
-	MPI_Allgatherv(arr1, nTotal * 23, MPI_DOUBLE, rec1, nFinal1, displs1, MPI_DOUBLE, MPI_COMM_WORLD);
-	MPI_Allgatherv(arr2, nTotal * 6, MPI_INT, rec2, nFinal2, displs2, MPI_INT, MPI_COMM_WORLD);
-
-	vector<ValuePosition3D> inputTopValues2 = unmarshalTopValues(rec1, rec2, sum);
-
-	// Reconstructs the TopValues structure
-	for(int i = 0; i < inputTopValues2.size(); ++i)
-		outputTopValues->updateTopValues( inputTopValues2[i] );
-
-	return outputTopValues;
-}
-
-// Merges and scatter the TopValues
-TopValues* scatterTopValues(TopValues *inputTopValues, int topValSize, int numFreq){
-
-	// Scattering of the data
-	int chunk, excess, sendcount1[np], sendcount2[np], displs1[np], displs2[np];
-	int size = inputTopValues->getCurrentNumberOfPositions();
-
-	TopValues *outputTopValues = new TopValues (topValSize, numFreq);
-
-	double arr1[size * 23], *rec1;
-	int arr2[size * 6], *rec2;
-
-	if(!rank){
-		chunk = size / np;
-		excess = size - chunk * np;
-
-		for(int i = 0; i < np; ++i){
-			if(excess){
-				sendcount1[i] = chunk * 23 + 23;
-				sendcount2[i] = chunk * 6 + 6;
-
-				--excess;
-			}else{
-				sendcount1[i] = chunk * 23;
-				sendcount2[i] = chunk * 6;
-			}
-			if(i == 0){
-				displs1[i] = 0;
-				displs2[i] = 0;
-			}else{
-				displs1[i] = displs1[i - 1] + sendcount1[i - 1];
-				displs2[i] = displs2[i - 1] + sendcount2[i - 1];
-			}
-		}
-	}
-
-	marshalTopValues(inputTopValues, arr1, arr2);
-
-	// MPI scattering
-	// TODO: tentar eliminar estes bcasts
-	MPI_Bcast(sendcount1, np, MPI_INT, 0, MPI_COMM_WORLD);
-	MPI_Bcast(sendcount2, np, MPI_INT, 0, MPI_COMM_WORLD);
-
-	rec1 = new double [sendcount1[rank]];
-	rec2 = new int [sendcount2[rank]];
-
-	MPI_Scatterv(arr1, sendcount1, displs1, MPI_DOUBLE, rec1, sendcount1[rank], MPI_DOUBLE, 0, MPI_COMM_WORLD);
-	MPI_Scatterv(arr2, sendcount2, displs2, MPI_INT, rec2, sendcount2[rank], MPI_INT, 0, MPI_COMM_WORLD);
-
-	vector<ValuePosition3D> inputTopValues2 = unmarshalTopValues(rec1, rec2, sendcount1[rank]/23);
-
-	// Reconstructs the TopValues structure
-	for(int i = 0; i < inputTopValues2.size(); ++i)
-		outputTopValues->updateTopValues( inputTopValues2[i] );
-
-	return outputTopValues;
-}
-
-// Merges the rotations from all processes and broadcasts the merged list
-void gatherRotations(PARAMS *pr){
-
-	int total, recvcount[np], displs[np];
-	float *rots;
-
-	MPI_Allreduce(&pr->pri->numberOfRotations, &total, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
-
-	rots = new float [total * 9];
-
-	int chunk = total / np;
-	int excess = total - chunk * np;
-
-	// Calculates the sendcount and displacements arrays for the rotations
-	// that each process uses
-	for(int j = 0; j < np; ++j){
-		if(excess){
-			recvcount[j] = chunk + 1;
-			--excess;
-		}else{
-			recvcount[j] = chunk;
-		}
-
-		recvcount[j] *= 9;
-
-		if(j == 0)
-			displs[j] = 0;
-		else
-			displs[j] = displs[j - 1] + recvcount[j - 1];
-	}
-
-	MPI_Allgatherv(pr->pri->rotations, pr->pri->numberOfRotations, MPI_FLOAT, rots, recvcount, displs, MPI_FLOAT, MPI_COMM_WORLD);
-
-	pr->pri->rotations = rots;
-	pr->pri->numberOfRotations = total;
-}
-
+// Prints the translations of a ValuePosition3D - debug information
 void printParams(ValuePosition3D vp){
 	FILE* outFile;
 
-	if(np == 1)
+	if(MpiModule::getProcs() == 1)
 		outFile = fopen("translations_seq.txt", "a");
 	else
-		switch (rank){
+		switch (MpiModule::getRank()){
 			case 0: outFile = fopen("translations_0.txt", "a"); break;
 			case 1: outFile = fopen("translations_1.txt", "a"); break;
 			case 2: outFile = fopen("translations_2.txt", "a"); break;
@@ -6240,13 +5917,14 @@ void printParams(ValuePosition3D vp){
 	fclose(outFile);
 }
 
+// Prints the data on the PARAMS struct - debug information
 void printParams(PARAMS pr){
 	ofstream outFile;
 
-	if(np == 1)
+	if(MpiModule::getProcs() == 1)
 		outFile.open("Params_seq.txt", ios::out | ios::trunc);
 	else
-		switch (rank){
+		switch (MpiModule::getRank()){
 			case 0: outFile.open("Params_0.txt", ios::out | ios::trunc); break;
 			case 1: outFile.open("Params_1.txt", ios::out | ios::trunc); break;
 			case 2: outFile.open("Params_2.txt", ios::out | ios::trunc); break;
@@ -6254,7 +5932,7 @@ void printParams(PARAMS pr){
 		}
 
 	if (outFile.is_open()){
-		outFile << "Data on the PARAMS structure of process " << rank << endl << endl;
+		outFile << "Data on the PARAMS structure of process " << MpiModule::getRank() << endl << endl;
 
 		outFile << "threadID\t\t" << pr.threadID << endl;
 		outFile << "breakDownScores\t\t" << pr.breakDownScores << endl;
@@ -6300,22 +5978,23 @@ void printParams(PARAMS pr){
 		outFile << "pGsolAvg\t\t" << pr.pGsolAvg << endl;
 		outFile << "nbRMSDAtoms\t\t" << pr.nbRMSDAtoms << endl;
 
-		MPI_Finalize();
+		MpiModule::Finalize();
 		exit(0);
 	} else {
 		cout << "Could not create the output file" << endl;
-		MPI_Finalize();
+		MpiModule::Finalize();
 		exit(0);
 	}
 }
 
+// Prints the data on the PARAMS_IN struct - debug information
 void printParams(PARAMS_IN pr){
 	ofstream outFile;
 
-	if(np == 1)
+	if(MpiModule::getProcs() == 1)
 		outFile.open("Params_in_seq.txt", ios::out | ios::trunc);
 	else
-		switch (rank){
+		switch (MpiModule::getRank()){
 			case 0: outFile.open("Params_in_0.txt", ios::out | ios::trunc); break;
 			case 1: outFile.open("Params_in_1.txt", ios::out | ios::trunc); break;
 			case 2: outFile.open("Params_in_2.txt", ios::out | ios::trunc); break;
@@ -6323,7 +6002,7 @@ void printParams(PARAMS_IN pr){
 		}
 
 	if (outFile.is_open()){
-		outFile << "Data on the PARAMS_IN structure of process " << rank << endl << endl;
+		outFile << "Data on the PARAMS_IN structure of process " << MpiModule::getRank() << endl << endl;
 
 		outFile << "performDocking\t\t" << pr.performDocking << endl;
 		outFile << "numThreads\t\t" << pr.numThreads << endl;
@@ -6467,23 +6146,24 @@ void printParams(PARAMS_IN pr){
 		outFile << "rerankerMinF2DockRank\t\t" << pr.rerankerMinF2DockRank << endl;
 		outFile << "rerankerF2DockScoreWeight\t\t" << pr.rerankerF2DockScoreWeight << endl;
 
-		MPI_Finalize();
+		MpiModule::Finalize();
 		exit(0);
 	} else {
 		cout << "Could not create the output file" << endl;
-		MPI_Finalize();
+		MpiModule::Finalize();
 		exit(0);
 	}
 }
 
+// Prints a given array, regardless its type - debug information
 template<class T> 
 void printArray(T *arr, int size){
 	ofstream outFile;
 
-	if(np == 1)
+	if(MpiModule::getProcs() == 1)
 		outFile.open("Array_seq.txt", ios::out | ios::trunc);
 	else
-		switch (rank){
+		switch (MpiModule::getRank()){
 			case 0: outFile.open("Array_0.txt", ios::out | ios::trunc); break;
 			case 1: outFile.open("Array_1.txt", ios::out | ios::trunc); break;
 			case 2: outFile.open("Array_2.txt", ios::out | ios::trunc); break;
@@ -6494,7 +6174,7 @@ void printArray(T *arr, int size){
 		outFile << arr[i] << endl;
 
 	outFile.close();
-	MPI_Finalize();
+	MpiModule::Finalize();
 	exit(0);
 }
 
@@ -7748,13 +7428,6 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 
 	}
 
-	// All processes write on stdout
-	
-	/*if(rank){
-		fflush(stdout);
-		dup2(desc, STDOUT_FILENO);
-	}*/
-
 	//printParams(prT[0]);
 	//printArray<double>(prT[0].pri->xkBOrig, prT[0].pri->numCentersA);
 	for ( int i = 0; i < numThreads; i++ )
@@ -7776,7 +7449,7 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 	
 	// Merge localTopValues
 	for (int i = 0; i < numThreads; ++i) {
-		localTopValues[i] = mergeTopValues(localTopValues[i], np * numThreads * numberOfPositions, numFreq);
+		localTopValues[i] = MpiModule::mergeTopValues(localTopValues[i], MpiModule::getProcs() * numThreads * numberOfPositions, numFreq);
 	}
 
 	// From this point localTopValues is the same on every process leading
@@ -7914,17 +7587,15 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 			// Since all the processes did the same computation with the localTopValues (which were merged)
 			// it is suposed that the globalTopValues are also consistent at this point
 			
-			globalTopValuesT = new TopValues( np * numThreads * numberOfPositions, numFreq );
+			globalTopValuesT = new TopValues( MpiModule::getProcs() * numThreads * numberOfPositions, numFreq );
 
 			for ( int i = 0; i < numThreads; i++ )
 			{
-				printf("# \n# PROCESS %d PROCESSING THREAD = %d\n# \n", rank, i + 1 );
+				printf("# \n# PROCESS %d PROCESSING THREAD = %d\n# \n", MpiModule::getRank(), i + 1 );
 				fflush( stdout );
 
 				int n = localTopValues[ i ]->getCurrentNumberOfPositions( );
 				ValuePosition3D sol;
-
-				//cout << "gtv " << rank << " - " << numThreads << " - " << n << endl;
 
 				// Iterates through all the positions n
 				while ( n-- )
@@ -7940,30 +7611,15 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 			// Merges the TopValues from each process and broadcasts them to all
 			// EDIT: since they are merged only the scatter is needed
 			// Scatter the TopValues to sub vectors
-			//cout << "rank " << rank << " " << globalTopValuesT->getCurrentNumberOfPositions() << endl;
-			//globalTopValuesT = scatterTopValues(globalTopValuesT, np * numThreads * numberOfPositions, numFreq);
+			//globalTopValuesT = MpiModule::scatterTopValues(globalTopValuesT, MpiModule::np * numThreads * numberOfPositions, numFreq);
 			// Assuming that globalTopValues is empty
-			gatherRotations(&prT[0]);
-
-			//printParams(*prT[0].pri);
-			/*
-			prT[0].pri->centroidxB = 6.95327e-310;
-			prT[0].pri->centroidyB = 6.95327e-310;
-			prT[0].pri->centroidzB = 6.92508e-310;
-			prT[0].pri->bboxXBMin = 6.95327e-310;
-			prT[0].pri->bboxXBMax = 6.92508e-310;
-			prT[0].pri->forbiddenBBoxXMin = 6.95327e-310;
-			prT[0].pri->forbiddenBBoxYMin = 6.92508e-310;
-			prT[0].pri->forbiddenBBoxZMin = 6.92508e-310;
-			prT[0].pri->forbiddenBBoxYMax = 6.95327e-310;
-			prT[0].pri->forbiddenBBoxZMax = 6.92508e-310;
-			*/
+			MpiModule::gatherRotations(&prT[0]);
 
 			filterPoses( &prT[ 0 ], globalTopValuesT, globalTopValues, numFreq, scale, translate_A, translate_B,
 					rotations, functionScaleFactor, randRot );
 
 			// After filterPoses the globalTopValues are merged again
-			//globalTopValuesT = mergeTopValues(globalTopValuesT, np * numThreads * numberOfPositions, numFreq);
+			//globalTopValuesT = MpiModule::mergeTopValues(globalTopValuesT, MpiModule::np * numThreads * numberOfPositions, numFreq);
 		
 		
 			if ( clusterTransRad > 0 )
@@ -8031,7 +7687,8 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 			{
 				// TODO: MPI Parallelization
 				/*int chunk, excess, temp;
-
+				
+				// Divides the number of reranks among the processes
 				temp = prT[0].pri->numRerank;
 				chunk = prT[0].pri->numRerank / np;
 				excess = prT[0].pri->numRerank - chunk * np;
@@ -8044,38 +7701,19 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 				prT[0].pri->numRerank = chunk;*/
 
 				// Scatter the TopValues to sub vectors
-			//	globalTopValues = scatterTopValues(globalTopValues, np * numThreads * numberOfPositions, numFreq);
+			//	globalTopValues = MpiModule::scatterTopValues(globalTopValues, MpiModule::np * numThreads * numberOfPositions, numFreq);
 
 				rerankPoses( &prT[ 0 ], globalTopValues );
 
 				// Merge globalTopValues
-			//	globalTopValues = mergeTopValues(globalTopValues, np * numThreads * numberOfPositions, numFreq);
+			//	globalTopValues = MpiModule::mergeTopValues(globalTopValues, MpiModule::np * numThreads * numberOfPositions, numFreq);
 				//prT[0].pri->numRerank = temp;
-				// Merge prts
-
-				/*int x = globalTopValues->getCurrentNumberOfPositions();
-				cout << "rank " << rank << " " << x << endl;
-				if(!var){
-					++var;
-					for (int j = 0; j < x; ++j){
-						ValuePosition3D c;
-						globalTopValues->extractMin(c);
-						printParams(c);
-					}
-				}*/
 			}
 		}
 	}
-	// Only root process writes on stdout
-	
-	/*if(rank){
-		fflush(stdout);
-		dup2(NULL, STDOUT_FILENO);
-	}*/
 	
 
 	// Free some of the memory allocated for the FFTs
-	//if(!rank){ // remover
 	FFTW_free( fkB );
 	if ( elecScale != 0 ) 
 		FFTW_free( fkBElec );
@@ -8107,15 +7745,16 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
 
 	if ( !scoreUntransformed )
 	{
-		if(!rank){
-		printf("# \n# Computation Time = %f sec\n# ", getTime() - mainStartTime);
+		// Only the master process prints the data
+		if(MpiModule::isRoot()){
+			printf("# \n# Computation Time = %f sec\n# ", getTime() - mainStartTime);
 
 			fprintf( fpOpt, (char *)"# computation time = %f sec\n# \n# ", getTime() - mainStartTime);
 			fprintf( fpOpt, (char *)"# center of the 2nd protein:\n# \n# " );
 			fprintf( fpOpt, (char *)"     conformation 0: %f %f %f\n# ", -translate_B[0], -translate_B[1], -translate_B[2] );
-		}
 
-		printf( "\n# " );
+			printf( "\n# \n" );
+		}
 	}
 
 

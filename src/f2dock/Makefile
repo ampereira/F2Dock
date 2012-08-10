@@ -208,6 +208,30 @@ ValuePosition3D.cpp.s:
 	cd /h1/apereira/F2Dock && $(MAKE) -f src/f2dock/CMakeFiles/F2Dock.dir/build.make src/f2dock/CMakeFiles/F2Dock.dir/ValuePosition3D.cpp.s
 .PHONY : ValuePosition3D.cpp.s
 
+mpiModule.o: mpiModule.cpp.o
+.PHONY : mpiModule.o
+
+# target to build an object file
+mpiModule.cpp.o:
+	cd /h1/apereira/F2Dock && $(MAKE) -f src/f2dock/CMakeFiles/F2Dock.dir/build.make src/f2dock/CMakeFiles/F2Dock.dir/mpiModule.cpp.o
+.PHONY : mpiModule.cpp.o
+
+mpiModule.i: mpiModule.cpp.i
+.PHONY : mpiModule.i
+
+# target to preprocess a source file
+mpiModule.cpp.i:
+	cd /h1/apereira/F2Dock && $(MAKE) -f src/f2dock/CMakeFiles/F2Dock.dir/build.make src/f2dock/CMakeFiles/F2Dock.dir/mpiModule.cpp.i
+.PHONY : mpiModule.cpp.i
+
+mpiModule.s: mpiModule.cpp.s
+.PHONY : mpiModule.s
+
+# target to generate assembly for a file
+mpiModule.cpp.s:
+	cd /h1/apereira/F2Dock && $(MAKE) -f src/f2dock/CMakeFiles/F2Dock.dir/build.make src/f2dock/CMakeFiles/F2Dock.dir/mpiModule.cpp.s
+.PHONY : mpiModule.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -229,6 +253,9 @@ help:
 	@echo "... ValuePosition3D.o"
 	@echo "... ValuePosition3D.i"
 	@echo "... ValuePosition3D.s"
+	@echo "... mpiModule.o"
+	@echo "... mpiModule.i"
+	@echo "... mpiModule.s"
 .PHONY : help
 
 

@@ -20,6 +20,8 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
+#include <mpiModule.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <fstream>
@@ -30,10 +32,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA
 #include <string>
 #include "ElementInformation.h"
 
-#include <mpi.h>
 #include <unistd.h>
 // Global MPI variables
-int rank, np, desc;
 
 using namespace std;
 
@@ -125,82 +125,6 @@ bool readRotations(char *rotationFile, PARAMS_IN *p)
 	fclose( fpRot );
 	p->rotations = rotations;
 	p->numberOfRotations = i;
-
-	return true;
-}
-
-bool readRotationsMPI(char *rotationFile, PARAMS_IN *p)
-{
-	// number of rotations (value 0 included)
-	int numberOfRotations = p->numberOfRotations;
-	int nmax = countLines(rotationFile);
-
-	if(nmax < numberOfRotations)
-		numberOfRotations = nmax;
-
-	int *sendcount, *displs, chunk, excess;
-
-	sendcount = new int [np];	// amount of rotations of each process (0 index not included)
-	displs    = new int [np];	// begin index of the process rotations
-
-	chunk = (numberOfRotations) / np;
-	excess = (numberOfRotations) - chunk * np;
-
-	// Calculates the sendcount and displacements arrays for the rotations
-	// that each process uses
-	for(int j = 0; j < np; ++j){
-		if(excess){
-			sendcount[j] = chunk + 1;
-			--excess;
-		}else{
-			sendcount[j] = chunk;
-		}
-
-		sendcount[j] *= 9;
-
-		if(j == 0)
-			displs[j] = 0;
-		else
-			displs[j] = displs[j - 1] + sendcount[j - 1];
-	}
-	
-	float *rotations = new float [ ( numberOfRotations + 1 ) * 9 ];
-
-	// Root process reads the data and scatters each subset
-	if (!rank) {
-		float buffer[9];
-		ifstream fpRot (rotationFile);
-
-		// Opens the file
-		if ( !fpRot.is_open() )
-		{
-			printf( "Error: Failed to open parameter file %s!\n", rotationFile);
-			return false;
-		}
-
-		// Reads the rotations
-		for (int i = 0; i <= numberOfRotations && !fpRot.eof(); ++i) {
-			int off = i*9;
-
-			for (int j = 0; j < 9; ++j)
-				fpRot >> rotations[off + j];
-				
-		}
-		fpRot.close();
-	}
-
-	float *rotations2 = new float [ sendcount[rank] ];
-
-	// Scatters the rotations that each process has to execute
-	MPI_Scatterv(rotations, sendcount, displs, MPI_FLOAT, rotations2, sendcount[rank], MPI_FLOAT, 0, MPI_COMM_WORLD);
-	//MPI_Bcast(rotations, numberOfRotations, MPI_FLOAT, 0, MPI_COMM_WORLD);
-
-	p->rotations = rotations2;
-	p->numberOfRotations = sendcount[rank] / 9;
-	//p->rotations = rotations;
-	//p->numberOfRotations = numberOfRotations;
-
-	delete [] rotations;
 
 	return true;
 }
@@ -1471,7 +1395,7 @@ bool setParamFromFile(PARAMS_IN *p, char *paramFile)
 
 					p->numberOfRotations = ival;
 			} else if (strcasecmp(key, "rotFile")==0) {
-						readRotationsMPI(val, p);
+						MpiModule::readRotations(val, p);
 			} else if (strcasecmp(key, "outFile")==0) {
 				p->outputFilename = strdup(val);
 
@@ -2299,27 +2223,17 @@ void setDefaultValues(PARAMS_IN *pr){
 int main( int argc, char* argv[] )
 {
 	// MPI Initialization
-	MPI_Init(&argc, &argv);
-	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-	MPI_Comm_size(MPI_COMM_WORLD, &np);
-
-	// Only root process writes on stdout
+	MpiModule::Init(&argc, &argv);
 	
-	/*if(rank){
-		desc = dup(STDOUT_FILENO);
-		dup2(NULL, STDOUT_FILENO);
-	}*/
-	
-
 	char *fixedMolFileName, *movingMolFileName, paramFileName[256];
 	
 	PARAMS_IN pr;		// data structure used to pass parameters to DockingMain
 
 	if (argc<2 || argc>3 ) {
-		if (!rank)
+		if (MpiModule::isRoot())
 			printf("Usage: F2Dock -score|saveGrid|vdw|effGridFile parameterFile\n");
 
-		MPI_Finalize();
+		MpiModule::Finalize();
 
 		return(1);
 	}
@@ -2330,8 +2244,7 @@ int main( int argc, char* argv[] )
 		strcpy(paramFileName, argv[2]);
 	}
 
-	if (!rank)
-		srand( time( NULL ) );
+	srand( time( NULL ) );
 
 
 	getComplexType( &pr, paramFileName );  
@@ -2359,7 +2272,7 @@ int main( int argc, char* argv[] )
 		dock( &pr );
 	else
 	{
-		if(!rank){
+		if(MpiModule::isRoot()){
 			if ( strcasecmp( argv[ 1 ], "-score" ) == 0 ) scoreUntransformed( &pr );
 			else if ( strcasecmp( argv[ 1 ], "-savegrid" ) == 0 ) saveGrid( &pr );
 			else if ( strcasecmp( argv[ 1 ], "-effGridFile" ) == 0 ) computeEffGrid( pr.minEffGridSize, pr.maxEffGridSize );               
@@ -2367,5 +2280,5 @@ int main( int argc, char* argv[] )
 	}
 
 	// MPI Finalization
-	MPI_Finalize();
+	MpiModule::Finalize();
 }
