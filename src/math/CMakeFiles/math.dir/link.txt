@@ -1,2 +1,2 @@
-/usr/bin/ar cr ../../lib/libmath.a  CMakeFiles/math.dir/Gaussian.cpp.o CMakeFiles/math.dir/Matrix.cpp.o CMakeFiles/math.dir/Quaternion.cpp.o CMakeFiles/math.dir/Ray.cpp.o CMakeFiles/math.dir/SmoothingFunction.cpp.o CMakeFiles/math.dir/Tuple.cpp.o CMakeFiles/math.dir/Vector.cpp.o
+/usr/bin/ar cr ../../lib/libmath.a  CMakeFiles/math.dir/Gaussian.cpp.o CMakeFiles/math.dir/SmoothingFunction.cpp.o CMakeFiles/math.dir/Vector.cpp.o CMakeFiles/math.dir/Ray.cpp.o CMakeFiles/math.dir/Matrix.cpp.o CMakeFiles/math.dir/Quaternion.cpp.o CMakeFiles/math.dir/Tuple.cpp.o
 /usr/bin/ranlib ../../lib/libmath.a

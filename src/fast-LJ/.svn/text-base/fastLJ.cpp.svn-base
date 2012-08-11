@@ -27,10 +27,6 @@
 
 #include "fastLJ.h"
 
-#include <iostream>
-
-using namespace std;
-
 
 void fastLJ::freeMemory( void )
 {
@@ -835,22 +831,8 @@ bool fastLJ::copyAtomsFromArray( int numAtomsSrc, double *atmsSrcXYZ, char *atms
 void fastLJ::countAtomsOctreeNodesAndSortAtoms( ATOM **atoms, int *atomsStartID, int *atomsEndID, 
                                                 ATOM **atomsT, int *numNodes )
 {
-
-  //if (*atomsStartID > *atomsEndID) return;
-  //for ( int k = 0; k < numAtomType; k++ )
-  //  cout << "Enter " << k << " " << atomsStartID[k] << " " << atomsEndID[k] << endl;
-  //cout << "NN " << *numNodes << endl;
-
-   //double minX = atoms[ 0 ][ atomsStartID[ 0 ] ].x, minY = atoms[ 0 ][ atomsStartID[ 0 ] ].y, minZ = atoms[ 0 ][ atomsStartID[ 0 ] ].z;
-   //double maxX = atoms[ 0 ][ atomsStartID[ 0 ] ].x, maxY = atoms[ 0 ][ atomsStartID[ 0 ] ].y, maxZ = atoms[ 0 ][ atomsStartID[ 0 ] ].z;
-
-   double minX = 100000000.0;
-   double minY = 100000000.0;
-   double minZ = 100000000.0;
-
-   double maxX = -100000000.0;
-   double maxY = -100000000.0;
-   double maxZ = -100000000.0;
+   double minX = atoms[ 0 ][ atomsStartID[ 0 ] ].x, minY = atoms[ 0 ][ atomsStartID[ 0 ] ].y, minZ = atoms[ 0 ][ atomsStartID[ 0 ] ].z;
+   double maxX = atoms[ 0 ][ atomsStartID[ 0 ] ].x, maxY = atoms[ 0 ][ atomsStartID[ 0 ] ].y, maxZ = atoms[ 0 ][ atomsStartID[ 0 ] ].z;
 
    for ( int k = 0; k < numAtomType; k++ )
      for ( int i = atomsStartID[ k ]; i <= atomsEndID[ k ]; i++ )
@@ -864,16 +846,14 @@ void fastLJ::countAtomsOctreeNodesAndSortAtoms( ATOM **atoms, int *atomsStartID,
           if ( atoms[ k ][ i ].z < minZ ) minZ = atoms[ k ][ i ].z;      
           if ( atoms[ k ][ i ].z > maxZ ) maxZ = atoms[ k ][ i ].z;      
         } 
-
+   
    double cx = ( minX + maxX ) / 2,
           cy = ( minY + maxY ) / 2,
           cz = ( minZ + maxZ ) / 2;
-   
-   //
-   //double r2 = ( atoms[ 0 ][ atomsStartID[ 0 ] ].x - cx ) * ( atoms[ 0 ][ atomsStartID[ 0 ] ].x - cx )
-   //          + ( atoms[ 0 ][ atomsStartID[ 0 ] ].y - cy ) * ( atoms[ 0 ][ atomsStartID[ 0 ] ].y - cy )
-   //          + ( atoms[ 0 ][ atomsStartID[ 0 ] ].z - cz ) * ( atoms[ 0 ][ atomsStartID[ 0 ] ].z - cz );
-   double r2 = 0.0;
+
+   double r2 = ( atoms[ 0 ][ atomsStartID[ 0 ] ].x - cx ) * ( atoms[ 0 ][ atomsStartID[ 0 ] ].x - cx )
+             + ( atoms[ 0 ][ atomsStartID[ 0 ] ].y - cy ) * ( atoms[ 0 ][ atomsStartID[ 0 ] ].y - cy )
+             + ( atoms[ 0 ][ atomsStartID[ 0 ] ].z - cz ) * ( atoms[ 0 ][ atomsStartID[ 0 ] ].z - cz );
 
    for ( int k = 0; k < numAtomType; k++ )
      for ( int i = atomsStartID[ k ]; i <= atomsEndID[ k ]; i++ )
@@ -895,8 +875,6 @@ void fastLJ::countAtomsOctreeNodesAndSortAtoms( ATOM **atoms, int *atomsStartID,
       
    *numNodes = 1;
       
-   //cout << "arand " << numAtoms << " " << cr << " " << maxLeafSize << " " << minRadius << endl;
-
    if ( ( numAtoms > maxLeafSize ) && ( cr > minRadius ) )
      {
       int atomsCount[ 8 ][ numAtomType ], atomsCountAllTypes[ 8 ] = { 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -916,11 +894,8 @@ void fastLJ::countAtomsOctreeNodesAndSortAtoms( ATOM **atoms, int *atomsStartID,
            
            atomsCount[ j ][ k ]++;
            atomsCountAllTypes[ j ]++;
-          }       
-     // for (int j=0; j<8; j++) {
-//	cout << atomsCount[j][1] << " ";
-      // cout << "done" << endl;
-
+          }
+        
       int atomsStartIndex[ 8 ][ numAtomType ], atomsEndIndex[ 8 ][ numAtomType ];
       int atomsCurIndex[ 8 ][ numAtomType ];              
       
@@ -947,15 +922,13 @@ void fastLJ::countAtomsOctreeNodesAndSortAtoms( ATOM **atoms, int *atomsStartID,
            int numNodesT = 0;
            
            for ( int k = 0; k < numAtomType; k++ )
-	     {
-	       atomsEndIndex[ i ][ k ] = atomsStartIndex[ i ][ k ] + atomsCount[ i ][ k ] - 1;
-	     }	   
-
+              atomsEndIndex[ i ][ k ] = atomsStartIndex[ i ][ k ] + atomsCount[ i ][ k ] - 1;
+           
            countAtomsOctreeNodesAndSortAtoms( atoms, atomsStartIndex[ i ], atomsEndIndex[ i ], atomsT, &numNodesT );
-
+         
            *numNodes += numNodesT;
           }
-     }
+     }  
 }
 
 
@@ -1144,19 +1117,13 @@ bool fastLJ::buildStaticAtomsOctree( void )
 
 bool fastLJ::buildMovingAtomsOctree( void )
 {  
-  //cout << "Also here" << endl;
-  printStatus = true;
    if ( printStatus ) printf( "\nbuilding moving atoms octree... " );
-   //cout << endl;
-
+   
    double startT = getTime( );
 
    ATOM *atomsT[ numAtomType ];
-
-   //cout << "A " << numAtomType << endl;
    
-   for ( int k = 0; k < numAtomType; k++ ) {
-     //cout << k << " " << nMovingAtoms[k] << endl;
+   for ( int k = 0; k < numAtomType; k++ )
      if ( nMovingAtoms[ k ] > 0 )
         {
          atomsT[ k ] = ( ATOM * ) malloc( nMovingAtoms[ k ] * sizeof( ATOM ) );
@@ -1169,23 +1136,16 @@ bool fastLJ::buildMovingAtomsOctree( void )
            }
         }
      else atomsT[ k ] = NULL;
-   }
 
    int atomsStartIndex[ numAtomType ], atomsEndIndex[ numAtomType ];
    
-   //cout << "AA" << endl;
-
    for ( int k = 0; k < numAtomType; k++ )
      {
-      // cout << k << " " << nMovingAtoms[k] << endl;
       atomsStartIndex[ k ] = 0;
       atomsEndIndex[ k ] = nMovingAtoms[ k ] - 1;
      }   
-   //cout << "AAA" << endl;
-   
-   countAtomsOctreeNodesAndSortAtoms( movingAtomsOrig, atomsStartIndex, atomsEndIndex, atomsT, &numMovingAtomsOctreeNodes );
 
-   //cout << "B" << endl;
+   countAtomsOctreeNodesAndSortAtoms( movingAtomsOrig, atomsStartIndex, atomsEndIndex, atomsT, &numMovingAtomsOctreeNodes );
    
    for ( int k = 0; k < numAtomType; k++ )
      freeMem( atomsT[ k ] );
@@ -1200,20 +1160,14 @@ bool fastLJ::buildMovingAtomsOctree( void )
       if ( !movingAtomsOctreeBuilt ) exit( 1 );
       return false;
      }
-
-  // cout << "B1" << endl;
-
+ 
    freeMem( movingAtomsOctree );
    movingAtomsOctree = atomsOctreeT;  
-
-   //cout << "C" << endl;
 
    initFreeNodeServer( numMovingAtomsOctreeNodes );
    
    movingAtomsOctreeRoot = constructAtomsOctree( atomsStartIndex, atomsEndIndex, movingAtomsOrig, movingAtomsOctree );
    
-   //cout << "D" << endl;
-
    movingAtomsOctreeBuilt = true;
    
    double endT = getTime( );
@@ -1230,8 +1184,6 @@ bool fastLJ::buildOctrees( void )
      || ( minInterAtomDist != minInterAtomDistUsed ) || ( !staticAtomsOctreeBuilt ) ) 
         buildStaticAtomsOctree( );  
         
-   //cout << "Got here" << endl;
-
    if ( ( minRadius != minRadiusUsed ) || ( maxLeafSize != maxLeafSizeUsed ) 
      || ( minInterAtomDist != minInterAtomDistUsed ) || ( !movingAtomsOctreeBuilt ) ) 
         buildMovingAtomsOctree( );

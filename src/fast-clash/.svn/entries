@@ -1,15 +1,15 @@
 10
 
 dir
-5808
+5167
 https://svn.ices.utexas.edu/repos/cvc/trunk/F2Dock-refactored/src/fast-clash
 https://svn.ices.utexas.edu/repos/cvc
 
 
 
-2012-02-28T22:10:49.709696Z
-5206
-brrk
+2011-10-28T15:44:58.532610Z
+4749
+muhibur
 
 
 
@@ -32,11 +32,11 @@ file
 
 
 
-2012-07-12T16:28:18.440594Z
-4f28d7843657a22af380419a8f61bfe1
-2012-02-28T22:10:49.709696Z
-5206
-brrk
+2011-10-28T15:01:35.443794Z
+2c42f5f45c8a7d9e77f6c87108161197
+2011-10-28T15:44:58.532610Z
+4749
+muhibur
 
 
 
@@ -58,7 +58,7 @@ brrk
 
 
 
-30155
+29545
 
 CMakeLists.txt
 file
@@ -66,7 +66,7 @@ file
 
 
 
-2012-07-12T16:28:18.445594Z
+2011-01-14T20:11:12.000000Z
 7faf02ec57d86b6af5e9d5ddd786f0ee
 2010-12-07T18:44:22.507644Z
 3304

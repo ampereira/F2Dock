@@ -1,15 +1,15 @@
 10
 
 dir
-5808
+5167
 https://svn.ices.utexas.edu/repos/cvc/trunk/F2Dock-refactored/src
 https://svn.ices.utexas.edu/repos/cvc
 
 
 
-2012-02-28T22:29:21.191060Z
-5207
-brrk
+2011-10-28T19:01:01.805533Z
+4750
+muhibur
 has-props
 
 
@@ -35,9 +35,6 @@ dir
 fast-clash
 dir
 
-PostFiltering
-dir
-
 math
 dir
 
@@ -47,7 +44,10 @@ dir
 F2DockServer
 dir
 
-hbondFilter
+vol
+dir
+
+utils
 dir
 
 fast-LJ
@@ -56,10 +56,7 @@ dir
 PG-range
 dir
 
-utils
-dir
-
-vol
+hbondFilter
 dir
 
 svnext.txt
@@ -68,7 +65,7 @@ file
 
 
 
-2012-07-12T16:28:20.772616Z
+2011-09-27T17:44:23.002992Z
 83c6b1967cea183326f1ab5609efb71e
 2011-08-15T16:56:19.958097Z
 4501
@@ -108,6 +105,40 @@ dir
 fast-PQ
 dir
 
+CMakeLists.txt
+file
+
+
+
+
+2011-10-28T18:56:58.512541Z
+f3c6e5eca3a781747dd2ff648478e0e9
+2011-10-28T19:01:01.805533Z
+4750
+muhibur
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+693
+
 fft-utils
 dir
 
@@ -117,7 +148,7 @@ file
 
 
 
-2012-07-12T16:28:20.778617Z
+2011-01-14T20:11:13.000000Z
 ce9dbcfdd17f94a69704119ef5275466
 2010-09-26T01:38:12.801575Z
 2950
@@ -144,40 +175,6 @@ shaikat
 
 
 3907
-
-CMakeLists.txt
-file
-
-
-
-
-2012-07-12T16:28:20.791617Z
-e06f4c1898e53a45a4c67599305a0776
-2012-02-28T22:10:49.709696Z
-5206
-brrk
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-726
 
 libmol
 dir

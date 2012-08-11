@@ -912,10 +912,6 @@ bool setParamFromFile(PARAMS_IN *p, char *paramFile)
 	    }
 		else continue;
 	  }
-	   else if ( strcasecmp( key, "forbiddenVolFileName" ) == 0 ) {
-	     p->forbiddenVolFileName = strdup( val );
-	     continue;
-	  }
 
 	  else if (strcasecmp(key, "minEffGridSize")==0) {
 	  	    ival = atoi(val);
@@ -1467,28 +1463,7 @@ bool setParamFromFile(PARAMS_IN *p, char *paramFile)
 		   return false;
 	          }
 
-	  } 
-	  else if (strcasecmp(key, "applyForbiddenVolumeFilter")==0) {
-
-	    if (strcasecmp(val, "true")==0 ) p->applyForbiddenVolumeFilter = true;
-	    else if (strcasecmp(val, "false")==0 ) p->applyForbiddenVolumeFilter = false;
-	    else  {
-		   printf( "Error: %s must be a Boolean value!\n", key);
-		   return false;
-	          }
-
-	  } 
-
-	  else if (strcasecmp(key, "forbiddenVolumeFileType")==0) {
-	    int aval = atoi(val);
-	    if(aval < 0 || aval > 2) 
-	      std::cout<<"Unable to read file type. Forbidden volume filter will not be applied "<<std::endl;
-	      	    
-	    p->forbiddenVolumeFileType = aval;
-
-	  } 
-
-	  else if (strcasecmp(key, "applyMiscFilter")==0) {
+	  } else if (strcasecmp(key, "applyMiscFilter")==0) {
 	    if (strcasecmp(val, "true")==0 ) p->applyMiscFilter = true;
 	    else if (strcasecmp(val, "false")==0 ) p->applyMiscFilter = false;
 	    else  {
@@ -2183,9 +2158,6 @@ int main( int argc, char* argv[] )
   pr.applyClashFilter = true;    // if set to true, on-the-fly filtering based on number of atomic clashes is performed
   pr.eqmDistFrac = 0.5;           // two atoms clash if distance between atom centers < eqmDistFrac * r_eqm_XY
   pr.clashTolerance = 10;        // maximum number of clashes tolerated
-  pr.forbiddenVolClashTolerance = 0; 
-  pr.applyForbiddenVolumeFilter = false;
-  pr.forbiddenVolumeFileType = -1; 
   pr.clashWeight = -0.5;         // weight given to each clash when added to total score
 
   pr.applyMiscFilter = false;     // when set to 'true' various minor filters are applied
@@ -2287,7 +2259,6 @@ int main( int argc, char* argv[] )
   pr.rerankerDispersionWeightLow = -1.1;  
   pr.rerankerDispersionWeightHigh = -21.0;
   pr.rerankerF2DockScoreWeight = 100.0;    
-
 
   pr.control = 9876;
 

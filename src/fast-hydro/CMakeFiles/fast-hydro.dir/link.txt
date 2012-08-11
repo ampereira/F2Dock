@@ -1,2 +1,2 @@
-/usr/bin/ar cr ../../lib/libfast-hydro.a  CMakeFiles/fast-hydro.dir/pseudoGsol.cpp.o CMakeFiles/fast-hydro.dir/testPseudoGsol.cpp.o
+/usr/bin/ar cr ../../lib/libfast-hydro.a  CMakeFiles/fast-hydro.dir/pseudoGsol.cpp.o CMakeFiles/fast-hydro.dir/testPseudoGsol.cpp.o CMakeFiles/fast-hydro.dir/kern.o
 /usr/bin/ranlib ../../lib/libfast-hydro.a

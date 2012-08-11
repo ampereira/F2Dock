@@ -26,7 +26,7 @@
 
 #include <stdio.h>
 
-#include "../fft-utils/fftw3.h"
+#include "fftw3.h"
 
 #include "fast-PQ/PairingHeap.h"
 #include "Docking.h"

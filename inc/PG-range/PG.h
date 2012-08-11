@@ -28,6 +28,7 @@
 #include "1D-IntegerRange.h"
 #include <cmath>
 
+
 //#include "grid.h"
 //#include "Point.h"
 //#include <arrangement_2d.h>
@@ -42,6 +43,7 @@ struct Point {
   float x;
   float y;
   float z;
+  
   Point() {}
   Point(float a, float b, float c) {
     x = a;
@@ -53,14 +55,14 @@ struct Point {
   }
  
   float distsq(Point a, Point b) {
-  float res;
-  double dx, dy, dz;
-  dx = a.x - b.x;
-  dy = a.y - b.y;
-  dz = a.z - b.z;  
-  res = dx*dx + dy*dy + dz*dz;
-  return res;
-}
+		float res;
+		double dx, dy, dz;
+		dx = a.x - b.x;
+		dy = a.y - b.y;
+		dz = a.z - b.z;  
+		res = dx*dx + dy*dy + dz*dz;
+		return res;
+	}
 
 };
 
@@ -185,6 +187,9 @@ class PG {
 
   /* Supported Queries*/
   vector<Point*> range(Point *, double);
+
+  bool pointsWithinRange2(Point *q, double delta, int *s, int i2); 
+
   bool pointsWithinRange(Point *q, double delta); 
   int countPointsWithinRange(Point *q, double delta);
 //  vector<Point*> *findintersections(Point *, double);
@@ -227,16 +232,22 @@ class PG {
  int tablesize(void) { return cells; }
 
  int gridsize(void) { return cells; }
-
   
+  
+  // method added for CUDA implementation
+  grid getGrid()
+  {
+			return g;
+	}
+
   /* Supported updates*/
   void addPoint(Point *a);
   void addPoints(vector<Point *> *alist)
   {
-	int i, size;
-	size = alist->size();
-	for(i=0;i<size;i++)
-		addPoint(alist->at(i));
+		int i, size;
+		size = alist->size();
+		for(i=0;i<size;i++)
+			addPoint(alist->at(i));
   }
   void removePoint(Point *a);
 //  void removePoints(vector<Point *> *alist);

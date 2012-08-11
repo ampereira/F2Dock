@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcClient.cpp
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRpcClient.cpp
 stdio.h
 -
 stdlib.h
@@ -14,49 +14,49 @@ stdlib.h
 string.h
 -
 XmlRPC/XmlRpcClient.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpcClient.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpcClient.h
 XmlRPC/XmlRpc.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpc.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpc.h
 XmlRPC/XmlRpcSocket.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpcSocket.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpcSocket.h
 
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcDispatch.cpp
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRpcDispatch.cpp
 math.h
 -
 sys/timeb.h
 -
 XmlRPC/XmlRpcDispatch.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpcDispatch.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpcDispatch.h
 XmlRPC/XmlRpcSource.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpcSource.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpcSource.h
 XmlRPC/XmlRpcUtil.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpcUtil.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpcUtil.h
 winsock2.h
 -
 sys/time.h
 -
 
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcServer.cpp
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRpcServer.cpp
 XmlRPC/XmlRpcException.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpcException.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpcException.h
 XmlRPC/XmlRpcServerConnection.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpcServerConnection.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpcServerConnection.h
 XmlRPC/XmlRpcServer.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpcServer.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpcServer.h
 XmlRPC/XmlRpcServerMethod.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpcServerMethod.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpcServerMethod.h
 XmlRPC/XmlRpcSocket.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpcSocket.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpcSocket.h
 XmlRPC/XmlRpcUtil.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpcUtil.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpcUtil.h
 
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcServerConnection.cpp
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRpcServerConnection.cpp
 XmlRPC/XmlRpc.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpc.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpc.h
 XmlRPC/XmlRpcServerConnection.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpcServerConnection.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpcServerConnection.h
 XmlRPC/XmlRpcSocket.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpcSocket.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpcSocket.h
 stdio.h
 -
 stdlib.h
@@ -64,17 +64,17 @@ stdlib.h
 string.h
 -
 
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcServerMethod.cpp
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRpcServerMethod.cpp
 XmlRPC/XmlRpcServer.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpcServer.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpcServer.h
 XmlRPC/XmlRpcServerMethod.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpcServerMethod.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpcServerMethod.h
 
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcSocket.cpp
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRpcSocket.cpp
 XmlRPC/XmlRpcSocket.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpcSocket.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpcSocket.h
 XmlRPC/XmlRpcUtil.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpcUtil.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpcUtil.h
 stdio.h
 -
 winsock2.h
@@ -100,17 +100,17 @@ fcntl.h
 signal.h
 -
 
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcSource.cpp
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRpcSource.cpp
 XmlRPC/XmlRpcSocket.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpcSocket.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpcSocket.h
 XmlRPC/XmlRpcSource.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpcSource.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpcSource.h
 XmlRPC/XmlRpcUtil.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpcUtil.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpcUtil.h
 
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcUtil.cpp
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRpcUtil.cpp
 XmlRPC/XmlRpcUtil.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpcUtil.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpcUtil.h
 ctype.h
 -
 iostream
@@ -122,19 +122,19 @@ stdio.h
 string.h
 -
 XmlRPC/XmlRpc.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpc.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpc.h
 windows.h
 -
 
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRpcValue.cpp
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRpcValue.cpp
 XmlRPC/base64.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/base64.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/base64.h
 XmlRPC/XmlRpcException.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpcException.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpcException.h
 XmlRPC/XmlRpcUtil.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpcUtil.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpcUtil.h
 XmlRPC/XmlRpcValue.h
-/Users/andre/F2Dock-refactored/src/XmlRPC/XmlRPC/XmlRpcValue.h
+/h1/mmatos/F2Dock-refactored_02/src/XmlRPC/XmlRPC/XmlRpcValue.h
 iostream
 -
 ostream

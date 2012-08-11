@@ -140,7 +140,8 @@ void pseudoGsol::processQPoints( void )
      {
        printError( (char *)"Failed to allocate memory!" );  
        exit( 1 );                 
-     }                                 
+     }  
+               		
 }
 
 
@@ -1118,12 +1119,22 @@ void pseudoGsol::initOctreeFlags( int threadID )
 void pseudoGsol::collectPseudoGsol( int threadID, double *trans, double *transI, double *pGsol, 
                                     double *pGsolHStaticPos, double *pGsolHStaticNeg, double *pGsolHMovingPos, double *pGsolHMovingNeg )
 {
-   *pGsol = *pGsolHStaticPos = *pGsolHStaticNeg = *pGsolHMovingPos = *pGsolHMovingNeg = 0;
+  
+ *pGsol = *pGsolHStaticPos = *pGsolHStaticNeg = *pGsolHMovingPos = *pGsolHMovingNeg = 0;
 
-   int offset = 2 * threadID * numStaticQPointsOctreeNodes;   
+	int offsetStatic = 2 * threadID * numStaticQPointsOctreeNodes;   
+	int offsetMoving = 2 * threadID * numMovingQPointsOctreeNodes;
+	
+		call_to_kern(offsetStatic, transI, pGsol, pGsolHStaticPos, pGsolHStaticNeg, staticQPointsOctreeFlags,staticQPointsOctree, staticQPoints, numStaticQPoints, numStaticQPointsOctreeNodes, movingPG, movingPG->TRANSLATE, movingPG->getdivsize(), movingPG->getRangeCount(), params, offsetMoving, trans, pGsolHMovingPos, pGsolHMovingNeg, movingQPointsOctreeFlags, movingQPointsOctree, movingQPoints, numMovingQPoints,  numMovingQPointsOctreeNodes, staticPG, staticPG->TRANSLATE, staticPG->getdivsize(), staticPG->getRangeCount());
+
+
+
+/*
+   //int offset = 2 * threadID * numStaticQPointsOctreeNodes;   
    
    for ( int i = 0; i < numStaticQPointsOctreeNodes; i++ )
-     if ( staticQPointsOctreeFlags[ offset + i ] )
+		{
+     if ( staticQPointsOctreeFlags[ offsetStatic + i ] )
         {
            for ( int j = staticQPointsOctree[ i ].qPtsStartID; j <= staticQPointsOctree[ i ].qPtsEndID; j++ )
              {
@@ -1143,11 +1154,12 @@ void pseudoGsol::collectPseudoGsol( int threadID, double *trans, double *transI,
                  }  
              }            
         } 
+	}
      
-   offset = 2 * threadID * numMovingQPointsOctreeNodes;
+   //offset = 2 * threadID * numMovingQPointsOctreeNodes;
    
-   for ( int i = 0; i < numMovingQPointsOctreeNodes; i++ )
-     if ( movingQPointsOctreeFlags[ offset + i ] )
+   for ( int i = 0; i < numMovingQPointsOctreeNodes; i++ ){
+     if ( movingQPointsOctreeFlags[ offsetMoving + i ] )
         {
            for ( int j = movingQPointsOctree[ i ].qPtsStartID; j <= movingQPointsOctree[ i ].qPtsEndID; j++ )
              {
@@ -1166,7 +1178,12 @@ void pseudoGsol::collectPseudoGsol( int threadID, double *trans, double *transI,
                    else ( *pGsolHMovingNeg ) += movingQPoints[ j ].h * movingQPoints[ j ].w;
                  }  
              }         
-        }         
+        }   
+      
+}
+*/
+	printf("CPU *pGsol, *pGsolHStaticPos, *pGsolHStaticNeg, *pGsolHMovingPos, *pGsolHMovingNeg %lf %lf %lf %lf %lf\n", *pGsol, *pGsolHStaticPos, *pGsolHStaticNeg, *pGsolHMovingPos, *pGsolHMovingNeg);
+
 }
 
 

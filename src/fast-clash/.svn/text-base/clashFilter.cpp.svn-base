@@ -164,30 +164,6 @@ clashFilter::clashFilter( int numStaticAtoms, double *stAtoms, int numMovingAtom
    if ( printStatus ) printCurrentSettings( );
 }
 
-clashFilter::clashFilter( int numStaticAtoms, double *stAtoms, int numMovingAtoms, double *mvAtoms, bool printStat, double cF )
-{
-   setDefaults( );
-   clashFrac = cF;
-
-   printStatus = printStat;
-
-   if ( !copyAtomsFromArray( numStaticAtoms, stAtoms, &nStaticAtoms, &staticAtoms )
-     || !copyAtomsFromArray( numMovingAtoms, mvAtoms, &nMovingAtoms, &movingAtoms ) )
-      {
-       freeMemory( );
-       exit( 1 );
-      }
-
-   if ( !allocateMovingAtomsSubtreeRootsArray( numThreads ) )
-     {
-      freeMemory( );
-      exit( 1 );
-     }
-
-   buildOctrees( );
-
-   if ( printStatus ) printCurrentSettings( );
-}
 
 clashFilter::clashFilter( int numStaticAtoms, double *stAtoms, int numMovingAtoms, double *mvAtoms )
 {

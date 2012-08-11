@@ -6,11 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/Users/andre/F2Dock-refactored/src/f2dock/Docking.cpp
+/h1/mmatos/F2Dock-refactored_02/src/f2dock/Docking.cpp
 Docking.h
-/Users/andre/F2Dock-refactored/src/f2dock/Docking.h
+/h1/mmatos/F2Dock-refactored_02/src/f2dock/Docking.h
 TopValues.h
-/Users/andre/F2Dock-refactored/src/f2dock/TopValues.h
+/h1/mmatos/F2Dock-refactored_02/src/f2dock/TopValues.h
 time.h
 -
 sys/types.h
@@ -20,7 +20,7 @@ sys/timeb.h
 sys/time.h
 -
 
-/Users/andre/F2Dock-refactored/src/f2dock/F2Dock.cpp
+/h1/mmatos/F2Dock-refactored_02/src/f2dock/F2Dock.cpp
 stdio.h
 -
 stdlib.h
@@ -28,23 +28,23 @@ stdlib.h
 fstream
 -
 TopValues.h
-/Users/andre/F2Dock-refactored/src/f2dock/TopValues.h
+/h1/mmatos/F2Dock-refactored_02/src/f2dock/TopValues.h
 Docking.h
-/Users/andre/F2Dock-refactored/src/f2dock/Docking.h
+/h1/mmatos/F2Dock-refactored_02/src/f2dock/Docking.h
 vector
 -
 string
 -
 ElementInformation.h
-/Users/andre/F2Dock-refactored/src/f2dock/ElementInformation.h
+/h1/mmatos/F2Dock-refactored_02/src/f2dock/ElementInformation.h
 
-/Users/andre/F2Dock-refactored/src/f2dock/TopValues.cpp
+/h1/mmatos/F2Dock-refactored_02/src/f2dock/TopValues.cpp
 stdio.h
 -
 math.h
 -
 TopValues.h
-/Users/andre/F2Dock-refactored/src/f2dock/TopValues.h
+/h1/mmatos/F2Dock-refactored_02/src/f2dock/TopValues.h
 
 src/f2dock/../../inc/PG-range/1D-IntegerRange.h
 cuckoo.h
@@ -396,7 +396,7 @@ stdlib.h
 malloc.h
 -
 fftw3.h
-src/f2dock/../../inc/fft-utils/fftw3.h
+-
 fftwPrecision.h
 src/f2dock/../../inc/fft-utils/fftwPrecision.h
 ../utils/utils.h
@@ -720,15 +720,11 @@ sys/timeb.h
 sys/time.h
 -
 
-src/f2dock/../../inc/vol/../fft-utils/fftw3.h
-stdio.h
--
-
 src/f2dock/../../inc/vol/../fft-utils/fftwPrecision.h
 
 src/f2dock/../../inc/vol/RAWIV.h
-../fft-utils/fftw3.h
-src/f2dock/../../inc/vol/../fft-utils/fftw3.h
+fftw3.h
+-
 ../fft-utils/fftwPrecision.h
 src/f2dock/../../inc/vol/../fft-utils/fftwPrecision.h
 

@@ -1054,7 +1054,6 @@ bool build_fks( char *type, int numCenters, double *xk, double *yk, double *zk, 
 
         char *typ = ( char * ) FFTW_malloc( sizeof( char ) * numCenters );
 
-
         memcpy( typ, type, numCenters * sizeof( char ) );
 
         int num_E = 0, num_I = 0;
@@ -1190,8 +1189,6 @@ bool build_fks( char *type, int numCenters, double *xk, double *yk, double *zk, 
               }
 	  }
 
-	std::cout<<"A "<<std::endl;
-
         double imag_mag = ( gradFactor == 1.0 ) ? imag_magnitude : 0.0;
 
 	for ( int i = 0; i < numCenters; i++ )
@@ -1293,11 +1290,8 @@ bool build_fks( char *type, int numCenters, double *xk, double *yk, double *zk, 
 		return false;
 	      }
 	  }
-	std::cout<<"A1 "<<std::endl;
 
         FFTW_free( fkE );
-
-	std::cout<<"B "<<std::endl;
 
         if ( gradFactor != 1.0 )
           {
@@ -4331,34 +4325,6 @@ void applyFilters( FILTER_PARAMS *pr )
        retrieveTransformation( sol, pr, transM, transD );
 
        bool filtered = false;
-       bool fFiltered = false;
-
-       if ( pr->pri->applyForbiddenVolumeFilter )
-         {
-	   
-	   if(pr->pri->forbiddenVolumeFileType%2==0){
-	     double intVal;
-	     int nclashes = 0, nclose = 0;
-
-	     pr->pri->fFilter->computeInteractions( transM, &nclashes, &nclose, &intVal );
-
-	     sol.m_nClashes = nclashes;
-
-	     if ( nclashes > pr->pri->forbiddenVolClashTolerance ) fFiltered = true;
-	   }
-
-	   else {
-
-	     Vector oldPos( pr->pri->centroidxB,pr->pri->centroidyB, pr->pri->centroidzB,  1.0 );
-	     Vector newPos = transM * oldPos;
-	     double xM = newPos[ 0 ], yM = newPos[ 1 ], zM = newPos[ 2 ];
-
-	     
-	     if ( xM< pr->pri->forbiddenBBoxXMax && yM < pr->pri->forbiddenBBoxYMax && zM < pr->pri->forbiddenBBoxZMax && 
-		 xM > pr->pri->forbiddenBBoxXMin && yM > pr->pri->forbiddenBBoxYMin && zM > pr->pri->forbiddenBBoxZMin)
-		 fFiltered = true;
-	   }
-         }
 
        if ( pr->pri->applyClashFilter )
          {
@@ -4428,10 +4394,6 @@ void applyFilters( FILTER_PARAMS *pr )
        if ( sol.m_simpComp > 0 ) filtered = true;
 
        if ( filtered ) sol.m_Value *= pr->pri->filterScaleDownFactor;
-       if(fFiltered) {
-	std::cout<<"Filtering solution that enters the forbidden volume.\n";
-        sol.m_Value = 0;
-        }
 
 //       double delDispE = sol.m_delDispE;
 //
@@ -4885,9 +4847,6 @@ int saveGrid( PARAMS_IN *pr )
   double n = ( int ) ( alpha * numFreq );
 
   smoothingFunction = new Gaussian( alpha, interpFuncExtent, n, gridSize );
-  std::cout<<"typeA "<<typeA<<" typeB "<<typeB<<" numCentersA "<<numCentersA<<" "<<"numCentersB " <<numCentersB
-	   <<" A origin "<<*xkAOrig<<" "<<*ykAOrig<<" "<<*zkAOrig<<" B origin "<<*xkBOrig<<" "<<*ykBOrig<<" "<<*zkBOrig
-	   <<std::endl;
 
   if ( !build_fks( typeA, numCentersA, xkAOrig, ykAOrig, zkAOrig, radiiA, chargesA, hbondTypeA, NULL,
     	           &fkA, 1, &fkAElec, 1, &fkAHbond,
@@ -5441,237 +5400,6 @@ bool initClashFilter( PARAMS_IN *pr, clashFilter **cFilter )
   return true;
 }
 
-//essentially a duplicate of initClashFilter, except that one of the inputs is a raw file enclosing the forbidden volume
-bool initForbiddenVolumeFilter( PARAMS_IN *pr, clashFilter **cFilter )
-{
-
-  std::cout<<"Entering initForbiddenVolumeFilter().\n";
-  int numStaticAtoms = 0, numMovingAtoms = 0;//pr->numCentersB;
-
-  //std::ifstream rawfile(pr->forbiddenVolFileName);
-  
-  double* staticAtoms;
-  double x,y,z;
-  double charge = 0.0;
-  double radius = 3.0;
-
-  if(pr->forbiddenVolumeFileType==0) { //rawfile
-    
-    std::cout<<"Forbidden volume bounded by surface "<<pr->forbiddenVolFileName<<std::endl;
-
-    FILE* rawfp = fopen(pr->forbiddenVolFileName, "r");
-
-    //  int i = 0;
-    if(rawfp) 
-      {
-	int dum;
-	
-	if(!(fscanf(rawfp, "%d %d", &numStaticAtoms, &dum)==2))
-	  std::cerr<<"Cannot read first line\n";
-      }
-
-    else { 
-
-      std::cerr<<"Cannot read forbidden volume raw file. Forbidden volume filter will not be applied.\n";
-      pr->applyForbiddenVolumeFilter = false;
-      return false;
-   
-    }
-
-    staticAtoms = ( double * ) FFTW_malloc( 5 * numStaticAtoms * sizeof( double ) );
-
-    if ( ( staticAtoms == NULL ) ) { 
-
-      std::cerr<<"Cannot allocate memory. Forbidden volume filter will not be applied.\n";
-      pr->applyForbiddenVolumeFilter = false;
-      return false;
-
-    }
-
-    for ( int i = 0, j = 0; i < numStaticAtoms; i++ )
-      {
-	if((fscanf(rawfp, "%lf %lf %lf", &x, &y, &z)==3)) {
-	  
-          std::cout<<"x = "<<x<<" y = "<<y<<" z = "<<z<<std::endl; 
-	  staticAtoms[ j++ ] = x;
-	  staticAtoms[ j++ ] = y;
-	  staticAtoms[ j++ ] = z;
-
-	  staticAtoms[ j++ ] = charge;
-
-	  staticAtoms[ j++ ] = radius;
-
-	}
-      }
-
-    fclose(rawfp);
-
-  }
-
-  else if(pr->forbiddenVolumeFileType==2) {//molecule
-    FILE *fp;
-    std::cout<<"Forbidden volume bounded by molecule  "<<pr->forbiddenVolFileName<<std::endl;
-    if( (fp = fopen(pr->forbiddenVolFileName, "r")) == NULL ) {
-
-      std::cerr<<"Cannot read forbidden volume pqr file. Forbidden volume filter will not be applied.\n";
-      pr->applyForbiddenVolumeFilter = false;
-      return false;
-
-    }
-
-    while(true) {
-      char str[40];
-
-      if(fscanf(fp,"%s",str)!=0){
-	break;
-      }
-
-      string temp(str);
-
-      if(temp.compare("ATOM")==0 || temp.compare("HETATM")==0){
-	numStaticAtoms++;
-	fgets(str, 1999, fp);
-      }
-    }
-    fclose(fp);
-
-    staticAtoms = ( double * ) FFTW_malloc( 5 * numStaticAtoms * sizeof( double ) );
-
-    if ( ( staticAtoms == NULL ) ) {
-
-      std::cerr<<"Cannot allocate memory. Forbidden volume filter will not be applied.\n";
-      pr->applyForbiddenVolumeFilter = false;
-      return false;
-
-    }
-
-    if( (fp = fopen(pr->forbiddenVolFileName, "r")) == NULL ) 
-      return false;
-
-    int j=0;
-
-    while(true) {
-      char str[40];
-
-      if(fscanf(fp,"%s",str)!=0){
-	break;
-      }
-
-      string temp(str);
-      int atomNum;
-      char atomName[50];
-      char resName[50];
-
-      if(temp.compare("ATOM")==0 || temp.compare("HETATM")==0){
-	if(fscanf(fp,"%d %s %s %lf %lf %lf %lf %lf", &atomNum, &atomName, &resName, &x, &y, &z, &charge, &radius)==8){
-	  staticAtoms[ j++ ] = x;
-	  staticAtoms[ j++ ] = y;
-	  staticAtoms[ j++ ] = z;
-
-	  staticAtoms[ j++ ] = charge;
-
-	  staticAtoms[ j++ ] = radius;
-	}
-      }
-    }
-
-    fclose(fp);
-  }
-
-  else if(pr->forbiddenVolumeFileType==1) {//bounding box
-
-    FILE *fp;
-    std::cout<<"Forbidden volume bounded by bbox  "<<pr->forbiddenVolFileName<<std::endl;
-    if( (fp = fopen(pr->forbiddenVolFileName, "r")) == NULL ) {
-
-      std::cerr<<"Cannot read forbidden volume bbox file. Forbidden volume filter will not be applied.\n";
-      pr->applyForbiddenVolumeFilter = false;
-      return false;
-
-    }
-
-    if(fscanf(fp,"%lf %lf %lf %lf %lf %lf", &pr->forbiddenBBoxXMin, &pr->forbiddenBBoxYMin, &pr->forbiddenBBoxZMin, &pr->forbiddenBBoxXMax, &pr->forbiddenBBoxYMax, &pr->forbiddenBBoxZMax)!=6) {
-
-      std::cerr<<"Wrong bbox file format. Forbidden volume filter will not be applied.\n";
-      pr->applyForbiddenVolumeFilter = false;
-      return false;
-    }
-
-    pr->centroidxB = 0;
-    pr->centroidyB = 0;
-    pr->centroidzB = 0;
-
-  for ( int i = 0; i < pr->numCentersB; i++ )
-      {
-	if(i==0) {
-
-	  pr->bboxXBMin = pr->xkBOrig[ i ]; pr->bboxYBMin  = pr->ykBOrig[ i ]; pr->bboxZBMin = pr->zkBOrig[ i ];
-	  pr->bboxXBMax = pr->bboxXBMin;  pr->bboxYBMax = pr->bboxYBMin; pr->bboxZBMax=pr->bboxZBMin;
-	  
-	}
-	  
-	pr->centroidxB += pr->xkBOrig[ i ];
-	pr->centroidyB += pr->ykBOrig[ i ];
-	pr->centroidzB += pr->zkBOrig[ i ];
-
-	pr->bboxXBMin = std::min(pr->xkBOrig[i], pr->bboxXBMin);
-	pr->bboxYBMin = std::min(pr->ykBOrig[i], pr->bboxYBMin);
-	pr->bboxZBMin = std::min(pr->zkBOrig[i], pr->bboxZBMin);
-
-	pr->bboxXBMax = std::max(pr->xkBOrig[i], pr->bboxXBMax);
-	pr->bboxYBMax = std::max(pr->ykBOrig[i], pr->bboxYBMax);
-	pr->bboxZBMax = std::max(pr->zkBOrig[i], pr->bboxZBMax);
-	
-      }
-
-  pr->centroidxB /= pr->numCentersB;
-  pr->centroidyB /= pr->numCentersB;
-  pr->centroidzB /= pr->numCentersB;
-  
-
-  return true;
-
-  }
-
-  else {
-
-    pr->applyForbiddenVolumeFilter = false;
-    return false;
-
-  }
-
-  for ( int i = 0; i < pr->numCentersB; i++ )
-    if ( pr->typeB[ i ] == 'I' ) numMovingAtoms++;
-
-  double *movingAtoms = ( double * ) FFTW_malloc( 5 * numMovingAtoms * sizeof( double ) );
-
-  if ( ( movingAtoms == NULL ) ) return false;
-
-  for ( int i = 0, j = 0; i < pr->numCentersB; i++ )
-    if ( pr->typeB[ i ] == 'I' )
-      {
-        movingAtoms[ j++ ] = pr->xkBOrig[ i ];
-        movingAtoms[ j++ ] = pr->ykBOrig[ i ];
-        movingAtoms[ j++ ] = pr->zkBOrig[ i ];
-
-        movingAtoms[ j++ ] = pr->chargesB[ i ];
-
-        movingAtoms[ j++ ] = pr->radiiB[ i ];
-      }
-
-  ( *cFilter ) = new clashFilter( numStaticAtoms, staticAtoms, numMovingAtoms, movingAtoms, false, 1.0 );
-
-//  ( *cFilter )->setNumThreads( 1 );
-//  ( *cFilter )->setProximityFactors( 0.4, 0.25, 0.8 );
-
-  FFTW_free( staticAtoms );
-  FFTW_free( movingAtoms );
- 
-  std::cout<<"Leaving initForbiddenVolumeFilter().\n";
-
-  return true;
-}
-
 
 void initLJFilter( PARAMS_IN *pr, fastLJ **ljFilter )
 {
@@ -5889,84 +5617,83 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
      pr->numberOfPositions = numFreq3;
     }
 
-  //#ifdef DEBUG
- printf("\n\ndata in PR in dockingMain\n");
- printf("performDocking: %d\n", pr->performDocking);
- printf("numThreads: %d\n", pr->numThreads);
- printf("breakDownScores: %d\n", pr->breakDownScores);
- printf("numberOfPositions: %d\n", pr->numberOfPositions);
- printf("gridSize: %d\n", pr->gridSize);
- printf("numFreq: %d\n", pr->numFreq);
-//  printf("interpFuncExtent: %d\n", pr->interpFuncExtent);
- printf("numCentersA: %i\n", pr->numCentersA);
- printf("numCentersB: %i\n", pr->numCentersB);
- printf("numberOfRotations: %d\n", pr->numberOfRotations);
-
- printf("distanceCutoff: %lf\n", pr->distanceCutoff);
- printf("alpha: %lf\n", pr->alpha);
- printf("blobbiness: %lf\n", pr->blobbiness);
- printf("skinSkinWeight: %lf\n", pr->skinSkinWeight);
- printf("coreCoreWeight: %lf\n", pr->coreCoreWeight);
- printf("skinCoreWeight: %lf\n", pr->skinCoreWeight);
- printf("realSCWeight: %lf\n", pr->realSCWeight);
- printf("imaginarySCWeight: %lf\n", pr->imaginarySCWeight);
- printf("elecScale: %lf\n", pr->elecScale);
- printf("scoreScaleUpFactor: %lf\n", pr->scoreScaleUpFactor);
-
- printf("bandwidth: %lf\n", pr->bandwidth);
- printf("gradFactor: %lf\n", pr->gradFactor);
-
- printf("outputFilename: %s\n", pr->outputFilename);
- printf("staticMoleculePdb: %s\n", pr->staticMoleculePdb);
- printf("staticMoleculeF2d: %s\n", pr->staticMoleculeF2d);
- printf("movingMoleculePdb: %s\n", pr->movingMoleculePdb);
- printf("movingMoleculeF2d: %s\n", pr->movingMoleculeF2d);
- printf("typeA: %s\n", pr->typeA);
- printf("typeB: %s\n", pr->typeB);
-
- printf("chargesA: %p %f %f\n", pr->chargesA, pr->chargesA[0],
-	 pr->chargesA[pr->numCentersA-1]);
- printf("radiiA: %p %f %f\n", pr->radiiA, pr->radiiA[0],
-	 pr->radiiA[pr->numCentersA-1]);
- printf("chargesB: %p %f %f\n", pr->chargesB, pr->chargesB[0],
-	 pr->chargesB[pr->numCentersB-1]);
- printf("radiiB: %p %f %f\n", pr->radiiB, pr->radiiB[0],
-	 pr->radiiB[pr->numCentersB-1]);
- printf("rotations: %p\n", pr->rotations);
-
- printf("xkAOrig: %p\n", pr->xkAOrig);
- printf("xkAOrig: %f %f\n", pr->xkAOrig[0], pr->xkAOrig[pr->numCentersA-1]);
- printf("ykAOrig: %p\n", pr->ykAOrig);
- printf("xkAOrig: %f %f\n", pr->ykAOrig[0], pr->ykAOrig[pr->numCentersA-1]);
- printf("zkAOrig: %p\n", pr->zkAOrig);
- printf("xkAOrig: %f %f\n", pr->zkAOrig[0], pr->zkAOrig[pr->numCentersA-1]);
- printf("atName: %s\n", pr->atNamesA[pr->numCentersA-1]);
- printf("resType: %s\n", pr->resTypesA[pr->numCentersA-1]);
- printf("resNum: %d\n", pr->resNumsA[pr->numCentersA-1]);
-
- printf("xkBOrig: %p\n", pr->xkBOrig);
- printf("xkBOrig: %f %f\n", pr->xkBOrig[0], pr->xkBOrig[pr->numCentersB-1]);
- printf("ykBOrig: %p\n", pr->ykBOrig);
- printf("xkBOrig: %f %f\n", pr->ykBOrig[0], pr->ykBOrig[pr->numCentersB-1]);
- printf("zkBOrig: %p\n", pr->zkBOrig);
- printf("xkBOrig: %f %f\n", pr->zkBOrig[0], pr->zkBOrig[pr->numCentersB-1]);
- printf("atName: %s\n", pr->atNamesB[pr->numCentersB-1]);
- printf("resType: %s\n", pr->resTypesB[pr->numCentersB-1]);
- printf("resNum: %d\n", pr->resNumsB[pr->numCentersB-1]);
-
- printf("nbRMSDAtoms: %d\n", pr->nbRMSDAtoms);
- if (pr->nbRMSDAtoms>0) {
-   printf("atNums: %d %d\n", pr->atNums[0], pr->atNums[pr->nbRMSDAtoms-1]);
-   printf("xRef: %f %f\n", pr->xRef[0], pr->xRef[pr->nbRMSDAtoms-1]);
-   printf("yRef: %f %f\n", pr->yRef[0], pr->yRef[pr->nbRMSDAtoms-1]);
-   printf("zRef: %f %f\n", pr->zRef[0], pr->zRef[pr->nbRMSDAtoms-1]);
- }
-//  printf("computevdw: %d\n", pr->computevdw);
-//  printf("vdwSmoothWidth: %lf\n", pr->vdwSmoothWidth);
-
- printf("control %d\n", pr->control);
- printf("numFreq %d\n", numFreq);
- //#endif
+//#ifdef DEBUG
+//  printf("\n\ndata in PR in dockingMain\n");
+//  printf("performDocking: %d\n", pr->performDocking);
+//  printf("numThreads: %d\n", pr->numThreads);
+//  printf("breakDownScores: %d\n", pr->breakDownScores);
+//  printf("numberOfPositions: %d\n", pr->numberOfPositions);
+//  printf("gridSize: %d\n", pr->gridSize);
+//  printf("numFreq: %d\n", pr->numFreq);
+// //  printf("interpFuncExtent: %d\n", pr->interpFuncExtent);
+//  printf("numCentersA: %i\n", pr->numCentersA);
+//  printf("numCentersB: %i\n", pr->numCentersB);
+//  printf("numberOfRotations: %d\n", pr->numberOfRotations);
+//
+//  printf("distanceCutoff: %lf\n", pr->distanceCutoff);
+//  printf("alpha: %lf\n", pr->alpha);
+//  printf("blobbiness: %lf\n", pr->blobbiness);
+//  printf("skinSkinWeight: %lf\n", pr->skinSkinWeight);
+//  printf("coreCoreWeight: %lf\n", pr->coreCoreWeight);
+//  printf("skinCoreWeight: %lf\n", pr->skinCoreWeight);
+//  printf("realSCWeight: %lf\n", pr->realSCWeight);
+//  printf("imaginarySCWeight: %lf\n", pr->imaginarySCWeight);
+//  printf("elecScale: %lf\n", pr->elecScale);
+//  printf("scoreScaleUpFactor: %lf\n", pr->scoreScaleUpFactor);
+//
+//  printf("bandwidth: %lf\n", pr->bandwidth);
+//  printf("gradFactor: %lf\n", pr->gradFactor);
+//
+//  printf("outputFilename: %s\n", pr->outputFilename);
+//  printf("staticMoleculePdb: %s\n", pr->staticMoleculePdb);
+//  printf("staticMoleculeF2d: %s\n", pr->staticMoleculeF2d);
+//  printf("movingMoleculePdb: %s\n", pr->movingMoleculePdb);
+//  printf("movingMoleculeF2d: %s\n", pr->movingMoleculeF2d);
+//  printf("typeA: %s\n", pr->typeA);
+//  printf("typeB: %s\n", pr->typeB);
+//
+//  printf("chargesA: %p %f %f\n", pr->chargesA, pr->chargesA[0],
+//	 pr->chargesA[pr->numCentersA-1]);
+//  printf("radiiA: %p %f %f\n", pr->radiiA, pr->radiiA[0],
+//	 pr->radiiA[pr->numCentersA-1]);
+//  printf("chargesB: %p %f %f\n", pr->chargesB, pr->chargesB[0],
+//	 pr->chargesB[pr->numCentersB-1]);
+//  printf("radiiB: %p %f %f\n", pr->radiiB, pr->radiiB[0],
+//	 pr->radiiB[pr->numCentersB-1]);
+//  printf("rotations: %p\n", pr->rotations);
+//
+//  printf("xkAOrig: %p\n", pr->xkAOrig);
+//  printf("xkAOrig: %f %f\n", pr->xkAOrig[0], pr->xkAOrig[pr->numCentersA-1]);
+//  printf("ykAOrig: %p\n", pr->ykAOrig);
+//  printf("xkAOrig: %f %f\n", pr->ykAOrig[0], pr->ykAOrig[pr->numCentersA-1]);
+//  printf("zkAOrig: %p\n", pr->zkAOrig);
+//  printf("xkAOrig: %f %f\n", pr->zkAOrig[0], pr->zkAOrig[pr->numCentersA-1]);
+//  printf("atName: %s\n", pr->atNamesA[pr->numCentersA-1]);
+//  printf("resType: %s\n", pr->resTypesA[pr->numCentersA-1]);
+//  printf("resNum: %d\n", pr->resNumsA[pr->numCentersA-1]);
+//
+//  printf("xkBOrig: %p\n", pr->xkBOrig);
+//  printf("xkBOrig: %f %f\n", pr->xkBOrig[0], pr->xkBOrig[pr->numCentersB-1]);
+//  printf("ykBOrig: %p\n", pr->ykBOrig);
+//  printf("xkBOrig: %f %f\n", pr->ykBOrig[0], pr->ykBOrig[pr->numCentersB-1]);
+//  printf("zkBOrig: %p\n", pr->zkBOrig);
+//  printf("xkBOrig: %f %f\n", pr->zkBOrig[0], pr->zkBOrig[pr->numCentersB-1]);
+//  printf("atName: %s\n", pr->atNamesB[pr->numCentersB-1]);
+//  printf("resType: %s\n", pr->resTypesB[pr->numCentersB-1]);
+//  printf("resNum: %d\n", pr->resNumsB[pr->numCentersB-1]);
+//
+//  printf("nbRMSDAtoms: %d\n", pr->nbRMSDAtoms);
+//  if (pr->nbRMSDAtoms>0) {
+//    printf("atNums: %d %d\n", pr->atNums[0], pr->atNums[pr->nbRMSDAtoms-1]);
+//    printf("xRef: %f %f\n", pr->xRef[0], pr->xRef[pr->nbRMSDAtoms-1]);
+//    printf("yRef: %f %f\n", pr->yRef[0], pr->yRef[pr->nbRMSDAtoms-1]);
+//    printf("zRef: %f %f\n", pr->zRef[0], pr->zRef[pr->nbRMSDAtoms-1]);
+//  }
+// //  printf("computevdw: %d\n", pr->computevdw);
+// //  printf("vdwSmoothWidth: %lf\n", pr->vdwSmoothWidth);
+//
+//  printf("control %d\n", pr->control);
+//#endif
 
   int numThreads = pr->numThreads;
   char *outputFilename = pr->outputFilename;
@@ -6195,20 +5922,12 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
      }
 
   clashFilter *cFilter;
-  clashFilter* fFilter;
 
   if ( pr->applyClashFilter )
      {
        initClashFilter( pr, &cFilter );
        pr->cFilter = cFilter;
      }
-
-  if(pr->applyForbiddenVolumeFilter) 
-    {
-      initForbiddenVolumeFilter( pr, &fFilter );
-      std::cout<<"Forbidden volume filter enabled.\n";	
-      pr->fFilter = fFilter;
-    }
 
   if ( pr->applyPseudoGsolFilter ) initPseudoGsolFilter( pr );
 
@@ -6220,7 +5939,7 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
   printf("LibMol was not found. Could not apply hygrogen bond filter\n");
 #endif
 
-  //#ifdef DEBUG
+#ifdef DEBUG
   printf("\n\nLocal variable in main\n");
   printf("numThreads: %d\n", numThreads);
   printf("performDocking: %d\n", performDocking);
@@ -6268,7 +5987,7 @@ int dockingMain( PARAMS_IN *pr, bool scoreUntransformed )
   printf("   types: %s\n", typeB);
   printf("   charges: %f %f\n", chargesB[0], chargesB[numCentersB-1]);
   printf("   radii: %f %f\n", radiiB[0], radiiB[numCentersB-1]);
-  //#endif
+#endif
 
 
   double *xkA = NULL, *ykA = NULL, *zkA = NULL;

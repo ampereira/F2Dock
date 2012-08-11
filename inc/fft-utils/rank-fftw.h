@@ -8,7 +8,7 @@
 #include <malloc.h>
 #endif
 
-#include "fftw3.h"
+#include <fftw3.h>
 #include "fftwPrecision.h"
 #include "../utils/utils.h"
 

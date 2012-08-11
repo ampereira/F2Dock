@@ -23,7 +23,7 @@
 #ifndef __RAWIV_H__
 #define __RAWIV_H__
 
-#include "../fft-utils/fftw3.h"
+#include <fftw3.h>
 #include "../fft-utils/fftwPrecision.h"
 
 #define SWAP_64( a ) \

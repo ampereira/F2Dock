@@ -1,7 +1,7 @@
 #ifndef CCV_NDFT_H
 #define CCV_NDFT_H
 
-#include "fftw3.h"
+#include <fftw3.h>
 #include "fftwPrecision.h"
 #include "math/SmoothingFunction.h"
 #include "sparsefft3.h"

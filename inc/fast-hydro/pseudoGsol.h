@@ -44,6 +44,7 @@
 #include "f2dock/ElementInformation.h"
 #include "PG-range/PG.h"
 
+
 #ifdef LID
    #undef LID
 #endif
@@ -176,8 +177,14 @@ class pseudoGsol
     void initOctreeFlags( int threadID );
     void collectPseudoGsol( int threadID, double *trans, double *transI, double *pGsol, 
                             double *pGsolHStaticPos, double *pGsolHStaticNeg, double *pGsolHMovingPos, double *pGsolHMovingNeg );
+//	void collectPseudoGsol_prep( int threadID, double *trans, double *transI, double *pGsol, 
+ //                           double *pGsolHStaticPos, double *pGsolHStaticNeg, double *pGsolHMovingPos, double *pGsolHMovingNeg );
     void markPotentialQPoints( int threadID, int nodeS, int nodeM, double *trans );
-                                                
+    
+		
+		
+		
+
  public: 
  
     pseudoGsol( char *paramFile, int nStAtoms, double *stAtoms, int nMvAtoms, double *mvAtoms, int nThreads );
@@ -191,7 +198,14 @@ class pseudoGsol
     void getPseudoGsol( int threadID, double *trans, double *pGsol, double *pGsolH );
     void getPseudoGsol( int threadID, double *pGsol, double *pGsolH );
     
-    void printGsolParamters( FILE* fp );        
+    void printGsolParamters( FILE* fp );  
+   
+
+		// CUDA call
+ 		int call_to_kern(int offsetStatic, double *transI, double *pGsol, double *pGsolHStaticPos, double *pGsolHStaticNeg, bool *staticQPointsOctreeFlags, QPOINTS_OCTREE_NODE *staticQPointsOctree, QPOINT *staticQPoints, int numStaticQPoints, int numStaticQPointsOctreeNodes, PG *movingPG, double TRANSLATEstatic, double DIMstatic, int rangeCountStatic, PARAMS_IN params, int offsetMoving, double *trans, double *pGsolHMovingPos, double *pGsolHMovingNeg, bool *movingQPointsOctreeFlags, QPOINTS_OCTREE_NODE *movingQPointsOctree, QPOINT *movingQPoints, int numMovingQPoints, int numMovingQPointsOctreeNodes, PG *staticPG, double TRANSLATEmoving, double DIMmoving, int rangeCountMoving);
+		
+
+
 };
 
 

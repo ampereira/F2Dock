@@ -1,13 +1,13 @@
 K 25
 svn:wc:ra_dav:version-url
 V 60
-/repos/cvc/!svn/ver/5206/trunk/F2Dock-refactored/src/fast-LJ
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/src/fast-LJ
 END
 fastLJ.cpp
 K 25
 svn:wc:ra_dav:version-url
 V 71
-/repos/cvc/!svn/ver/5206/trunk/F2Dock-refactored/src/fast-LJ/fastLJ.cpp
+/repos/cvc/!svn/ver/4749/trunk/F2Dock-refactored/src/fast-LJ/fastLJ.cpp
 END
 LJTest.cpp
 K 25

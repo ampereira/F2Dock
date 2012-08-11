@@ -135,17 +135,17 @@ svn:wc:ra_dav:version-url
 V 68
 /repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/init.cpp
 END
-pdb.cpp
-K 25
-svn:wc:ra_dav:version-url
-V 67
-/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/pdb.cpp
-END
 intcrds.cpp.back
 K 25
 svn:wc:ra_dav:version-url
 V 76
 /repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/intcrds.cpp.back
+END
+pdb.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/pdb.cpp
 END
 io.cpp
 K 25
@@ -153,11 +153,11 @@ svn:wc:ra_dav:version-url
 V 66
 /repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/io.cpp
 END
-quaternions.cpp
+shield.cpp
 K 25
 svn:wc:ra_dav:version-url
-V 75
-/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/quaternions.cpp
+V 70
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/shield.cpp
 END
 _atom_group_copy_from_deprecated.cpp
 K 25
@@ -165,11 +165,11 @@ svn:wc:ra_dav:version-url
 V 96
 /repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/_atom_group_copy_from_deprecated.cpp
 END
-shield.cpp
+quaternions.cpp
 K 25
 svn:wc:ra_dav:version-url
-V 70
-/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/shield.cpp
+V 75
+/repos/cvc/!svn/ver/4299/trunk/F2Dock-refactored/src/libmol/quaternions.cpp
 END
 nbenergy.cpp
 K 25

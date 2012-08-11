@@ -1,13 +1,13 @@
 K 25
 svn:wc:ra_dav:version-url
 V 36
-/repos/cvc/!svn/ver/5624/trunk/CMake
+/repos/cvc/!svn/ver/5003/trunk/CMake
 END
 GetPrerequisites.cmake
 K 25
 svn:wc:ra_dav:version-url
 V 59
-/repos/cvc/!svn/ver/5315/trunk/CMake/GetPrerequisites.cmake
+/repos/cvc/!svn/ver/4143/trunk/CMake/GetPrerequisites.cmake
 END
 SetupQt.cmake
 K 25
@@ -19,7 +19,7 @@ BundleUtilities.cmake
 K 25
 svn:wc:ra_dav:version-url
 V 58
-/repos/cvc/!svn/ver/5315/trunk/CMake/BundleUtilities.cmake
+/repos/cvc/!svn/ver/4141/trunk/CMake/BundleUtilities.cmake
 END
 SetupGSL.cmake
 K 25
@@ -79,7 +79,7 @@ SetupCGAL.cmake
 K 25
 svn:wc:ra_dav:version-url
 V 52
-/repos/cvc/!svn/ver/5559/trunk/CMake/SetupCGAL.cmake
+/repos/cvc/!svn/ver/5003/trunk/CMake/SetupCGAL.cmake
 END
 FindCg.cmake
 K 25
@@ -91,7 +91,7 @@ FindLapack.cmake
 K 25
 svn:wc:ra_dav:version-url
 V 53
-/repos/cvc/!svn/ver/5624/trunk/CMake/FindLapack.cmake
+/repos/cvc/!svn/ver/4208/trunk/CMake/FindLapack.cmake
 END
 FindPackageMultipass.cmake
 K 25

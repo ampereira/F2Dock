@@ -25,12 +25,17 @@
 #include <cmath>
 #include <time.h>
 #include <sys/time.h>
+#include <stdio.h>
 
+
+#include <algorithm>
 using namespace std;
 
 //#define TRANSLATE 2000.0
 
 double gtod_sec = 0.0E0;
+
+
 
 double gtod_timer()
 {
@@ -139,6 +144,9 @@ vector<Point*> PG::range(Point *q, double delta)
 
 bool PG::pointsWithinRange(Point *q, double delta) 
 {
+
+
+
   Point p = *q;
 
   p.x += TRANSLATE;
@@ -160,12 +168,14 @@ bool PG::pointsWithinRange(Point *q, double delta)
   vector<tuple<plane*> > S2 = g.RR.report(l,h);
   rangeCount++;
 
+	
+
   if(S2.empty())
   {
     return false;
   }
   size2 = (int)S2.size();
-
+		
 
   for(i = 0; i < size2; i++) 
   {
@@ -187,23 +197,23 @@ bool PG::pointsWithinRange(Point *q, double delta)
 
       if((temp1[j].ptr)->RR.getn())
       {
-	temp2 = (temp1[j].ptr)->RR.report(l,h);
-        
-	size = (int)temp2.size();
-	int pbcount;
+				temp2 = (temp1[j].ptr)->RR.report(l,h);
+						  
+				size = (int)temp2.size();
+				int pbcount;
 
-	Point *oa;
+				Point *oa;
 
-	double delsq = delta*delta;
-	for(int mn=0;mn<size;mn++)
-	{
-		int atomsInCell = temp2[mn].ptr->balls.size();
-		for(int pq=0;pq<atomsInCell;pq++)
-		{
-			oa = temp2[mn].ptr->balls[pq];
-			if(oa->distsq(*oa, *q) <= delsq) return true;
-		}
-	}
+				double delsq = delta*delta;
+				for(int mn=0;mn<size;mn++)
+				{
+					int atomsInCell = temp2[mn].ptr->balls.size();
+					for(int pq=0;pq<atomsInCell;pq++)
+					{
+						oa = temp2[mn].ptr->balls[pq];
+						if(oa->distsq(*oa, *q) <= delsq) return true;
+					}
+				}
 	
       	temp2.clear();
 	
@@ -216,9 +226,10 @@ bool PG::pointsWithinRange(Point *q, double delta)
 }
 
 
-
 int PG::countPointsWithinRange(Point *q, double delta) 
 {
+
+
   Point p = *q;
 
   p.x += TRANSLATE;

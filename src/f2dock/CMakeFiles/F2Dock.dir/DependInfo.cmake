@@ -4,39 +4,25 @@ SET(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 SET(CMAKE_DEPENDS_CHECK_CXX
-  "/Users/andre/F2Dock-refactored/src/f2dock/Docking.cpp" "/Users/andre/F2Dock-refactored/src/f2dock/CMakeFiles/F2Dock.dir/Docking.cpp.o"
-  "/Users/andre/F2Dock-refactored/src/f2dock/F2Dock.cpp" "/Users/andre/F2Dock-refactored/src/f2dock/CMakeFiles/F2Dock.dir/F2Dock.cpp.o"
-  "/Users/andre/F2Dock-refactored/src/f2dock/TopValues.cpp" "/Users/andre/F2Dock-refactored/src/f2dock/CMakeFiles/F2Dock.dir/TopValues.cpp.o"
-  "/Users/andre/F2Dock-refactored/src/f2dock/ValuePosition3D.cpp" "/Users/andre/F2Dock-refactored/src/f2dock/CMakeFiles/F2Dock.dir/ValuePosition3D.cpp.o"
+  "/h1/mmatos/F2Dock-refactored_02/src/f2dock/Docking.cpp" "/h1/mmatos/F2Dock-refactored_02/src/f2dock/CMakeFiles/F2Dock.dir/Docking.cpp.o"
+  "/h1/mmatos/F2Dock-refactored_02/src/f2dock/F2Dock.cpp" "/h1/mmatos/F2Dock-refactored_02/src/f2dock/CMakeFiles/F2Dock.dir/F2Dock.cpp.o"
+  "/h1/mmatos/F2Dock-refactored_02/src/f2dock/TopValues.cpp" "/h1/mmatos/F2Dock-refactored_02/src/f2dock/CMakeFiles/F2Dock.dir/TopValues.cpp.o"
+  "/h1/mmatos/F2Dock-refactored_02/src/f2dock/ValuePosition3D.cpp" "/h1/mmatos/F2Dock-refactored_02/src/f2dock/CMakeFiles/F2Dock.dir/ValuePosition3D.cpp.o"
   )
 SET(CMAKE_CXX_COMPILER_ID "GNU")
 
-# Preprocessor definitions for this target.
-SET(CMAKE_TARGET_DEFINITIONS
-  "MACOS_X"
-  )
-
 # Targets to which this target links.
 SET(CMAKE_TARGET_LINKED_INFO_FILES
-  "/Users/andre/F2Dock-refactored/src/fast-clash/CMakeFiles/fast-clash.dir/DependInfo.cmake"
-  "/Users/andre/F2Dock-refactored/src/fast-GB/CMakeFiles/fast-GB.dir/DependInfo.cmake"
-  "/Users/andre/F2Dock-refactored/src/fast-hydro/CMakeFiles/fast-hydro.dir/DependInfo.cmake"
-  "/Users/andre/F2Dock-refactored/src/fast-LJ/CMakeFiles/fast-LJ.dir/DependInfo.cmake"
-  "/Users/andre/F2Dock-refactored/src/fast-PQ/CMakeFiles/fast-PQ.dir/DependInfo.cmake"
-  "/Users/andre/F2Dock-refactored/src/fast-resCont/CMakeFiles/fast-resCont.dir/DependInfo.cmake"
-  "/Users/andre/F2Dock-refactored/src/PG-range/CMakeFiles/PG-range.dir/DependInfo.cmake"
-  "/Users/andre/F2Dock-refactored/src/math/CMakeFiles/math.dir/DependInfo.cmake"
-  "/Users/andre/F2Dock-refactored/src/utils/CMakeFiles/utils.dir/DependInfo.cmake"
-  "/Users/andre/F2Dock-refactored/src/vol/CMakeFiles/vol.dir/DependInfo.cmake"
-  "/Users/andre/F2Dock-refactored/src/fft-utils/CMakeFiles/fft-utils.dir/DependInfo.cmake"
-  "/Users/andre/F2Dock-refactored/src/misc-ident/CMakeFiles/misc-ident.dir/DependInfo.cmake"
+  "/h1/mmatos/F2Dock-refactored_02/src/fast-clash/CMakeFiles/fast-clash.dir/DependInfo.cmake"
+  "/h1/mmatos/F2Dock-refactored_02/src/fast-GB/CMakeFiles/fast-GB.dir/DependInfo.cmake"
+  "/h1/mmatos/F2Dock-refactored_02/src/fast-hydro/CMakeFiles/fast-hydro.dir/DependInfo.cmake"
+  "/h1/mmatos/F2Dock-refactored_02/src/fast-LJ/CMakeFiles/fast-LJ.dir/DependInfo.cmake"
+  "/h1/mmatos/F2Dock-refactored_02/src/fast-PQ/CMakeFiles/fast-PQ.dir/DependInfo.cmake"
+  "/h1/mmatos/F2Dock-refactored_02/src/fast-resCont/CMakeFiles/fast-resCont.dir/DependInfo.cmake"
+  "/h1/mmatos/F2Dock-refactored_02/src/PG-range/CMakeFiles/PG-range.dir/DependInfo.cmake"
+  "/h1/mmatos/F2Dock-refactored_02/src/math/CMakeFiles/math.dir/DependInfo.cmake"
+  "/h1/mmatos/F2Dock-refactored_02/src/utils/CMakeFiles/utils.dir/DependInfo.cmake"
+  "/h1/mmatos/F2Dock-refactored_02/src/vol/CMakeFiles/vol.dir/DependInfo.cmake"
+  "/h1/mmatos/F2Dock-refactored_02/src/fft-utils/CMakeFiles/fft-utils.dir/DependInfo.cmake"
+  "/h1/mmatos/F2Dock-refactored_02/src/misc-ident/CMakeFiles/misc-ident.dir/DependInfo.cmake"
   )
-
-# The include file search paths:
-SET(CMAKE_C_TARGET_INCLUDE_PATH
-  "src/f2dock/../../inc"
-  "src/f2dock/../../inc/f2dock"
-  )
-SET(CMAKE_CXX_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})
-SET(CMAKE_Fortran_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})
-SET(CMAKE_ASM_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})

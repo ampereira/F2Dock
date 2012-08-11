@@ -6,10 +6,10 @@ movingMoleculePQR /h1/mmatos/F2Dock-refactored/tests/1A2K_L_U.pqr
 staticMoleculeQUAD /h1/mmatos/F2Dock-refactored/tests/1A2K_R_U.quad
 movingMoleculeQUAD /h1/mmatos/F2Dock-refactored/tests/1A2K_L_U.quad
 rmsdAtoms /h1/mmatos/F2Dock-refactored/tests/1A2K_rmsd_backbone_unbound_10.0.txt
-outFile /h1/mmatos/F2Dock-refactored/tests/1A2K_out.txt
+outFile /h1/mmatos/F2Dock-refactored/tests/1A2K_out10_3.txt
 
 rotFile /h1/mmatos/F2Dock-refactored/deg15.mtx
-numRot 100000
+numRot 10
 effGridFile /h1/mmatos/F2Dock-refactored/fftw-rank.txt
 
 complexType G
@@ -19,5 +19,5 @@ numRerank 2000
 
 breakDownScores true
 
-numThreads 4
+numThreads 1
 

@@ -6,9 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/Users/andre/F2Dock-refactored/src/F2DockServer/F2DockServer.cpp
+/h1/mmatos/F2Dock-refactored_02/src/F2DockServer/F2DockServer.cpp
 XmlRPC/XmlRpc.h
-/Users/andre/F2Dock-refactored/src/F2DockServer/XmlRPC/XmlRpc.h
+/h1/mmatos/F2Dock-refactored_02/src/F2DockServer/XmlRPC/XmlRpc.h
 iostream
 -
 stdlib.h
@@ -18,7 +18,7 @@ fstream
 vector
 -
 F2DockServer/jobHandler.h
-/Users/andre/F2Dock-refactored/src/F2DockServer/F2DockServer/jobHandler.h
+/h1/mmatos/F2Dock-refactored_02/src/F2DockServer/F2DockServer/jobHandler.h
 
 src/F2DockServer/../../inc/F2DockServer/dockingJobParams.h
 string

@@ -1,4 +1,4 @@
-# Install script for directory: /Users/andre/F2Dock-refactored/src/fft-utils
+# Install script for directory: /h1/mmatos/F2Dock-refactored_02/src/fft-utils
 
 # Set the install prefix
 IF(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -26,4 +26,9 @@ IF(NOT CMAKE_INSTALL_COMPONENT)
     SET(CMAKE_INSTALL_COMPONENT)
   ENDIF(COMPONENT)
 ENDIF(NOT CMAKE_INSTALL_COMPONENT)
+
+# Install shared libraries without execute permission?
+IF(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
+  SET(CMAKE_INSTALL_SO_NO_EXE "1")
+ENDIF(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 

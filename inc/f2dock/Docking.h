@@ -217,7 +217,6 @@ typedef struct
     bool randomRotate;         // apply an initial random rotation on the ligand molecule
 
     char *outputFilename;
-    char* forbiddenVolFileName;
     char *staticMoleculePdb;
     char *movingMoleculePdb;
     char *staticMoleculeF2d;
@@ -277,16 +276,10 @@ typedef struct
     double *ykAOrig;
     double *zkAOrig;
 
-    double centroidxB, centroidyB, centroidzB;
-
-    double bboxXBMin, bboxYBMin, bboxZBMin,bboxXBMax, bboxYBMax, bboxZBMax;
-
     // moving molecule
     double *xkBOrig;
     double *ykBOrig;
     double *zkBOrig;
-
-    double forbiddenBBoxXMin, forbiddenBBoxYMin, forbiddenBBoxZMin, forbiddenBBoxXMax, forbiddenBBoxYMax, forbiddenBBoxZMax;
 
     // RMSD calculations
     int nbRMSDAtoms;  // # of atoms used to compute RMSD
@@ -316,13 +309,9 @@ typedef struct
     fastLJ *ljFilter;              // octree-based Lennard-Jones potential estimator                              
                                   
     bool applyClashFilter;        // if set to true, on-the-fly filtering based on number of atomic clashes is performed
-    bool applyForbiddenVolumeFilter;        // if set to true, on-the-fly filtering based on number of atomic clashes is performed
     double eqmDistFrac;           // two atoms clash if distance between atom centers < eqmDistFrac * r_eqm_XY
     int clashTolerance;           // maximum number of clashes tolerated
-    int forbiddenVolClashTolerance;
-    short forbiddenVolumeFileType; //0==rawfile, 1==bbox, 2==molecule
     clashFilter *cFilter;
-    clashFilter *fFilter;
 
     bool applyMiscFilter;         // when set to 'true' various minor filters are applied
     
@@ -385,7 +374,6 @@ typedef struct
     double rerankerDispersionWeightLow;    
     double rerankerMinF2DockRank;
     double rerankerF2DockScoreWeight;    
-    
    
     int control;
 

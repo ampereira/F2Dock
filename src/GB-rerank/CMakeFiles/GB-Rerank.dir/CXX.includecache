@@ -6,13 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/Users/andre/F2Dock-refactored/src/GB-rerank/GB-rerank.cpp
+/h1/mmatos/F2Dock-refactored_02/src/GB-rerank/GB-rerank.cpp
 GB-rerank/GB-rerank.h
-/Users/andre/F2Dock-refactored/src/GB-rerank/GB-rerank/GB-rerank.h
-
-/Users/andre/F2Dock-refactored/src/GB-rerank/pairingHeap.cpp
-GB-rerank/pairingHeap.h
-/Users/andre/F2Dock-refactored/src/GB-rerank/GB-rerank/pairingHeap.h
+/h1/mmatos/F2Dock-refactored_02/src/GB-rerank/GB-rerank/GB-rerank.h
 
 src/GB-rerank/../../inc/GB-rerank/GB-rerank.h
 stdio.h

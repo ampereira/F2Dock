@@ -6,17 +6,15 @@
 
 #IncludeRegexTransform: 
 
-/Users/andre/F2Dock-refactored/src/fast-LJ/LJTest.cpp
+/h1/mmatos/F2Dock-refactored_02/src/fast-LJ/LJTest.cpp
 stdio.h
 -
 fastLJ.h
-/Users/andre/F2Dock-refactored/src/fast-LJ/fastLJ.h
+/h1/mmatos/F2Dock-refactored_02/src/fast-LJ/fastLJ.h
 
-/Users/andre/F2Dock-refactored/src/fast-LJ/fastLJ.cpp
+/h1/mmatos/F2Dock-refactored_02/src/fast-LJ/fastLJ.cpp
 fastLJ.h
-/Users/andre/F2Dock-refactored/src/fast-LJ/fastLJ.h
-iostream
--
+/h1/mmatos/F2Dock-refactored_02/src/fast-LJ/fastLJ.h
 
 src/fast-LJ/../../inc/fast-LJ/../utils/utils.h
 iostream

@@ -6,29 +6,15 @@
 
 #IncludeRegexTransform: 
 
-/Users/andre/F2Dock-refactored/src/PG-range/PG.cc
+/h1/mmatos/F2Dock-refactored_02/src/PG-range/PG.cc
 PG.h
-/Users/andre/F2Dock-refactored/src/PG-range/PG.h
+/h1/mmatos/F2Dock-refactored_02/src/PG-range/PG.h
 cmath
 -
 time.h
 -
 sys/time.h
 -
-
-/Users/andre/F2Dock-refactored/src/PG-range/cuckoo.cc
-stdio.h
--
-stdlib.h
--
-strings.h
--
-time.h
--
-math.h
--
-cuckoo.h
-/Users/andre/F2Dock-refactored/src/PG-range/cuckoo.h
 
 src/PG-range/../../inc/PG-range/1D-IntegerRange.h
 cuckoo.h

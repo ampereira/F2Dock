@@ -22,7 +22,7 @@
 #ifndef SPARSE3DFFT_H
 #define SPARSE3DFFT_H
 
-#include "fftw3.h"
+#include <fftw3.h>
 #include "fftwPrecision.h"
 
 #define c_re( c ) ( ( c )[ 0 ] )

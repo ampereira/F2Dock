@@ -32,6 +32,10 @@
 #include <string>
 #include <iostream>
 #include <cmath>
+#include <stdio.h>
+
+#include <climits>
+
 using namespace std;
 
 //#define W 4
@@ -483,10 +487,10 @@ public:
   		int next_clus = get_cluster(pre_rep, x);
   
   		if(next_clus == (int)BST.size())
-		{   
-			tuple<T> temp(pre_rep, NULL);
-			return BST[next_clus-1]->find(temp);
-		}
+			{   
+				tuple<T> temp(pre_rep, NULL);
+				return BST[next_clus-1]->find(temp);
+			}
 
   
 		tuple<T> item(x, NULL);
@@ -513,7 +517,6 @@ public:
 //		cout<<n;
 //		int abc;
 //		scanf("%d", &abc);
-
 		if(n == 0)
 		{ 
 //			cout<<"returning"<<endl;
@@ -531,10 +534,10 @@ public:
 				x.push_back(pre);
 		
 			b = pre.id - 1;
-
-			if(b < 0)
+		
+			if(b < 0){
 				break;
-
+			}
 			pre = predecessor(b);
 		}
 
@@ -550,12 +553,61 @@ public:
 	}
 
 
+ /* functions added for the CUDA implementation */
+
 	inline void printAll()
 	{
 		printBSTs();
 		printReps();
 		return;
 	}
+	
+	vector<int> getRepMap()
+	{
+		return repMap;
+	}
+
+	vector<BinarySearchTree<tuple<T> >*> getBST(){
+		return BST;	
+	}
+
+	dict_ptr getDic()
+	{
+		return D;
+	}
+
+	int getOverallMin()
+	{
+		int n = BST.size();
+		int min = INT_MAX;
+		int BSTmin;
+
+		for (int i = 0; i < n; i++)
+		{
+			BSTmin = BST.at(i)->findMin().id;
+			if (BSTmin < min)
+				min = BSTmin;
+		}
+		return min;
+	}
+
+
+	int getOverallMax()
+	{
+		int n = BST.size();
+		int max = INT_MIN;
+		int BSTmax;
+
+		for (int i = 0; i < n; i++)
+		{
+			BSTmax = BST.at(i)->findMax().id;
+			
+			if (BSTmax > max)
+				max = BSTmax;
+		}
+		return max;
+	}
+
 };
 
 

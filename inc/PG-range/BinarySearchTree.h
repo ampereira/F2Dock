@@ -282,7 +282,7 @@ class BinarySearchTree
 			}
 			
 
-        	public:
+ public:
             
 			explicit BinarySearchTree( const Comparable & notFound):num_nodes(0), root(NULL), ITEM_NOT_FOUND( notFound )
         		{

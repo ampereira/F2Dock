@@ -10,7 +10,8 @@
 **  software for educational and research purposes, provided copies include                                                                                                      
 **  this notice. This software (or modified copies thereof) may not be                                                                                                           
 **  distributed to any other institution without express permission from the                                                                                                     
-**  Structural Bioinformatics Laboratory and  Boston University. Requests to use this software (or                                                                                 **  modified copies therof) in any other way should be sent to Dima Kozakov,                                                                                                     
+**  Structural Bioinformatics Laboratory and  Boston University. Requests to use this software (or                                                                                 
+**  modified copies therof) in any other way should be sent to Dima Kozakov,                                                                                                     
 **  Department of Biomedical Engineering: "midas@bu.edu".                                                                                                                  
 **                                                                                                                                                                               
 **---------------------------------------------------------------------------*/

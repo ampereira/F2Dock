@@ -6,17 +6,51 @@
 
 #IncludeRegexTransform: 
 
-/Users/andre/F2Dock-refactored/src/fast-hydro/pseudoGsol.cpp
-pseudoGsol.h
-/Users/andre/F2Dock-refactored/src/fast-hydro/pseudoGsol.h
+/h1/mmatos/F2Dock-refactored_02/src/fast-hydro/../../inc/PG-range/1D-IntegerRange.h
+cuckoo.h
+/h1/mmatos/F2Dock-refactored_02/src/fast-hydro/../../inc/PG-range/cuckoo.h
+BinarySearchTree.h
+/h1/mmatos/F2Dock-refactored_02/src/fast-hydro/../../inc/PG-range/BinarySearchTree.h
+string
+-
+iostream
+-
+cmath
+-
 
-/Users/andre/F2Dock-refactored/src/fast-hydro/testPseudoGsol.cpp
+/h1/mmatos/F2Dock-refactored_02/src/fast-hydro/../../inc/PG-range/BinarySearchTree.h
+vector
+-
+iostream
+-
+dsexceptions.h
+/h1/mmatos/F2Dock-refactored_02/src/fast-hydro/../../inc/PG-range/dsexceptions.h
+
+/h1/mmatos/F2Dock-refactored_02/src/fast-hydro/../../inc/PG-range/PG.h
+vector
+-
+1D-IntegerRange.h
+/h1/mmatos/F2Dock-refactored_02/src/fast-hydro/../../inc/PG-range/1D-IntegerRange.h
+cmath
+-
+
+/h1/mmatos/F2Dock-refactored_02/src/fast-hydro/../../inc/PG-range/cuckoo.h
+
+/h1/mmatos/F2Dock-refactored_02/src/fast-hydro/../../inc/PG-range/dsexceptions.h
+
+/h1/mmatos/F2Dock-refactored_02/src/fast-hydro/pseudoGsol.cpp
+pseudoGsol.h
+/h1/mmatos/F2Dock-refactored_02/src/fast-hydro/pseudoGsol.h
+../../inc/PG-range/PG.h
+/h1/mmatos/F2Dock-refactored_02/src/fast-hydro/../../inc/PG-range/PG.h
+
+/h1/mmatos/F2Dock-refactored_02/src/fast-hydro/testPseudoGsol.cpp
 stdio.h
 -
 ../utils/utils.h
-/Users/andre/F2Dock-refactored/src/fast-hydro/../utils/utils.h
+/h1/mmatos/F2Dock-refactored_02/src/fast-hydro/../utils/utils.h
 pseudoGsol.h
-/Users/andre/F2Dock-refactored/src/fast-hydro/pseudoGsol.h
+/h1/mmatos/F2Dock-refactored_02/src/fast-hydro/pseudoGsol.h
 
 src/fast-hydro/../../inc/PG-range/1D-IntegerRange.h
 cuckoo.h
@@ -78,7 +112,7 @@ sys/timeb.h
 sys/time.h
 -
 
-src/fast-hydro/../../inc/fast-hydro/pseudoGsol.h
+src/fast-hydro/../../inc/pseudoGsol.h
 stdio.h
 -
 stdlib.h
@@ -100,11 +134,11 @@ sys/timeb.h
 sys/time.h
 -
 utils/utils.h
-src/fast-hydro/../../inc/fast-hydro/utils/utils.h
+src/fast-hydro/../../inc/utils/utils.h
 f2dock/ElementInformation.h
-src/fast-hydro/../../inc/fast-hydro/f2dock/ElementInformation.h
+src/fast-hydro/../../inc/f2dock/ElementInformation.h
 PG-range/PG.h
-src/fast-hydro/../../inc/fast-hydro/PG-range/PG.h
+src/fast-hydro/../../inc/PG-range/PG.h
 
 src/fast-hydro/../../inc/utils/utils.h
 iostream

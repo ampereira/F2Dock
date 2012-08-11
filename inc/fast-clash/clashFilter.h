@@ -174,8 +174,7 @@ class clashFilter
     
  public:
 
-   clashFilter( int numStaticAtoms, double *staticAtoms, int numMovingAtoms, double *movingAtoms, bool printStat ); 
-   clashFilter( int numStaticAtoms, double *staticAtoms, int numMovingAtoms, double *movingAtoms, bool printStat , double cF); 	  
+   clashFilter( int numStaticAtoms, double *staticAtoms, int numMovingAtoms, double *movingAtoms, bool printStat );   
    clashFilter( int numStaticAtoms, double *staticAtoms, int numMovingAtoms, double *movingAtoms );      
    ~clashFilter( );
    

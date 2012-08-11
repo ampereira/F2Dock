@@ -1,16 +1,16 @@
 
-staticMolecule /net/neutron/workspace/muhibur/scratch/F2Dock-refactored/tests/1JZD_R_U_1.7.f2d
-movingMolecule /net/neutron/workspace/muhibur/scratch/F2Dock-refactored/tests/1JZD_L_U.f2d
-staticMoleculePQR /net/neutron/workspace/muhibur/scratch/F2Dock-refactored/tests/1JZD_R_U.pqr
-movingMoleculePQR /net/neutron/workspace/muhibur/scratch/F2Dock-refactored/tests/1JZD_L_U.pqr
-staticMoleculeQUAD /net/neutron/workspace/muhibur/scratch/F2Dock-refactored/tests/1JZD_R_U.quad
-movingMoleculeQUAD /net/neutron/workspace/muhibur/scratch/F2Dock-refactored/tests/1JZD_L_U.quad
-rmsdAtoms /net/neutron/workspace/muhibur/scratch/F2Dock-refactored/tests/1JZD_rmsd_backbone_unbound_10.0.txt
-outFile /net/neutron/workspace/muhibur/scratch/F2Dock-refactored/tests/1JZD_out.txt
+staticMolecule /h1/mmatos/F2Dock-refactored_02/tests/1JZD_R_U_1.7.f2d
+movingMolecule /h1/mmatos/F2Dock-refactored_02/tests/1JZD_L_U.f2d
+staticMoleculePQR /h1/mmatos/F2Dock-refactored_02/tests/1JZD_R_U.pqr
+movingMoleculePQR /h1/mmatos/F2Dock-refactored_02/tests/1JZD_L_U.pqr
+staticMoleculeQUAD /h1/mmatos/F2Dock-refactored_02/tests/1JZD_R_U.quad
+movingMoleculeQUAD /h1/mmatos/F2Dock-refactored_02/tests/1JZD_L_U.quad
+rmsdAtoms /h1/mmatos/F2Dock-refactored_02/tests/1JZD_rmsd_backbone_unbound_10.0.txt
+outFile /h1/mmatos/F2Dock-refactored_02/tests/1JZD_out03.txt
 
-rotFile /net/neutron/workspace/muhibur/scratch/F2Dock-refactored/deg15.mtx
-numRot 100000
-effGridFile /net/neutron/workspace/muhibur/scratch/F2Dock-refactored/fftw-rank.txt
+rotFile /h1/mmatos/F2Dock-refactored_02/deg15.mtx
+numRot 100
+effGridFile /h1/mmatos/F2Dock-refactored_02/fftw-rank.txt
 
 complexType G
 numSolutions 20000

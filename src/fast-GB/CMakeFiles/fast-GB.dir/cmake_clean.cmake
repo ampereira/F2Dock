@@ -1,9 +1,9 @@
 FILE(REMOVE_RECURSE
-  "CMakeFiles/fast-GB.dir/fastBornRadius.cpp.o"
+  "CMakeFiles/fast-GB.dir/SSEApproxMath.cpp.o"
   "CMakeFiles/fast-GB.dir/fastDispE.cpp.o"
   "CMakeFiles/fast-GB.dir/fastGpol.cpp.o"
   "CMakeFiles/fast-GB.dir/GpolTest.cpp.o"
-  "CMakeFiles/fast-GB.dir/SSEApproxMath.cpp.o"
+  "CMakeFiles/fast-GB.dir/fastBornRadius.cpp.o"
   "../../lib/libfast-GB.pdb"
   "../../lib/libfast-GB.a"
 )

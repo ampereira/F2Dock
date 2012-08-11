@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/Users/andre/F2Dock-refactored/src/vol/RAWIV.cpp
+/h1/mmatos/F2Dock-refactored_02/src/vol/RAWIV.cpp
 stdio.h
 -
 stdlib.h
@@ -16,17 +16,13 @@ malloc.h
 string.h
 -
 RAWIV.h
-/Users/andre/F2Dock-refactored/src/vol/RAWIV.h
-
-src/vol/../../inc/vol/../fft-utils/fftw3.h
-stdio.h
--
+/h1/mmatos/F2Dock-refactored_02/src/vol/RAWIV.h
 
 src/vol/../../inc/vol/../fft-utils/fftwPrecision.h
 
 src/vol/../../inc/vol/RAWIV.h
-../fft-utils/fftw3.h
-src/vol/../../inc/vol/../fft-utils/fftw3.h
+fftw3.h
+-
 ../fft-utils/fftwPrecision.h
 src/vol/../../inc/vol/../fft-utils/fftwPrecision.h
 
